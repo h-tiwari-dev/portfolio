@@ -1,0 +1,12 @@
+{
+  "__entry_css_mods__": {
+    "/home/harsh/portfolio/app/page": [
+      "/home/harsh/portfolio/app/globals.css",
+      "/home/harsh/portfolio/node_modules/@next/font/google/target.css?{\"path\":\"app/layout.tsx\",\"import\":\"Space_Mono\",\"arguments\":[{\"weight\":\"400\",\"subsets\":[\"latin\"]}],\"variableName\":\"spaceMono\"}"
+    ]
+  },
+  "/home/harsh/portfolio/app/layout.tsx": [
+    "/home/harsh/portfolio/node_modules/@next/font/google/target.css?{\"path\":\"app/layout.tsx\",\"import\":\"Space_Mono\",\"arguments\":[{\"weight\":\"400\",\"subsets\":[\"latin\"]}],\"variableName\":\"spaceMono\"}",
+    "/home/harsh/portfolio/app/globals.css"
+  ]
+}
