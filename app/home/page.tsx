@@ -4,13 +4,20 @@ import { PrismaClient } from '@prisma/client';
 import { log } from 'console';
 import Image from 'next/image';
 
-async function getFiles() {
+export async function getResume() {
     const prisma = new PrismaClient()
     const resume = await prisma.file.findFirst({
         where: {
             fileType: 'RESUME'
         }
     })
+    return {
+        resume,
+    }
+}
+
+async function getCourseWork() {
+    const prisma = new PrismaClient()
     const courseWork = await prisma.file.findMany({
         where: {
             fileType: 'COURSE_WORK'
@@ -18,13 +25,12 @@ async function getFiles() {
     })
 
     return {
-        resume,
         courseWork
     }
 }
-
 export default async function Home() {
-    const data = await getFiles();
+    const resume = await getResume();
+    const courseWork = await getCourseWork();
 
     return (
         <div>
@@ -96,24 +102,28 @@ export default async function Home() {
                     </div>
                     <p className="text-xl mt-5">Files:-</p>
                     <div className="flex flex-col mx-10">
-                        <div className='flex flex-row justify-between'>
-                            <p className='text-md'>Resume:</p>
-                            <DownloadFile file={data.resume?.file as Buffer} fileName={data.resume?.name as string} />
-                        </div>
-                        <div className='flex flex-col w-full'>
-                            <p className='text-md'>Course Work:-</p>
-                            <ul className='mx-10 justify-end w-full'>
-                                {
-                                    data.courseWork.map(course => {
-                                        return (
-                                            <li key={course.id} >
-                                                <DownloadFile file={course.file as Buffer} fileName={course.name as string} />
-                                            </li>
-                                        );
-                                    })
-                                }
-                            </ul>
-                        </div>
+                        {
+                            resume.resume?.file ? <div className='flex flex-row justify-between'>
+                                <p className='text-md'>Resume:</p>
+                                <DownloadFile file={resume.resume?.file as Buffer} fileName={resume.resume?.name as string} />
+                            </div> : <></>
+                        }
+                        {
+                            courseWork.courseWork ? <div className='flex flex-col w-full'>
+                                <p className='text-md'>Course Work:-</p>
+                                <ul className='mx-10 justify-end w-full'>
+                                    {
+                                        courseWork.courseWork.map(course => {
+                                            return (
+                                                <li key={course.id} >
+                                                    <DownloadFile file={course.file as Buffer} fileName={course.name as string} />
+                                                </li>
+                                            );
+                                        })
+                                    }
+                                </ul>
+                            </div> : <></>
+                        }
                     </div>
                 </div>
             </div>
