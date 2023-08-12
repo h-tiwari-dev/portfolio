@@ -1,6 +1,31 @@
+import DownloadFile from '@/components/common/downloadFile';
+import handleDownload from '@/components/common/downloadFile';
+import { PrismaClient } from '@prisma/client';
+import { log } from 'console';
 import Image from 'next/image';
 
-export default function Home() {
+async function getFiles() {
+    const prisma = new PrismaClient()
+    const resume = await prisma.file.findFirst({
+        where: {
+            fileType: 'RESUME'
+        }
+    })
+    const courseWork = await prisma.file.findMany({
+        where: {
+            fileType: 'COURSE_WORK'
+        }
+    })
+
+    return {
+        resume,
+        courseWork
+    }
+}
+
+export default async function Home() {
+    const data = await getFiles();
+
     return (
         <div>
             <div className="flex justify-center w-full">
@@ -55,20 +80,41 @@ export default function Home() {
                     Creating Fintech Products That Can Scale To Thousands Of Requests Per
                     Seconds.
                 </div>
-            </div>
-            <div className="mt-10">
-                <p className="text-xl">Technologies:-</p>
-                <div className="grid grid-cols-2 gap-4 mx-10">
-                    <ul className="list-disc">
-                        <li>Rust</li>
-                        <li>Postgres</li>
-                        <li>Next Js</li>
-                    </ul>
-                    <ul className="list-disc">
-                        <li>Nest Js</li>
-                        <li>Tailwind</li>
-                        <li>Node Js</li>
-                    </ul>
+                <div className="mt-10">
+                    <p className="text-xl">Technologies:-</p>
+                    <div className="grid grid-cols-2 gap-4 mx-10">
+                        <ul className="list-disc">
+                            <li>Rust</li>
+                            <li>Postgres</li>
+                            <li>Next Js</li>
+                        </ul>
+                        <ul className="list-disc">
+                            <li>Nest Js</li>
+                            <li>Tailwind</li>
+                            <li>Node Js</li>
+                        </ul>
+                    </div>
+                    <p className="text-xl mt-5">Files:-</p>
+                    <div className="flex flex-col mx-10">
+                        <div className='flex flex-row justify-between'>
+                            <p className='text-md'>Resume:</p>
+                            <DownloadFile file={data.resume?.file as Buffer} fileName={data.resume?.name as string} />
+                        </div>
+                        <div className='flex flex-col w-full'>
+                            <p className='text-md'>Course Work:-</p>
+                            <ul className='mx-10 justify-end w-full'>
+                                {
+                                    data.courseWork.map(course => {
+                                        return (
+                                            <li key={course.id} >
+                                                <DownloadFile file={course.file as Buffer} fileName={course.name as string} />
+                                            </li>
+                                        );
+                                    })
+                                }
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

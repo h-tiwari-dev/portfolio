@@ -512,6 +512,15 @@ html.js :where([class*="taos:"]:not(.taos-init)) {
 .mt-10 {
   margin-top: 2.5rem;
 }
+.mt-5 {
+  margin-top: 1.25rem;
+}
+.ml-10 {
+  margin-left: 2.5rem;
+}
+.mt-2 {
+  margin-top: 0.5rem;
+}
 .flex {
   display: flex;
 }
@@ -536,6 +545,14 @@ html.js :where([class*="taos:"]:not(.taos-init)) {
 .w-screen {
   width: 100vw;
 }
+.w-fit {
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.w-min {
+  width: -moz-min-content;
+  width: min-content;
+}
 .max-w-lg {
   max-width: 32rem;
 }
@@ -557,8 +574,17 @@ html.js :where([class*="taos:"]:not(.taos-init)) {
 .items-center {
   align-items: center;
 }
+.justify-end {
+  justify-content: flex-end;
+}
 .justify-center {
   justify-content: center;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.justify-around {
+  justify-content: space-around;
 }
 .gap-4 {
   gap: 1rem;
@@ -568,8 +594,22 @@ html.js :where([class*="taos:"]:not(.taos-init)) {
   margin-right: calc(0.5rem * var(--tw-space-x-reverse));
   margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
+.self-end {
+  align-self: flex-end;
+}
+.overflow-hidden {
+  overflow: hidden;
+}
+.overflow-clip {
+  overflow: clip;
+}
 .overflow-y-scroll {
   overflow-y: scroll;
+}
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .rounded-full {
   border-radius: 9999px;
@@ -585,6 +625,10 @@ html.js :where([class*="taos:"]:not(.taos-init)) {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
+.bg-red-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 242 242 / var(--tw-bg-opacity));
+}
 .p-4 {
   padding: 1rem;
 }
@@ -596,6 +640,15 @@ html.js :where([class*="taos:"]:not(.taos-init)) {
 }
 .text-center {
   text-align: center;
+}
+.text-end {
+  text-align: end;
+}
+.align-baseline {
+  vertical-align: baseline;
+}
+.align-bottom {
+  vertical-align: bottom;
 }
 .text-3xl {
   font-size: 1.875rem;

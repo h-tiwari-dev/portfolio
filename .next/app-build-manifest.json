@@ -5,20 +5,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/home/page.js"
     ],
-    "/head": [
+    "/home/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/head.js"
+      "static/chunks/app/home/layout.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/layout.js"
     ],
-    "/home/layout": [
+    "/head": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/home/layout.js"
+      "static/chunks/app/head.js"
     ]
   }
 }
