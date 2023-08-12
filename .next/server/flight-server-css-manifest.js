@@ -1,12 +1,12 @@
 self.__RSC_CSS_MANIFEST={
   "__entry_css_mods__": {
-    "/home/harsh/portfolio/app/page": [
-      "/home/harsh/portfolio/app/globals.css",
-      "/home/harsh/portfolio/node_modules/@next/font/google/target.css?{\"path\":\"app/layout.tsx\",\"import\":\"Space_Mono\",\"arguments\":[{\"weight\":\"400\",\"subsets\":[\"latin\"]}],\"variableName\":\"spaceMono\"}"
+    "/Users/harshtiwari/Documents/portfolio/app/page": [
+      "/Users/harshtiwari/Documents/portfolio/app/globals.css",
+      "/Users/harshtiwari/Documents/portfolio/node_modules/@next/font/google/target.css?{\"path\":\"app/layout.tsx\",\"import\":\"Space_Mono\",\"arguments\":[{\"weight\":\"400\",\"subsets\":[\"latin\"]}],\"variableName\":\"spaceMono\"}"
     ]
   },
-  "/home/harsh/portfolio/app/layout.tsx": [
-    "/home/harsh/portfolio/node_modules/@next/font/google/target.css?{\"path\":\"app/layout.tsx\",\"import\":\"Space_Mono\",\"arguments\":[{\"weight\":\"400\",\"subsets\":[\"latin\"]}],\"variableName\":\"spaceMono\"}",
-    "/home/harsh/portfolio/app/globals.css"
+  "/Users/harshtiwari/Documents/portfolio/app/layout.tsx": [
+    "/Users/harshtiwari/Documents/portfolio/node_modules/@next/font/google/target.css?{\"path\":\"app/layout.tsx\",\"import\":\"Space_Mono\",\"arguments\":[{\"weight\":\"400\",\"subsets\":[\"latin\"]}],\"variableName\":\"spaceMono\"}",
+    "/Users/harshtiwari/Documents/portfolio/app/globals.css"
   ]
 }
