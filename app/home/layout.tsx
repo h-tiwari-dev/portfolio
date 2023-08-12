@@ -9,7 +9,7 @@ export default async function HomeLayout({
 }: {
     children: React.ReactNode;
 }) {
-
+    console.log(Number.parseInt(process.env.LOOKING_FOR_WORK ?? '0') === 1);
     return (
         <div>
             <div
@@ -19,12 +19,12 @@ export default async function HomeLayout({
               scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-black overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full
               `}
             >
-                {/* {
-                    process.env.LOOKING_FOR_WORK === 'true' ??  */}
-                <div className="fixed top-0 left-0 right-0 bg-red-800 text-white font-bold text-center">
-                    I'm looking for work. Give me money!
-                </div>
-                {/* } */}
+                {
+                    Number.parseInt(process.env.LOOKING_FOR_WORK ?? "0") === 1 ?
+                        <div className="fixed top-0 left-0 right-0 bg-red-800 text-white font-bold text-center">
+                            I'm looking for work. Give me money!
+                        </div> : <></>
+                }
                 {children}
             </div>
             <div className="fixed bottom-0 left-0 right-0 p-4 text-center">
