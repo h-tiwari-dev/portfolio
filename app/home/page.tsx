@@ -1,7 +1,6 @@
 import DownloadFile from '@/components/common/downloadFile';
-import handleDownload from '@/components/common/downloadFile';
+import GameOfLife from '@/components/common/gameOfLife';
 import { PrismaClient } from '@prisma/client';
-import { log } from 'console';
 import Image from 'next/image';
 
 export async function getResume() {
@@ -125,6 +124,9 @@ export default async function Home() {
                             </div> : <></>
                         }
                     </div>
+                </div>
+                <div className='mt-5'>
+                    <GameOfLife height={90} width={32} />
                 </div>
             </div>
         </div>

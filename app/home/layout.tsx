@@ -1,15 +1,11 @@
 import { navItems } from '@/constants/navItems';
-import { Space_Mono } from '@next/font/google';
 import Link from 'next/link';
-import { getResume } from './page';
-import DownloadFile from '@/components/common/downloadFile';
 
 export default async function HomeLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    console.log(Number.parseInt(process.env.LOOKING_FOR_WORK ?? '0') === 1);
     return (
         <div>
             <div
