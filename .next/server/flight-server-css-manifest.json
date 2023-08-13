@@ -3,6 +3,14 @@
     "/Users/harshtiwari/Documents/portfolio/app/home/page": [
       "/Users/harshtiwari/Documents/portfolio/app/globals.css",
       "/Users/harshtiwari/Documents/portfolio/node_modules/@next/font/google/target.css?{\"path\":\"app/layout.tsx\",\"import\":\"Space_Mono\",\"arguments\":[{\"weight\":\"400\",\"subsets\":[\"latin\"]}],\"variableName\":\"spaceMono\"}"
+    ],
+    "/Users/harshtiwari/Documents/portfolio/app/home/pictures/page": [
+      "/Users/harshtiwari/Documents/portfolio/app/globals.css",
+      "/Users/harshtiwari/Documents/portfolio/node_modules/@next/font/google/target.css?{\"path\":\"app/layout.tsx\",\"import\":\"Space_Mono\",\"arguments\":[{\"weight\":\"400\",\"subsets\":[\"latin\"]}],\"variableName\":\"spaceMono\"}"
+    ],
+    "/Users/harshtiwari/Documents/portfolio/app/home/blogs/page": [
+      "/Users/harshtiwari/Documents/portfolio/app/globals.css",
+      "/Users/harshtiwari/Documents/portfolio/node_modules/@next/font/google/target.css?{\"path\":\"app/layout.tsx\",\"import\":\"Space_Mono\",\"arguments\":[{\"weight\":\"400\",\"subsets\":[\"latin\"]}],\"variableName\":\"spaceMono\"}"
     ]
   },
   "/Users/harshtiwari/Documents/portfolio/app/layout.tsx": [

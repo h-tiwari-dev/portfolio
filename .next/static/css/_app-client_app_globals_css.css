@@ -609,10 +609,6 @@ html.js :where([class*="taos:"]:not(.taos-init)) {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
-.bg-red-50 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(254 242 242 / var(--tw-bg-opacity));
-}
 .p-4 {
   padding: 1rem;
 }
