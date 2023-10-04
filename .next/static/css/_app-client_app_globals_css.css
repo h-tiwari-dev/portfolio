@@ -495,6 +495,9 @@ html.js :where([class*="taos:"]:not(.taos-init)) {
 .top-0 {
   top: 0px;
 }
+.m-2 {
+  margin: 0.5rem;
+}
 .mx-10 {
   margin-left: 2.5rem;
   margin-right: 2.5rem;
@@ -527,14 +530,27 @@ html.js :where([class*="taos:"]:not(.taos-init)) {
 .grid {
   display: grid;
 }
+.h-20 {
+  height: 5rem;
+}
 .h-24 {
   height: 6rem;
+}
+.h-56 {
+  height: 14rem;
+}
+.h-fit {
+  height: -moz-fit-content;
+  height: fit-content;
 }
 .min-h-screen {
   min-height: 100vh;
 }
 .w-10\/12 {
   width: 83.333333%;
+}
+.w-2\/4 {
+  width: 50%;
 }
 .w-24 {
   width: 6rem;
@@ -591,8 +607,14 @@ html.js :where([class*="taos:"]:not(.taos-init)) {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.rounded {
+  border-radius: 0.25rem;
+}
 .rounded-full {
   border-radius: 9999px;
+}
+.border {
+  border-width: 1px;
 }
 .border-2 {
   border-width: 2px;
@@ -608,6 +630,9 @@ html.js :where([class*="taos:"]:not(.taos-init)) {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+.p-2 {
+  padding: 0.5rem;
 }
 .p-4 {
   padding: 1rem;
@@ -648,6 +673,10 @@ html.js :where([class*="taos:"]:not(.taos-init)) {
 .text-blue-500 {
   --tw-text-opacity: 1;
   color: rgb(59 130 246 / var(--tw-text-opacity));
+}
+.text-red-500 {
+  --tw-text-opacity: 1;
+  color: rgb(239 68 68 / var(--tw-text-opacity));
 }
 .text-white {
   --tw-text-opacity: 1;
@@ -789,6 +818,16 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+.focus\:border-blue-500:focus {
+  --tw-border-opacity: 1;
+  border-color: rgb(59 130 246 / var(--tw-border-opacity));
+}
+
+.focus\:outline-none:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
 }
 
 @media (min-width: 640px) {
