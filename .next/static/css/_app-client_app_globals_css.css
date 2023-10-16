@@ -567,6 +567,9 @@ html.js :where([class*="taos:"]:not(.taos-init)) {
 .flex-grow {
   flex-grow: 1;
 }
+.resize {
+  resize: both;
+}
 .list-disc {
   list-style-type: disc;
 }

@@ -6,7 +6,7 @@ self.__RSC_CSS_MANIFEST={
     ]
   },
   "/Users/harshtiwari/Documents/portfolio/app/layout.tsx": [
-    "/Users/harshtiwari/Documents/portfolio/node_modules/@next/font/google/target.css?{\"path\":\"app/layout.tsx\",\"import\":\"Space_Mono\",\"arguments\":[{\"weight\":\"400\",\"subsets\":[\"latin\"]}],\"variableName\":\"spaceMono\"}",
-    "/Users/harshtiwari/Documents/portfolio/app/globals.css"
+    "/Users/harshtiwari/Documents/portfolio/app/globals.css",
+    "/Users/harshtiwari/Documents/portfolio/node_modules/@next/font/google/target.css?{\"path\":\"app/layout.tsx\",\"import\":\"Space_Mono\",\"arguments\":[{\"weight\":\"400\",\"subsets\":[\"latin\"]}],\"variableName\":\"spaceMono\"}"
   ]
 }
