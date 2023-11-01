@@ -212,8 +212,8 @@ self.__RSC_MANIFEST={
   "__edge_ssr_module_mapping__": {},
   "__entry_css_files__": {
     "/Users/harshtiwari/Documents/portfolio/app/layout": [
-      "static/css/_app-client_node_modules_next_font_google_target_css_path_app_layout_tsx_import_Space_Mono_ar-21cd75.css",
-      "static/css/_app-client_app_globals_css.css"
+      "static/css/_app-client_app_globals_css.css",
+      "static/css/_app-client_node_modules_next_font_google_target_css_path_app_layout_tsx_import_Space_Mono_ar-21cd75.css"
     ]
   },
   "/Users/harshtiwari/Documents/portfolio/components/common/downloadFile.tsx": {
@@ -580,21 +580,21 @@ self.__RSC_MANIFEST={
       "async": false
     }
   },
-  "/Users/harshtiwari/Documents/portfolio/app/globals.css": {
-    "default": {
-      "id": "null",
-      "name": "default",
-      "chunks": [
-        "static/css/_app-client_app_globals_css.css"
-      ]
-    }
-  },
   "/Users/harshtiwari/Documents/portfolio/node_modules/@next/font/google/target.css?{\"path\":\"app/layout.tsx\",\"import\":\"Space_Mono\",\"arguments\":[{\"weight\":\"400\",\"subsets\":[\"latin\"]}],\"variableName\":\"spaceMono\"}": {
     "default": {
       "id": "null",
       "name": "default",
       "chunks": [
         "static/css/_app-client_node_modules_next_font_google_target_css_path_app_layout_tsx_import_Space_Mono_ar-21cd75.css"
+      ]
+    }
+  },
+  "/Users/harshtiwari/Documents/portfolio/app/globals.css": {
+    "default": {
+      "id": "null",
+      "name": "default",
+      "chunks": [
+        "static/css/_app-client_app_globals_css.css"
       ]
     }
   }

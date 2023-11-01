@@ -1,36 +1,9 @@
 import DownloadFile from '@/components/common/downloadFile';
 import GameOfLife from '@/components/common/gameOfLife';
-import { PrismaClient } from '@prisma/client';
+import { fileNames } from '@/constants/files';
 import Image from 'next/image';
 
-export async function getResume() {
-    const prisma = new PrismaClient()
-    const resume = await prisma.file.findFirst({
-        where: {
-            fileType: 'RESUME'
-        }
-    })
-    return {
-        resume,
-    }
-}
-
-async function getCourseWork() {
-    const prisma = new PrismaClient()
-    const courseWork = await prisma.file.findMany({
-        where: {
-            fileType: 'COURSE_WORK'
-        }
-    })
-
-    return {
-        courseWork
-    }
-}
 export default async function Home() {
-    const resume = await getResume();
-    const courseWork = await getCourseWork();
-
     return (
         <div>
             <div className="flex justify-center w-full">
@@ -101,28 +74,21 @@ export default async function Home() {
                     </div>
                     <p className="text-xl mt-5">Files:-</p>
                     <div className="flex flex-col mx-10">
-                        {
-                            resume.resume?.file ? <div className='flex flex-row justify-between'>
-                                <p className='text-md'>Resume:</p>
-                                <DownloadFile file={resume.resume?.file as Buffer} fileName={resume.resume?.name as string} />
-                            </div> : <></>
-                        }
-                        {
-                            courseWork.courseWork ? <div className='flex flex-col w-full'>
-                                <p className='text-md'>Course Work:-</p>
-                                <ul className='mx-10 justify-end w-full'>
-                                    {
-                                        courseWork.courseWork.map(course => {
-                                            return (
-                                                <li key={course.id} >
-                                                    <DownloadFile file={course.file as Buffer} fileName={course.name as string} />
-                                                </li>
-                                            );
-                                        })
-                                    }
-                                </ul>
-                            </div> : <></>
-                        }
+                        <div className='flex flex-row justify-between'>
+                            <p className='text-md'>Resume:</p>
+                            <DownloadFile fileName={fileNames.resume} />
+                        </div>
+                        <div className='flex flex-col w-full'>
+                            <p className='text-md'>Course Work:-</p>
+                            <ul className='mx-10 justify-end w-full'>
+                                <li key={fileNames.courseWork_DSA} >
+                                    <DownloadFile fileName={fileNames.courseWork_DSA} />
+                                </li>
+                                <li key={fileNames.courseWork_DLS} >
+                                    <DownloadFile fileName={fileNames.courseWork_DLS} />
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div className='mt-5'>

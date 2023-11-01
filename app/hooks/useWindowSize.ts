@@ -21,7 +21,7 @@ const useWindowDimensions = (): WindowDimentions => {
         handleResize();
         window.addEventListener('resize', handleResize);
         return (): void => window.removeEventListener('resize', handleResize);
-    }, []); // Empty array ensures that effect is only run on mount
+    }, []);  // Empty array ensures that effect is only run on mount
 
     return windowDimensions;
 };
