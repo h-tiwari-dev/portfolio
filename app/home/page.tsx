@@ -52,11 +52,7 @@ export default async function Home() {
             </div>
             <div className="max-w-lg mx-auto mt-10">
                 <div className="w-full">
-                    Hi, I'm A Full Stack Software Engineer with over 2.+ years of professional experience.
-                    I Primarily Work With Technologies Like Mongo DB, Node JS,
-                    Typescript, React Js, Angular Js, Nest Js, Postgresql. I've Experience In
-                    Creating Fintech Products That Can Scale To Thousands Of Requests Per
-                    Seconds.
+                    Hi, I am a Full Stack Software Engineer with over 2 years of professional experience. I primarily work with technologies such as MongoDB, Node.js, TypeScript, React.js, Angular.js, Nest.js, and PostgreSQL. I have experience in creating fintech products capable of scaling to thousands of requests per second.
                 </div>
                 <div className="mt-10">
                     <p className="text-xl">Technologies:-</p>
