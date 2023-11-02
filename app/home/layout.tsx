@@ -10,8 +10,8 @@ export default async function HomeLayout({
         <div>
             <div
                 className={`
-                w-screen flex-grow font-bold 
-                flex justify-center pt-10 
+                w-screen 
+                font-bold pt-10 
                 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-black overflow-y-scroll scrollbar-thumb-rounded-full scrollbar-track-rounded-full
               `}
             >

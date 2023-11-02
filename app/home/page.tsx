@@ -52,9 +52,9 @@ export default async function Home() {
             </div>
             <div className="max-w-lg mx-auto mt-10">
                 <div className="w-full">
-                    Hi, I'm A Full Stack Software Engineer Working At A Fintech Startup
-                    Castler. I Primarily Work With Technologies Like Mongo DB, Node JS,
-                    Typescript, React Js, Angular Js, Nest Js, Java. I've Experience In
+                    Hi, I'm A Full Stack Software Engineer with over 2.+ years of professional experience.
+                    I Primarily Work With Technologies Like Mongo DB, Node JS,
+                    Typescript, React Js, Angular Js, Nest Js, Postgresql. I've Experience In
                     Creating Fintech Products That Can Scale To Thousands Of Requests Per
                     Seconds.
                 </div>
