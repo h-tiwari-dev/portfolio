@@ -1,4 +1,5 @@
 import { Space_Mono } from '@next/font/google';
+import { Analytics } from '@vercel/analytics/react';
 import './globals.css';
 
 const spaceMono = Space_Mono({
@@ -19,6 +20,7 @@ export default function RootLayout({
       <head />
       <body className={`min-h-screen bg-white ${spaceMono.className}`}>
         {children}
+        <Analytics />
       </body>
     </html>
   );
