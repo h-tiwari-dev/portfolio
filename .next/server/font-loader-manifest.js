@@ -1,8 +1,0 @@
-self.__FONT_LOADER_MANIFEST={
-  "pages": {},
-  "app": {
-    "/Users/harshtiwari/Documents/portfolio/node_modules/@next/font/google/target.css?{\"path\":\"app/layout.tsx\",\"import\":\"Space_Mono\",\"arguments\":[{\"weight\":\"400\",\"subsets\":[\"latin\"]}],\"variableName\":\"spaceMono\"}": [
-      "static/media/0cf0e55cc0ef3777.p.woff2"
-    ]
-  }
-}
