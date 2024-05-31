@@ -1,28 +1,30 @@
 import { Space_Mono } from '@next/font/google';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import './globals.css';
 
 const spaceMono = Space_Mono({
-  weight: '400',
-  subsets: ['latin'],
+    weight: '400',
+    subsets: ['latin'],
 });
 export default function RootLayout({
-  children,
+    children,
 }: {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }) {
-  return (
-    <html lang="en">
-      {/*
+    return (
+        <html lang="en">
+            {/*
         <head /> will contain the components returned by the nearest parent
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
-      <head />
-      <body className={`min-h-screen bg-white ${spaceMono.className}`}>
-        {children}
-        <Analytics />
-      </body>
-    </html>
-  );
+            <head />
+            <body className={`min-h-screen bg-white ${spaceMono.className}`}>
+                {children}
+                <Analytics />
+                <SpeedInsights />
+            </body>
+        </html>
+    );
 }
