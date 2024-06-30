@@ -1,3 +1,11 @@
 {
-  "/home/page": "app/home/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/home/page": "app/home/page.js",
+  "/home/tools/jsonToTypescript/page": "app/home/tools/jsonToTypescript/page.js",
+  "/home/pictures/page": "app/home/pictures/page.js",
+  "/home/tools/jsonToString/page": "app/home/tools/jsonToString/page.js",
+  "/home/tools/stringToJson/page": "app/home/tools/stringToJson/page.js",
+  "/home/projects/page": "app/home/projects/page.js",
+  "/home/tools/page": "app/home/tools/page.js",
+  "/home/blogs/page": "app/home/blogs/page.js"
 }
