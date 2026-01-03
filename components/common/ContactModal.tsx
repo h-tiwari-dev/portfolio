@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createPortal } from "react-dom";
-import { X, Terminal, Send, ShieldCheck, Mail, User, MessageSquare } from "lucide-react";
+import { X, Terminal, Send, ShieldCheck, Mail, User, Lock, Cpu, CheckCircle2 } from "lucide-react";
 
 interface ContactModalProps {
     isOpen: boolean;
@@ -54,7 +54,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-[#020617]/80 backdrop-blur-md"
+                        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
                     />
 
                     {/* Modal Window */}
@@ -63,58 +63,36 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 20 }}
                         transition={{ type: "spring", duration: 0.5 }}
-                        className="relative w-full max-w-lg bg-[#0a0f1e] border border-indigo-500/30 rounded-xl overflow-hidden shadow-[0_0_50px_rgba(99,102,241,0.2)]"
+                        className="relative w-full max-w-lg bg-[#0c0b0a] border border-amber-500/30 rounded-xl overflow-hidden shadow-[0_0_50px_rgba(245,158,11,0.2)]"
                     >
                         {/* Terminal Header */}
-                        <div className="bg-indigo-500/10 border-b border-indigo-500/20 p-3 flex items-center justify-between shrink-0">
+                        <div className="bg-amber-500/10 px-4 py-2 border-b border-amber-500/20 flex items-center justify-between">
                             <div className="flex items-center space-x-2">
-                                <Terminal size={14} className="text-indigo-400" />
-                                <span className="text-[10px] font-mono text-indigo-400 font-bold uppercase tracking-widest">
-                                    S_MESSAGE_DISPATCHER.EXE
-                                </span>
+                                <Terminal size={14} className="text-amber-400" />
+                                <span className="text-[10px] font-mono text-amber-400 font-bold uppercase tracking-widest">Secure_Comm_Terminal // 0xAF32</span>
                             </div>
-                            <button
-                                onClick={onClose}
-                                className="p-1 hover:bg-white/5 rounded transition-colors text-slate-500 hover:text-white"
-                            >
+                            <button onClick={onClose} className="text-slate-500 hover:text-white transition-colors">
                                 <X size={16} />
                             </button>
                         </div>
 
                         {/* Status Bar */}
-                        <div className="bg-black/40 px-4 py-2 flex items-center space-x-4 border-b border-white/5 shrink-0">
-                            <div className="flex items-center text-[9px] font-mono">
-                                <span className="text-slate-500 mr-2">STATE:</span>
-                                <span className={status === "success" ? "text-green-500" : "text-indigo-400"}>
-                                    {status === "idle" ? "READY_TO_DISPATCH" : status === "sending" ? "UPLOADING_PACKETS" : "DISPATCH_SUCCESS"}
-                                </span>
+                        <div className="bg-black/40 px-4 py-1.5 border-b border-white/5 flex items-center space-x-4">
+                            <div className="flex items-center text-[9px] text-slate-500">
+                                <ShieldCheck size={10} className="mr-1 text-green-500" />
+                                <span className="uppercase tracking-tighter">Encrypted</span>
                             </div>
-                            <div className="flex items-center text-[9px] font-mono">
-                                <span className="text-slate-500 mr-2">ID:</span>
-                                <span className="text-slate-300">MSG_{Math.random().toString(36).substring(7).toUpperCase()}</span>
+                            <div className="flex items-center text-[9px] text-slate-500">
+                                <Cpu size={10} className="mr-1 text-amber-500/50" />
+                                <span className="uppercase tracking-tighter">Host: local_node</span>
                             </div>
                         </div>
 
-                        {/* Form Body */}
                         <div className="p-6">
-                            {status === "success" ? (
-                                <motion.div
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    className="py-12 flex flex-col items-center justify-center text-center space-y-4"
-                                >
-                                    <div className="w-16 h-16 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center shadow-[0_0_30px_rgba(34,197,94,0.1)]">
-                                        <ShieldCheck size={32} className="text-green-500 animate-pulse" />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-lg font-bold text-white uppercase tracking-tight">Transmission Complete</h3>
-                                        <p className="text-[11px] font-mono text-slate-500 mt-1 uppercase">Message has been encrypted and dispatched to destination gateway.</p>
-                                    </div>
-                                </motion.div>
-                            ) : (
-                                <form onSubmit={handleSubmit} className="space-y-6">
-                                    <div className="space-y-4">
-                                        {/* Name Input */}
+                            {status === 'idle' ? (
+                                <form onSubmit={handleSubmit} className="space-y-5">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        {/* Name Field */}
                                         <div className="space-y-1.5 group">
                                             <div className="flex items-center text-[9px] font-mono text-slate-500 mb-1">
                                                 <User size={10} className="mr-1.5" />
@@ -123,13 +101,13 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                                             <input
                                                 required
                                                 placeholder="JOHN_DOE"
-                                                className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-[12px] font-mono text-white placeholder:text-slate-700 focus:outline-none focus:border-indigo-500/50 focus:bg-indigo-500/[0.03] transition-all"
+                                                className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-[12px] font-mono text-white placeholder:text-slate-700 focus:outline-none focus:border-amber-500/50 focus:bg-amber-500/[0.03] transition-all"
                                                 value={formData.name}
                                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                             />
                                         </div>
 
-                                        {/* Email Input */}
+                                        {/* Email Field */}
                                         <div className="space-y-1.5 group">
                                             <div className="flex items-center text-[9px] font-mono text-slate-500 mb-1">
                                                 <Mail size={10} className="mr-1.5" />
@@ -139,59 +117,81 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                                                 required
                                                 type="email"
                                                 placeholder="SOURCE@PROVIDER.COM"
-                                                className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-[12px] font-mono text-white placeholder:text-slate-700 focus:outline-none focus:border-indigo-500/50 focus:bg-indigo-500/[0.03] transition-all"
+                                                className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-[12px] font-mono text-white placeholder:text-slate-700 focus:outline-none focus:border-amber-500/50 focus:bg-amber-500/[0.03] transition-all"
                                                 value={formData.email}
                                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                             />
                                         </div>
+                                    </div>
 
-                                        {/* Message Input */}
-                                        <div className="space-y-1.5 group">
-                                            <div className="flex items-center text-[9px] font-mono text-slate-500 mb-1">
-                                                <MessageSquare size={10} className="mr-1.5" />
-                                                <span>SET_PAYLOAD:</span>
-                                            </div>
-                                            <textarea
-                                                required
-                                                rows={4}
-                                                placeholder="ENCRYPTED_MESSAGE_BLOCK"
-                                                className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-[12px] font-mono text-white placeholder:text-slate-700 focus:outline-none focus:border-indigo-500/50 focus:bg-indigo-500/[0.03] transition-all resize-none"
-                                                value={formData.message}
-                                                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                                            />
+                                    {/* Message Field */}
+                                    <div className="space-y-1.5">
+                                        <div className="flex items-center text-[9px] font-mono text-slate-500 mb-1">
+                                            <Lock size={10} className="mr-1.5" />
+                                            <span>PAYLOAD_RAW:</span>
                                         </div>
+                                        <textarea
+                                            required
+                                            rows={4}
+                                            placeholder="INITIATING_MESSAGE_BUFFER..."
+                                            className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-[12px] font-mono text-white placeholder:text-slate-700 focus:outline-none focus:border-amber-500/50 focus:bg-amber-500/[0.03] transition-all resize-none"
+                                            value={formData.message}
+                                            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                                        />
                                     </div>
 
-                                    {/* Action Area */}
-                                    <div className="pt-2">
-                                        {status === "sending" ? (
-                                            <div className="space-y-3">
-                                                <div className="flex items-center justify-between text-[10px] font-mono text-indigo-400">
-                                                    <span className="animate-pulse">TRANSMITTING...</span>
-                                                    <span>{Math.round(progress)}%</span>
-                                                </div>
-                                                <div className="h-1.5 w-full bg-black/60 rounded-full overflow-hidden border border-white/5">
-                                                    <motion.div
-                                                        initial={{ width: 0 }}
-                                                        animate={{ width: `${progress}%` }}
-                                                        className="h-full bg-indigo-500 shadow-[0_0_10px_#6366f1]"
-                                                    />
-                                                </div>
-                                                <div className="text-[9px] font-mono text-slate-600 text-center uppercase tracking-widest">
-                                                    Packet fragmentation detected // Re-routing via node_delta
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <button
-                                                type="submit"
-                                                className="w-full h-12 rounded-lg bg-indigo-500/10 border border-indigo-500/30 hover:bg-indigo-500/20 hover:border-indigo-500/60 transition-all flex items-center justify-center space-x-3 group active:scale-[0.98]"
-                                            >
-                                                <Send size={16} className="text-indigo-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                                                <span className="text-[11px] font-mono font-bold text-indigo-300 uppercase tracking-widest">Execute Dispatch</span>
-                                            </button>
-                                        )}
-                                    </div>
+                                    {/* Transmission Trigger */}
+                                    <button
+                                        type="submit"
+                                        className="w-full group/btn relative overflow-hidden bg-amber-500 text-black font-bold py-3 rounded-lg flex items-center justify-center space-x-2 hover:bg-amber-400 transition-all active:scale-[0.98]"
+                                    >
+                                        <Send size={16} className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
+                                        <span className="text-[12px] font-mono tracking-[0.2em] uppercase">Execute_Dispatch</span>
+
+                                        {/* Scanline effect on button */}
+                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:animate-[shimmer_1.5s_infinite]"></div>
+                                    </button>
                                 </form>
+                            ) : (
+                                <div className="py-12 flex flex-col items-center justify-center text-center">
+                                    {status === 'sending' ? (
+                                        <>
+                                            <div className="relative mb-6">
+                                                <div className="absolute inset-0 bg-amber-500/20 blur-xl animate-pulse rounded-full"></div>
+                                                <Cpu size={48} className="text-amber-500 animate-[spin_3s_linear_infinite]" />
+                                            </div>
+                                            <div className="text-amber-400 font-mono text-[11px] uppercase tracking-[0.3em] mb-4">
+                                                Transmitting_Packets...
+                                            </div>
+                                            <div className="w-full max-w-xs h-1 bg-white/5 rounded-full overflow-hidden">
+                                                <motion.div
+                                                    initial={{ width: 0 }}
+                                                    animate={{ width: "100%" }}
+                                                    transition={{ duration: 2 }}
+                                                    className="h-full bg-amber-500"
+                                                />
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <motion.div
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            className="flex flex-col items-center"
+                                        >
+                                            <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-6 border border-green-500/50">
+                                                <CheckCircle2 size={32} className="text-green-500" />
+                                            </div>
+                                            <h4 className="text-xl font-bold text-white mb-2 uppercase tracking-tighter">Transmission_Complete</h4>
+                                            <p className="text-[12px] text-slate-400 font-mono">ID: {Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
+                                            <button
+                                                onClick={onClose}
+                                                className="mt-8 text-[10px] text-amber-400 font-mono border border-amber-400/30 px-6 py-2 rounded-full hover:bg-amber-400/10 transition-all uppercase tracking-widest"
+                                            >
+                                                Return_to_Dashboard
+                                            </button>
+                                        </motion.div>
+                                    )}
+                                </div>
                             )}
                         </div>
 

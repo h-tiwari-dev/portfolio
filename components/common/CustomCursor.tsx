@@ -39,33 +39,33 @@ export default function CustomCursor() {
         <>
             {/* Central Dot */}
             <div
-                className="fixed top-0 left-0 w-1.5 h-1.5 bg-indigo-500 rounded-full pointer-events-none z-[100010] transition-transform duration-75 ease-out shadow-[0_0_10px_#818cf8]"
+                className="fixed top-0 left-0 w-1.5 h-1.5 bg-amber-500 rounded-full pointer-events-none z-[100010] transition-transform duration-75 ease-out shadow-[0_0_10px_#fbbf24]"
                 style={{
                     transform: `translate(${position.x - 3}px, ${position.y - 3}px)`,
                 }}
             />
             {/* Outer Ring */}
             <div
-                className={`fixed top-0 left-0 w-8 h-8 border border-indigo-500/30 rounded-full pointer-events-none z-[100009] transition-all duration-150 ease-out ${isMouseDown ? 'scale-75 border-green-500/50 bg-green-500/5' : 'scale-100'}`}
+                className={`fixed top-0 left-0 w-8 h-8 border border-amber-500/30 rounded-full pointer-events-none z-[100009] transition-all duration-150 ease-out ${isMouseDown ? 'scale-75 border-green-500/50 bg-green-500/5' : 'scale-100'}`}
                 style={{
                     transform: `translate(${position.x - 16}px, ${position.y - 16}px)`,
                 }}
             />
             {/* Crosshair Lines */}
             <div
-                className="fixed top-0 left-0 w-4 h-[1px] bg-indigo-500/20 pointer-events-none z-[100008]"
+                className="fixed top-0 left-0 w-4 h-[1px] bg-amber-500/20 pointer-events-none z-[100008]"
                 style={{ transform: `translate(${position.x - 20}px, ${position.y}px)` }}
             />
             <div
-                className="fixed top-0 left-0 w-4 h-[1px] bg-indigo-500/20 pointer-events-none z-[100008]"
+                className="fixed top-0 left-0 w-4 h-[1px] bg-amber-500/20 pointer-events-none z-[100008]"
                 style={{ transform: `translate(${position.x + 4}px, ${position.y}px)` }}
             />
             <div
-                className="fixed top-0 left-0 w-[1px] h-4 bg-indigo-500/20 pointer-events-none z-[100008]"
+                className="fixed top-0 left-0 w-[1px] h-4 bg-amber-500/20 pointer-events-none z-[100008]"
                 style={{ transform: `translate(${position.x}px, ${position.y - 20}px)` }}
             />
             <div
-                className="fixed top-0 left-0 w-[1px] h-4 bg-indigo-500/20 pointer-events-none z-[100008]"
+                className="fixed top-0 left-0 w-[1px] h-4 bg-amber-500/20 pointer-events-none z-[100008]"
                 style={{ transform: `translate(${position.x}px, ${position.y + 4}px)` }}
             />
         </>

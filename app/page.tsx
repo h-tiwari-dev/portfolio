@@ -9,7 +9,7 @@ import { BentoGrid, BentoGridItem } from "@/components/ui/BentoGrid";
 
 export default async function Home() {
   return (
-    <main className="h-screen w-screen bg-[#020617] p-4 md:p-6 overflow-hidden flex items-center justify-center relative">
+    <main className="h-screen w-screen bg-background p-4 md:p-6 overflow-hidden flex items-center justify-center relative">
       {/* Background Decorative Elements */}
       <div className="absolute inset-0 bg-grid opacity-20 pointer-events-none"></div>
       <div className="absolute inset-0 scanlines pointer-events-none"></div>
@@ -17,7 +17,7 @@ export default async function Home() {
       <BentoGrid className="w-full h-full relative z-10">
         {/* Identity: Top Left, 2x2 */}
         <BentoGridItem
-          className="md:col-span-2 md:row-span-2 shadow-[0_0_50px_-12px_rgba(99,102,241,0.15)]"
+          className="md:col-span-2 md:row-span-2 shadow-[0_0_50px_-12px_rgba(245,158,11,0.15)]"
           title="S_IDENTITY.SYS"
         >
           <Hero />
@@ -25,7 +25,7 @@ export default async function Home() {
 
         {/* Lifeline: Top Right, 2x2 */}
         <BentoGridItem
-          className="md:col-span-2 md:row-span-2 shadow-[0_0_50px_-12px_rgba(99,102,241,0.15)]"
+          className="md:col-span-2 md:row-span-2 shadow-[0_0_50px_-12px_rgba(245,158,11,0.15)]"
           title="S_LIFELINE.LOG"
         >
           <Experience />
@@ -33,7 +33,7 @@ export default async function Home() {
 
         {/* Simulation: Bottom Left, 2x2 */}
         <BentoGridItem
-          className="md:col-span-2 md:row-span-2 shadow-[0_0_50px_-12px_rgba(99,102,241,0.15)]"
+          className="md:col-span-2 md:row-span-2 shadow-[0_0_50px_-12px_rgba(245,158,11,0.15)]"
           title="S_SIMULATION.IO"
         >
           <GameOfLife />
@@ -41,7 +41,7 @@ export default async function Home() {
 
         {/* Kernel Stack: Bottom Middle-Left, 1x1 */}
         <BentoGridItem
-          className="md:col-span-1 md:row-span-1 shadow-[0_0_30px_-12px_rgba(99,102,241,0.1)]"
+          className="md:col-span-1 md:row-span-1 shadow-[0_0_30px_-12px_rgba(245,158,11,0.1)]"
           title="S_KERNEL.STACK"
         >
           <Skills />
@@ -49,7 +49,7 @@ export default async function Home() {
 
         {/* Telemetry: Bottom Middle-Right, 1x1 */}
         <BentoGridItem
-          className="md:col-span-1 md:row-span-1 shadow-[0_0_30px_-12px_rgba(99,102,241,0.1)]"
+          className="md:col-span-1 md:row-span-1 shadow-[0_0_30px_-12px_rgba(6,182,212,0.1)]"
           title="S_TELEMETRY.LIVE"
         >
           <SystemMetrics />
@@ -57,7 +57,7 @@ export default async function Home() {
 
         {/* Comms Link: Bottom Right, 1x2 */}
         <BentoGridItem
-          className="md:col-span-2 md:row-span-1 shadow-[0_0_30px_-12px_rgba(14,165,233,0.1)]"
+          className="md:col-span-2 md:row-span-1 shadow-[0_0_30px_-12px_rgba(6,182,212,0.1)]"
           title="S_COMMS.LINK"
         >
           <Socials />

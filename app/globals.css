@@ -10,40 +10,39 @@
   }
 
   /* Mouse position will be handled via JS in RootLayout to avoid lag */
-  /* Midnight Slate Theme */
-  --background: 222 47% 4%;
-  /* Slate 950 (#020617) */
-  --foreground: 210 40% 98%;
-  /* Slate 50 */
+  /* Industrial Amber Theme */
+  --background: 30 15% 2%;
+  /* Darker Slate */
+  --foreground: 38 100% 98%;
+  /* Warm White */
 
-  --card: 222 47% 11%;
-  /* Slate 900 */
-  --card-foreground: 210 40% 98%;
+  --card: 30 15% 4%;
+  --card-foreground: 38 100% 98%;
 
-  --popover: 222 47% 4%;
-  --popover-foreground: 210 40% 98%;
+  --popover: 222 47% 3%;
+  --popover-foreground: 38 100% 98%;
 
-  --primary: 244 75% 59%;
-  /* Indigo 500 (#6366f1) */
-  --primary-foreground: 210 40% 98%;
+  --primary: 38 92% 50%;
+  /* Amber 500 */
+  --primary-foreground: 222 47% 3%;
 
-  --secondary: 217 33% 17%;
-  /* Slate 800 */
-  --secondary-foreground: 210 40% 98%;
+  --secondary: 222 47% 12%;
+  --secondary-foreground: 38 92% 50%;
 
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%;
+  --muted: 222 47% 12%;
+  --muted-foreground: 215 20% 50%;
 
-  --accent: 199 89% 48%;
-  /* Sky 500 (#0ea5e9) */
-  --accent-foreground: 210 40% 98%;
+  --accent: 188 86% 53%;
+  /* Cyan 500 */
+  --accent-foreground: 222 47% 3%;
 
   --destructive: 0 84% 60%;
   --destructive-foreground: 210 40% 98%;
 
-  --border: 217 33% 17%;
-  --input: 217 33% 17%;
-  --ring: 244 75% 59%;
+  --border: 38 92% 50% / 0.1;
+  /* Amber border alpha */
+  --input: 38 92% 50% / 0.1;
+  --ring: 38 92% 50%;
 }
 
 @layer base {
@@ -58,7 +57,7 @@
 
 /* Glassmorphism Utilities */
 .glass {
-  background: rgba(15, 23, 42, 0.4);
+  background: rgba(15, 12, 10, 0.6);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -73,8 +72,8 @@
 .bg-grid {
   background-size: 40px 40px;
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    linear-gradient(to right, rgba(245, 158, 11, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(245, 158, 11, 0.03) 1px, transparent 1px);
 }
 
 .scanlines {

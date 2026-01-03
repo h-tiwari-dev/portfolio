@@ -10,8 +10,8 @@ export default function GameOfLife() {
 
     // Config
     const CELL_SIZE = 5;
-    const ALIVE_COLOR = "#818cf8";
-    const GLOW_COLOR = "rgba(129, 140, 248, 0.4)";
+    const ALIVE_COLOR = "#f59e0b";
+    const GLOW_COLOR = "rgba(245, 158, 11, 0.4)";
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -122,7 +122,7 @@ export default function GameOfLife() {
                 onTouchMove={(e) => handleInteraction(e.touches[0].clientX, e.touches[0].clientY)}
             />
             <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-5 group-hover/sim:opacity-20 transition-opacity">
-                <span className="text-[12px] font-mono uppercase tracking-[1em] text-indigo-400 font-bold">Simulation_Active</span>
+                <span className="text-[12px] font-mono uppercase tracking-[1em] text-amber-400 font-bold">Simulation_Active</span>
             </div>
             <div className="absolute bottom-2 right-2 pointer-events-none opacity-20">
                 <div className="text-[8px] font-mono text-slate-500">RES: {dims.w}x{dims.h}</div>
