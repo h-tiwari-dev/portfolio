@@ -14,14 +14,22 @@ export class Universe {
         this.height = height;
         this.cells = new Uint8Array(width * height);
         this.nextCells = new Uint8Array(width * height);
+        this.randomize();
+    }
 
-        for (let i = 0; i < width * height; i++) {
+    randomize(): void {
+        for (let i = 0; i < this.width * this.height; i++) {
             if (Math.random() > 0.8) { // Sparser initialization for background
                 this.cells[i] = Cell.Alive;
             } else {
                 this.cells[i] = Cell.Dead;
             }
         }
+    }
+
+    clear(): void {
+        this.cells.fill(Cell.Dead);
+        this.nextCells.fill(Cell.Dead);
     }
 
     private get_index(row: number, column: number): number {

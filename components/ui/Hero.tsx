@@ -8,21 +8,21 @@ export default function Hero() {
     return (
         <div className="flex flex-col items-center justify-center h-full w-full p-8 text-center relative overflow-hidden group">
             {/* Background Simulation */}
-            <div className="absolute inset-0 opacity-[0.4] group-hover:opacity-[0.7] transition-opacity duration-1000 pointer-events-none">
-                <div className="relative z-0 h-full w-full">
+            <div className="absolute inset-0 opacity-[0.4] group-hover:opacity-[0.7] transition-opacity duration-1000">
+                <div className="relative z-10 h-full w-full pointer-events-auto">
                     <GameOfLife />
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-b from-background/0 via-background/20 to-background z-10"></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-background/0 via-background/20 to-background z-20 pointer-events-none"></div>
             </div>
 
             {/* Background Decorative ID */}
-            <div className="absolute top-4 left-4 flex items-center space-x-2 opacity-40 group-hover:opacity-80 transition-opacity duration-500">
+            <div className="absolute top-4 left-4 flex items-center space-x-2 opacity-40 group-hover:opacity-80 transition-opacity duration-500 pointer-events-none">
                 <ShieldCheck size={14} className="text-amber-400" />
                 <span className="text-[10px] font-mono text-slate-300 uppercase tracking-widest">Authenticated_Entity</span>
                 <div className="w-1 h-3 bg-amber-500 animate-pulse"></div>
             </div>
 
-            <div className="absolute top-4 right-4 text-white/5 group-hover:text-amber-500/20 transition-colors">
+            <div className="absolute top-4 right-4 text-white/5 group-hover:text-amber-500/20 transition-colors pointer-events-none">
                 <Terminal size={120} strokeWidth={0.5} />
             </div>
 

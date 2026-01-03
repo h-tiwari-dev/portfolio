@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Share2, Github, Linkedin, Mail, Twitter, ChevronRight, FileDown, ExternalLink, Binary } from "lucide-react";
+import { Share2, Github, Linkedin, Mail, BookOpen, ChevronRight, FileDown, ExternalLink, Binary } from "lucide-react";
 import ContactModal from "@/components/common/ContactModal";
 import BinaryClock from "./BinaryClock";
 
@@ -11,7 +11,7 @@ export default function Socials() {
     const links = [
         { icon: Github, label: "GH_Vault", color: "group-hover:text-white", sub: "Source_Control", url: "https://github.com/h-tiwari-dev", id: "01" },
         { icon: Linkedin, label: "LI_Network", color: "group-hover:text-blue-400", sub: "Social_Sync", url: "https://www.linkedin.com/in/tiwari-ai-harsh/", id: "02" },
-        { icon: Twitter, label: "TW_Stream", color: "group-hover:text-sky-400", sub: "Broadcast_Net", url: "https://twitter.com", id: "03" },
+        { icon: BookOpen, label: "BG_Hub", color: "group-hover:text-purple-400", sub: "Tech_Logs", url: "https://htiwaridev.hashnode.dev", id: "03" },
         { icon: Mail, label: "EM_Gateway", color: "group-hover:text-red-400", sub: "Direct_Comms", onClick: () => setIsContactOpen(true), id: "04" },
     ];
 
