@@ -1,0 +1,148 @@
+"use client";
+
+import { Briefcase, Activity, Zap, Terminal, Cpu } from "lucide-react";
+
+const experiences = [
+    {
+        pid: "PID_1024",
+        company: "WellnessLiving",
+        role: "Sr. Software Engineer",
+        period: "2025 - PRESENT",
+        status: "STABLE_EXEC",
+        highlights: [
+            "Real-time warehouse (Debezium → Kafka → ClickHouse) with a semantic layer; cut <span class='text-indigo-400 font-bold'>time-to-insight 80%</span> and <span class='text-indigo-400 font-bold'>ad-hoc SQL 60%</span>.",
+            "pgvector LLM conversation intelligence on transcripts with Superset dashboards.",
+            "Stateless WebSocket platform via Kafka backplane; <span class='text-indigo-400 font-bold'>35% fewer disconnects</span> and <span class='text-indigo-400 font-bold'>18% fewer support tickets</span>."
+        ],
+        tech: ["KAFKA", "CLICKHOUSE", "PGVECTOR", "K8S", "DEBEZIUM"]
+    },
+    {
+        pid: "PID_0892",
+        company: "Kusho",
+        role: "Full Stack Developer",
+        period: "2023 - 2025",
+        status: "TERMINATED_EXIT_0",
+        highlights: [
+            "React Flow builder with 50+ nodes; <span class='text-indigo-400 font-bold'>40% faster test runs</span>, sub-200ms UI.",
+            "Playwright CDP-based automation with AST-driven action parsing; <span class='text-indigo-400 font-bold'>3x coverage</span>, <span class='text-indigo-400 font-bold'>70% less manual effort</span>.",
+            "Typed DSL unifying Postman/OpenAPI/GraphQL; reduced <span class='text-indigo-400 font-bold'>incident MTTR 25%</span> via LLM test gen.",
+            "Redis RQ pipeline with Pinecone vector search; <span class='text-indigo-400 font-bold'>45% higher throughput</span>, <span class='text-indigo-400 font-bold'>60% lower latency</span>."
+        ],
+        tech: ["REACT_FLOW", "PLAYWRIGHT", "REDIS", "PINECONE", "GRAFANA"]
+    },
+    {
+        pid: "PID_0441",
+        company: "Castler",
+        role: "Full Stack Developer",
+        period: "2021 - 2023",
+        status: "TERMINATED_EXIT_0",
+        highlights: [
+            "Event-driven payments processing <span class='text-indigo-400 font-bold'>INR 50Cr+/mo</span> and 2M+ txns; <span class='text-indigo-400 font-bold'>sub-200ms latency</span>, <span class='text-indigo-400 font-bold'>35% lower cost</span>.",
+            "Banking Security: Sonar/Snyk/OAuth2; cut <span class='text-indigo-400 font-bold'>critical vulns 40%</span> and ensured PCI compliance.",
+            "Migrated 200GB MongoDB → MySQL via Airflow; <span class='text-indigo-400 font-bold'>40% faster queries</span>, <span class='text-indigo-400 font-bold'>99.99% data accuracy</span>.",
+            "React 18 + XState FSM designer; <span class='text-indigo-400 font-bold'>60% faster workflow creation</span>, 67% adoption."
+        ],
+        tech: ["KAFKA", "REDIS", "MONGODB", "XSTATE", "AIRFLOW"]
+    }
+];
+
+export default function Experience() {
+    return (
+        <div className="h-full w-full p-6 overflow-hidden flex flex-col group relative">
+            {/* Header Trace */}
+            <div className="flex items-center justify-between mb-8 shrink-0 relative">
+                <div className="flex items-center">
+                    <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center mr-3 border border-indigo-500/20 shadow-[0_0_15px_-3px_rgba(99,102,241,0.3)]">
+                        <Activity size={18} className="text-indigo-400 animate-pulse" />
+                    </div>
+                    <div>
+                        <h3 className="text-[11px] font-bold text-indigo-400 uppercase tracking-[0.2em]">S_LIFELINE.SYS_LOG</h3>
+                        <div className="text-[9px] text-slate-500 font-mono flex items-center mt-0.5">
+                            <Terminal size={10} className="mr-1 opacity-50" />
+                            <span>TRACE_ACTIVE: 0x7A29B</span>
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => window.open('/resume.pdf', '_blank')}
+                        className="ml-6 flex items-center space-x-2 px-3 py-1 rounded border border-indigo-500/30 bg-indigo-500/5 hover:bg-indigo-500/20 hover:border-indigo-500/60 transition-all group/dl"
+                    >
+                        <span className="text-[9px] font-mono text-indigo-400 font-bold tracking-tighter">S_ARCHIVE.GET</span>
+                        <div className="w-px h-3 bg-indigo-500/20"></div>
+                        <span className="text-[8px] font-mono text-indigo-300 opacity-60 group-hover/dl:opacity-100 uppercase">Resume_v2.0</span>
+                    </button>
+                </div>
+                <div className="hidden lg:flex items-center space-x-4 opacity-40">
+                    <div className="flex flex-col items-end">
+                        <span className="text-[8px] font-mono text-slate-500">Uptime</span>
+                        <span className="text-[10px] font-mono text-indigo-300">1825.24h</span>
+                    </div>
+                    <div className="w-px h-6 bg-white/10"></div>
+                    <Cpu size={16} className="text-slate-600" />
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 flex-1 overflow-hidden relative">
+                {/* Horizontal Trace Line */}
+                <div className="absolute top-[4.5rem] left-0 right-0 h-px bg-gradient-to-r from-indigo-500/5 via-indigo-500/20 to-indigo-500/5 hidden md:block"></div>
+
+                {experiences.map((exp, index) => (
+                    <div key={index} className="flex flex-col relative group/item overflow-hidden">
+                        {/* Process ID & Status Header */}
+                        <div className="flex items-center justify-between mb-4 px-3 py-1.5 rounded-md bg-white/[0.03] border border-white/[0.05] group-hover/item:border-indigo-500/30 transition-all shrink-0">
+                            <span className="text-[9px] font-mono text-indigo-400/80 font-bold">{exp.pid}</span>
+                            <div className="flex items-center">
+                                <span className={`text-[8px] font-mono mr-2 ${index === 0 ? 'text-green-500' : 'text-slate-600'}`}>
+                                    {exp.status}
+                                </span>
+                                <div className={`w-1.5 h-1.5 rounded-full ${index === 0 ? 'bg-green-500 animate-ping' : 'bg-slate-700'}`}></div>
+                            </div>
+                        </div>
+
+                        <div className="mb-4 shrink-0 px-1">
+                            <div className="text-[11px] font-mono text-slate-400 mb-1">{exp.period}</div>
+                            <h4 className="text-[16px] font-bold text-white uppercase tracking-tight group-hover/item:text-indigo-300 transition-colors">
+                                {exp.role}
+                            </h4>
+                            <div className="text-[13px] text-indigo-400 font-mono font-bold mt-1.5 flex items-center">
+                                {exp.company}
+                                <Zap size={10} className="ml-2 text-indigo-500/40" />
+                            </div>
+                        </div>
+
+                        <div className="space-y-3 flex-1 overflow-y-auto scrollbar-none px-1 py-1">
+                            {exp.highlights.map((point, i) => (
+                                <div key={i} className="flex items-start text-[11px] text-slate-300 leading-relaxed font-light">
+                                    <div className="w-1.5 h-1.5 rounded-full border border-indigo-500/40 mt-1.5 mr-3 shrink-0 group-hover/item:border-indigo-400 transition-colors"></div>
+                                    <span dangerouslySetInnerHTML={{ __html: point }}></span>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="mt-4 flex flex-wrap gap-2 shrink-0 px-1 pb-1">
+                            {exp.tech.map((t, i) => (
+                                <span key={i} className="text-[10px] font-mono bg-indigo-500/10 text-indigo-200 px-2.5 py-1 rounded border border-indigo-500/20 hover:border-indigo-400/50 transition-colors">
+                                    {t}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Footer Metrics */}
+            <div className="mt-8 pt-5 border-t border-white/10 flex items-center justify-between shrink-0">
+                <div className="flex items-center space-x-6">
+                    <div className="flex items-center text-[11px] text-slate-400 font-mono">
+                        <div className="w-2 h-2 rounded-full bg-indigo-500/50 mr-2 shadow-[0_0_10px_rgba(99,102,241,0.5)]"></div>
+                        EDUC: B.TECH_CS.21
+                    </div>
+                    <div className="hidden sm:flex items-center text-[10px] text-slate-600 font-mono">
+                        <span className="mr-2 uppercase tracking-tighter">Availability:</span>
+                        <span className="text-indigo-400 font-bold">ACTIVE_POOL</span>
+                    </div>
+                </div>
+                <div className="text-[10px] text-slate-700 font-mono uppercase tracking-[0.3em] font-bold">STATE::SYNCED</div>
+            </div>
+        </div>
+    );
+}

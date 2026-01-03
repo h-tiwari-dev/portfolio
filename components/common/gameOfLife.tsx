@@ -1,104 +1,132 @@
 "use client";
-import { Cell, Universe } from "@/app/utils/gameOfLife";
-import { useEffect, useRef } from "react";
+import { Universe, Cell } from "@/app/utils/gameOfLife";
+import { useEffect, useRef, useState } from "react";
 
-export default function GameOfLife({ height, width }: { height: number, width: number }) {
-    const canvasRef = useRef<HTMLCanvasElement>(null)
+export default function GameOfLife() {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const universeRef = useRef<Universe | null>(null);
+    const [dims, setDims] = useState({ w: 0, h: 0 });
 
+    // Config
     const CELL_SIZE = 5;
-    const GRID_COLOR = "#CCCCCC";
-    const DEAD_COLOR = "#FFFFFF";
-    const ALIVE_COLOR = "#000000";
-
-    const universe = new Universe(height, width);
-    const _width = universe.width;
-    const _height = universe.height;
-    let canvas: HTMLCanvasElement | null = null;
-    let ctx: CanvasRenderingContext2D | null = null;
+    const ALIVE_COLOR = "#818cf8";
+    const GLOW_COLOR = "rgba(129, 140, 248, 0.4)";
 
     useEffect(() => {
-        canvas = canvasRef.current;
-        if (canvas !== null) {
-            canvas.height = (CELL_SIZE + 1) * _height + 1;
-            canvas.width = (CELL_SIZE + 1) * _width + 1;
+        const canvas = canvasRef.current;
+        const container = containerRef.current;
+        if (!canvas || !container) return;
 
-            ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext("2d", { alpha: false });
+        if (!ctx) return;
 
-            if (ctx) {
-                canvas.addEventListener("click", event => {
-                    if (canvas && ctx) {
-                        const boundingRect = canvas.getBoundingClientRect();
+        let animationId: number;
 
-                        const scaleX = canvas.width / boundingRect.width;
-                        const scaleY = canvas.height / boundingRect.height;
+        const init = () => {
+            const rect = container.getBoundingClientRect();
+            if (rect.width === 0 || rect.height === 0) return;
 
-                        const canvasLeft = (event.clientX - boundingRect.left) * scaleX;
-                        const canvasTop = (event.clientY - boundingRect.top) * scaleY;
+            canvas.width = rect.width;
+            canvas.height = rect.height;
 
-                        const row = Math.min(Math.floor(canvasTop / (CELL_SIZE + 1)), _height - 1);
-                        const col = Math.min(Math.floor(canvasLeft / (CELL_SIZE + 1)), _width - 1);
+            const cols = Math.floor(canvas.width / CELL_SIZE);
+            const rows = Math.floor(canvas.height / CELL_SIZE);
 
-                        universe.toggle_cell(row, col);
+            universeRef.current = new Universe(cols, rows);
+            setDims({ w: cols, h: rows });
+        };
 
-                        drawGrid(ctx);
-                        drawCells(ctx);
+        const draw = () => {
+            const universe = universeRef.current;
+            if (!universe) return;
+
+            // Manual clear for performance with alpha:false
+            ctx.fillStyle = "#020617";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const { width, height, cells } = universe;
+
+            ctx.fillStyle = ALIVE_COLOR;
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = GLOW_COLOR;
+
+            ctx.beginPath();
+            for (let row = 0; row < height; row++) {
+                for (let col = 0; col < width; col++) {
+                    const idx = row * width + col;
+                    if (cells[idx] === Cell.Alive) {
+                        ctx.rect(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE - 1, CELL_SIZE - 1);
                     }
-                });
+                }
+            }
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        };
+
+        const tick = () => {
+            if (universeRef.current) {
+                universeRef.current.tick();
+                draw();
+            }
+            animationId = requestAnimationFrame(tick);
+        };
+
+        // Initial setup
+        init();
+        tick();
+
+        const handleResize = () => {
+            init();
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            cancelAnimationFrame(animationId);
+        };
+    }, []);
+
+    const handleInteraction = (clientX: number, clientY: number) => {
+        const universe = universeRef.current;
+        const canvas = canvasRef.current;
+        if (!universe || !canvas) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+
+        const col = Math.floor(x / CELL_SIZE);
+        const row = Math.floor(y / CELL_SIZE);
+
+        if (col >= 0 && col < universe.width && row >= 0 && row < universe.height) {
+            const brushSize = 1;
+            for (let r = -brushSize; r <= brushSize; r++) {
+                for (let c = -brushSize; c <= brushSize; c++) {
+                    const targetRow = (row + r + universe.height) % universe.height;
+                    const targetCol = (col + c + universe.width) % universe.width;
+                    universe.cells[targetRow * universe.width + targetCol] = Cell.Alive;
+                }
             }
         }
-    }, [])
+    };
 
-    setInterval(() => {
-        if (canvas && ctx) {
-            universe.tick();
-            drawGrid(ctx);
-            drawCells(ctx);
-        }
-    }, 10);
-
-    const drawGrid = (ctx: CanvasRenderingContext2D) => {
-        ctx.beginPath();
-        ctx.strokeStyle = GRID_COLOR;
-
-        for (let i = 0; i <= _width; i++) {
-            ctx.moveTo(i * (CELL_SIZE + 1) + 1, 0);
-            ctx.lineTo(i * (CELL_SIZE + 1) + 1, (CELL_SIZE + 1) * _height + 1);
-        }
-
-        for (let j = 0; j <= _height; j++) {
-            ctx.moveTo(0, j * (CELL_SIZE + 1) + 1);
-            ctx.lineTo((CELL_SIZE + 1) * _width + 1, j * (CELL_SIZE + 1) + 1);
-        }
-
-        ctx.stroke();
-    }
-
-    const getIndex = (row: number, column: number) => {
-        return row * _width + column;
-    }
-
-    const drawCells = (ctx: CanvasRenderingContext2D) => {
-        ctx.beginPath();
-
-        for (let row = 0; row < _height; row++) {
-            for (let column = 0; column < _width; column++) {
-                const idx = getIndex(row, column);
-
-                ctx.fillStyle = universe.cells[idx] === Cell.Dead ? DEAD_COLOR : ALIVE_COLOR;
-
-                ctx.fillRect(
-                    column * (CELL_SIZE + 1) + 1,
-                    row * (CELL_SIZE + 1) + 1,
-                    CELL_SIZE,
-                    CELL_SIZE
-                )
-            }
-        }
-        ctx.stroke();
-    }
     return (
-        <div>
-            <canvas ref={canvasRef} />
+        <div ref={containerRef} className="w-full h-full min-h-[150px] relative overflow-hidden bg-slate-950/20 group/sim">
+            <canvas
+                ref={canvasRef}
+                className="absolute inset-0 w-full h-full cursor-crosshair z-10"
+                onMouseMove={(e) => handleInteraction(e.clientX, e.clientY)}
+                onMouseDown={(e) => handleInteraction(e.clientX, e.clientY)}
+                onTouchMove={(e) => handleInteraction(e.touches[0].clientX, e.touches[0].clientY)}
+            />
+            <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-5 group-hover/sim:opacity-20 transition-opacity">
+                <span className="text-[12px] font-mono uppercase tracking-[1em] text-indigo-400 font-bold">Simulation_Active</span>
+            </div>
+            <div className="absolute bottom-2 right-2 pointer-events-none opacity-20">
+                <div className="text-[8px] font-mono text-slate-500">RES: {dims.w}x{dims.h}</div>
+            </div>
         </div>
     )
 }
