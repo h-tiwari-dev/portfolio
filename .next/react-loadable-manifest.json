@@ -1,1 +1,8 @@
-{}
+{
+  "components/common/ContactModal.tsx -> @/app/actions": {
+    "id": "components/common/ContactModal.tsx -> @/app/actions",
+    "files": [
+      "static/chunks/_app-pages-browser_app_actions_ts.js"
+    ]
+  }
+}

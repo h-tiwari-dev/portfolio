@@ -11,35 +11,51 @@ interface ContactModalProps {
 }
 
 export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
-    const [status, setStatus] = useState<"idle" | "sending" | "success">("idle");
+    const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
     const [formData, setFormData] = useState({ name: "", email: "", message: "" });
     const [progress, setProgress] = useState(0);
+    const [errorMessage, setErrorMessage] = useState("");
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setStatus("sending");
+        setErrorMessage("");
 
-        // Simulated transmission animation
-        let p = 0;
-        const interval = setInterval(() => {
-            p += Math.random() * 15;
-            if (p >= 100) {
-                p = 100;
-                clearInterval(interval);
+        // Simulated transmission progress for aesthetic feel
+        const progressInterval = setInterval(() => {
+            setProgress(prev => Math.min(prev + Math.random() * 10, 95));
+        }, 100);
+
+        try {
+            const { sendEmail } = await import("@/app/actions");
+            const result = await sendEmail(formData);
+
+            clearInterval(progressInterval);
+            setProgress(100);
+
+            if (result.success) {
                 setStatus("success");
                 setTimeout(() => {
                     onClose();
                     setStatus("idle");
                     setFormData({ name: "", email: "", message: "" });
-                }, 2500);
+                    setProgress(0);
+                }, 3000);
+            } else {
+                setStatus("error");
+                setErrorMessage(result.error || "UPLINK_FAILURE: PACKET_LOSS_DETECTED");
             }
-            setProgress(p);
-        }, 150);
+        } catch (error) {
+            clearInterval(progressInterval);
+            setStatus("error");
+            setErrorMessage("CRITICAL_SYSTEM_FAULT: SIGNAL_TERMINATED");
+            console.error(error);
+        }
     };
 
     if (!mounted) return null;
@@ -166,13 +182,12 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                                             <div className="w-full max-w-xs h-1 bg-white/5 rounded-full overflow-hidden">
                                                 <motion.div
                                                     initial={{ width: 0 }}
-                                                    animate={{ width: "100%" }}
-                                                    transition={{ duration: 2 }}
+                                                    animate={{ width: `${progress}%` }}
                                                     className="h-full bg-amber-500"
                                                 />
                                             </div>
                                         </>
-                                    ) : (
+                                    ) : status === 'success' ? (
                                         <motion.div
                                             initial={{ opacity: 0, scale: 0.9 }}
                                             animate={{ opacity: 1, scale: 1 }}
@@ -188,6 +203,24 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                                                 className="mt-8 text-[10px] text-amber-400 font-mono border border-amber-400/30 px-6 py-2 rounded-full hover:bg-amber-400/10 transition-all uppercase tracking-widest"
                                             >
                                                 Return_to_Dashboard
+                                            </button>
+                                        </motion.div>
+                                    ) : (
+                                        <motion.div
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            className="flex flex-col items-center"
+                                        >
+                                            <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mb-6 border border-red-500/50">
+                                                <X size={32} className="text-red-500" />
+                                            </div>
+                                            <h4 className="text-xl font-bold text-white mb-2 uppercase tracking-tighter">Transmission_Failed</h4>
+                                            <p className="text-[12px] text-red-400/80 font-mono">{errorMessage}</p>
+                                            <button
+                                                onClick={() => setStatus("idle")}
+                                                className="mt-8 text-[10px] text-amber-400 font-mono border border-amber-400/30 px-6 py-2 rounded-full hover:bg-amber-400/10 transition-all uppercase tracking-widest"
+                                            >
+                                                Retry_Transmission
                                             </button>
                                         </motion.div>
                                     )}
