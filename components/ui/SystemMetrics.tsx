@@ -6,8 +6,10 @@ import { Zap, Activity } from "lucide-react";
 export default function SystemMetrics() {
     const [cpu, setCpu] = useState(45);
     const [memory, setMemory] = useState(62);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        setMounted(true);
         const interval = setInterval(() => {
             setCpu(prev => Math.min(100, Math.max(0, prev + (Math.random() - 0.5) * 15)));
             setMemory(prev => Math.min(100, Math.max(0, prev + (Math.random() - 0.5) * 5)));
@@ -15,9 +17,11 @@ export default function SystemMetrics() {
         return () => clearInterval(interval);
     }, []);
 
+    if (!mounted) return null;
+
     return (
-        <div className="p-5 h-full flex flex-col justify-center group">
-            <div className="flex items-center justify-between mb-6">
+        <div className="p-4 h-full flex flex-col justify-center group">
+            <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center text-[10px] font-bold text-amber-400 tracking-[0.2em] uppercase">
                     <Zap size={14} className="mr-2 text-amber-500" />
                     Live_Telemetry.log

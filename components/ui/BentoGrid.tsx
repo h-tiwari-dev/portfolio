@@ -11,7 +11,7 @@ export const BentoGrid = ({
     return (
         <div
             className={cn(
-                "grid grid-cols-1 md:grid-cols-4 md:grid-rows-4 gap-3 w-full h-full p-3 bg-grid scanline-moving relative",
+                "grid grid-cols-1 md:grid-cols-4 md:grid-rows-5 gap-3 w-full h-full p-3 bg-grid scanline-moving relative",
                 className
             )}
         >
@@ -56,6 +56,15 @@ export const BentoGridItem = ({
             <div className="flex-1 overflow-hidden relative">
                 {children}
             </div>
+
+            {/* Circuit-style Corner Accents */}
+            <div className="absolute top-10 left-0 w-2 h-[1px] bg-amber-500/20 group-hover:bg-amber-500/40 transition-colors pointer-events-none"></div>
+            <div className="absolute top-10 left-0 w-[1px] h-2 bg-amber-500/20 group-hover:bg-amber-500/40 transition-colors pointer-events-none"></div>
+
+            <div className="absolute bottom-4 right-0 w-4 h-[1px] bg-amber-500/10 group-hover:bg-amber-500/30 transition-colors pointer-events-none"></div>
+            <div className="absolute bottom-4 right-0 w-[1px] h-4 bg-amber-500/10 group-hover:bg-amber-500/30 transition-colors pointer-events-none"></div>
+
+            <div className="absolute top-1/2 right-0 w-1 h-[20px] border-y border-l border-amber-500/10 translate-y-[-50%] pointer-events-none group-hover:border-amber-500/30 transition-colors"></div>
 
             {/* Inner shadow effect */}
             <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent"></div>

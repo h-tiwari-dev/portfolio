@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import { Briefcase, Activity, Zap, Terminal, Cpu } from "lucide-react";
 
 const experiences = [
@@ -47,10 +48,30 @@ const experiences = [
 ];
 
 export default function Experience() {
+    const [mounted, setMounted] = useState(false);
+    const [streams, setStreams] = useState<string[]>([]);
+
+    useEffect(() => {
+        setMounted(true);
+        const newStreams = Array.from({ length: 15 }).map(() =>
+            " 0x" + Array.from({ length: 40 }).map(() => Math.floor(Math.random() * 256).toString(16).padStart(2, '0')).join(' 0x')
+        );
+        setStreams(newStreams);
+    }, []);
+
     return (
         <div className="h-full w-full p-6 overflow-hidden flex flex-col group relative">
+            {/* Background Data Stream (Subtle Hex) */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none overflow-hidden font-mono text-[9px] select-none leading-none flex flex-wrap content-start">
+                {mounted && streams.map((str, i) => (
+                    <div key={i} className="animate-[scrollUp_40s_linear_infinite] whitespace-nowrap opacity-40 shrink-0 w-full" style={{ animationDelay: `${i * -2.5}s` }}>
+                        {str}
+                    </div>
+                ))}
+            </div>
+
             {/* Header Trace */}
-            <div className="flex items-center justify-between mb-8 shrink-0 relative">
+            <div className="flex items-center justify-between mb-8 shrink-0 relative z-10">
                 <div className="flex items-center">
                     <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center mr-3 border border-amber-500/20 shadow-[0_0_15px_-3px_rgba(245,158,11,0.3)]">
                         <Activity size={18} className="text-amber-400 animate-pulse" />
@@ -62,14 +83,6 @@ export default function Experience() {
                             <span>TRACE_ACTIVE: 0x7A29B</span>
                         </div>
                     </div>
-                    <button
-                        onClick={() => window.open('/resume.pdf', '_blank')}
-                        className="ml-6 flex items-center space-x-2 px-3 py-1 rounded border border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/20 hover:border-amber-500/60 transition-all group/dl"
-                    >
-                        <span className="text-[9px] font-mono text-amber-400 font-bold tracking-tighter">S_ARCHIVE.GET</span>
-                        <div className="w-px h-3 bg-amber-500/20"></div>
-                        <span className="text-[8px] font-mono text-amber-300 opacity-60 group-hover/dl:opacity-100 uppercase">Resume_v2.0</span>
-                    </button>
                 </div>
                 <div className="hidden lg:flex items-center space-x-4 opacity-40">
                     <div className="flex flex-col items-end">

@@ -182,7 +182,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                                                 <CheckCircle2 size={32} className="text-green-500" />
                                             </div>
                                             <h4 className="text-xl font-bold text-white mb-2 uppercase tracking-tighter">Transmission_Complete</h4>
-                                            <p className="text-[12px] text-slate-400 font-mono">ID: {Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
+                                            <p className="text-[12px] text-slate-400 font-mono">ID: SEC_DATA_TX_OK</p>
                                             <button
                                                 onClick={onClose}
                                                 className="mt-8 text-[10px] text-amber-400 font-mono border border-amber-400/30 px-6 py-2 rounded-full hover:bg-amber-400/10 transition-all uppercase tracking-widest"

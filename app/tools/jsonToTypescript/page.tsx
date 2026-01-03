@@ -2,8 +2,6 @@
 import CardWrapper from '@/components/common/cardWrapper';
 import { json2ts } from 'json-ts';
 import { useEffect, useRef, useState } from 'react';
-import { json } from 'stream/consumers';
-import { JsxEmit } from 'typescript';
 
 export default function Home() {
   const [_json, _setJson] = useState<string>();

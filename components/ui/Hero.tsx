@@ -2,14 +2,23 @@
 
 import Image from "next/image";
 import { Terminal, Cpu, ShieldCheck } from "lucide-react";
+import GameOfLife from "@/components/common/gameOfLife";
 
 export default function Hero() {
     return (
         <div className="flex flex-col items-center justify-center h-full w-full p-8 text-center relative overflow-hidden group">
+            {/* Background Simulation */}
+            <div className="absolute inset-0 opacity-[0.5] group-hover:opacity-[0.8] transition-opacity duration-1000">
+                <div className="absolute inset-0 bg-gradient-to-b from-[#0c0b0a]/0 via-[#0c0b0a]/20 to-[#0c0b0a] z-0"></div>
+                <div className="relative z-10 h-full w-full">
+                    <GameOfLife />
+                </div>
+            </div>
+
             {/* Background Decorative ID */}
-            <div className="absolute top-4 left-4 flex items-center space-x-2 opacity-20 group-hover:opacity-40 transition-opacity">
+            <div className="absolute top-4 left-4 flex items-center space-x-2 opacity-40 group-hover:opacity-80 transition-opacity duration-500">
                 <ShieldCheck size={14} className="text-amber-400" />
-                <span className="text-[10px] font-mono text-slate-500 uppercase">Authenticated_Entity</span>
+                <span className="text-[10px] font-mono text-slate-300 uppercase tracking-widest">Authenticated_Entity</span>
                 <div className="w-1 h-3 bg-amber-500 animate-pulse"></div>
             </div>
 
@@ -36,19 +45,25 @@ export default function Hero() {
             </div>
 
             {/* Introduction with Premium Typography */}
-            <div className="text-center z-10 max-w-lg">
+            <div className="text-center z-10 max-w-lg relative">
+                {/* Subtle backdrop for text legibility */}
+                <div className="absolute inset-x-0 inset-y-[-20px] bg-[#0c0b0a]/60 blur-2xl rounded-full -z-10"></div>
+
                 <div className="flex items-center justify-center space-x-2 mb-2">
                     <span className="h-px w-8 bg-gradient-to-r from-transparent to-amber-500/50"></span>
                     <span className="text-[10px] font-mono text-amber-400 tracking-[0.3em] uppercase">Security Level 10</span>
                     <span className="h-px w-8 bg-gradient-to-l from-transparent to-amber-500/50"></span>
                 </div>
 
-                <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-3 leading-tight">
-                    Engineer <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-cyan-400">Architect</span>
+                <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-3 leading-tight drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:animate-pulse">
+                    Engineer <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-cyan-400">
+                        Architect
+                        <span className="absolute inset-0 bg-clip-text text-amber-500 opacity-0 group-hover:opacity-40 group-hover:animate-ping -z-10 blur-sm">Architect</span>
+                    </span>
                 </h1>
 
-                <p className="text-sm md:text-base text-slate-400 font-light mb-6 leading-relaxed">
-                    Building <span className="text-amber-400/90 font-medium">horizontally scalable platforms</span> and <span className="text-cyan-400/90 font-medium">real-time AI infrastructure</span>. Core focus on event-driven architectures and distributed pipelines.
+                <p className="text-sm md:text-base text-slate-200 font-normal mb-8 leading-relaxed">
+                    Building <span className="text-amber-400 font-semibold">horizontally scalable platforms</span> and <span className="text-cyan-400 font-semibold">real-time AI infrastructure</span>. Core focus on event-driven architectures and distributed pipelines.
                 </p>
 
                 <div className="flex items-center justify-center space-x-6">
