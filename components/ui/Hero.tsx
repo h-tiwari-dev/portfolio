@@ -8,11 +8,11 @@ export default function Hero() {
     return (
         <div className="flex flex-col items-center justify-center h-full w-full p-8 text-center relative overflow-hidden group">
             {/* Background Simulation */}
-            <div className="absolute inset-0 opacity-[0.5] group-hover:opacity-[0.8] transition-opacity duration-1000">
-                <div className="absolute inset-0 bg-gradient-to-b from-[#0c0b0a]/0 via-[#0c0b0a]/20 to-[#0c0b0a] z-0"></div>
-                <div className="relative z-10 h-full w-full">
+            <div className="absolute inset-0 opacity-[0.4] group-hover:opacity-[0.7] transition-opacity duration-1000 pointer-events-none">
+                <div className="relative z-0 h-full w-full">
                     <GameOfLife />
                 </div>
+                <div className="absolute inset-0 bg-gradient-to-b from-background/0 via-background/20 to-background z-10"></div>
             </div>
 
             {/* Background Decorative ID */}
@@ -55,12 +55,36 @@ export default function Hero() {
                     <span className="h-px w-8 bg-gradient-to-l from-transparent to-amber-500/50"></span>
                 </div>
 
-                <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-3 leading-tight drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:animate-pulse">
-                    Engineer <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-cyan-400">
-                        Architect
-                        <span className="absolute inset-0 bg-clip-text text-amber-500 opacity-0 group-hover:opacity-40 group-hover:animate-ping -z-10 blur-sm">Architect</span>
-                    </span>
-                </h1>
+                <div className="relative inline-block mb-3">
+                    {/* Main Title Layer */}
+                    <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-white leading-tight relative z-10">
+                        SR. SOFTWARE <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-200 to-cyan-400 bg-[length:200%_100%] animate-[text-shimmer_3s_infinite_linear]">ENGINEER</span>
+                    </h1>
+
+                    {/* Glitch Overlay - Mapped to match exactly to parent wrap */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-80 transition-opacity pointer-events-none z-20">
+                        {/* Red Shift */}
+                        <h1 className="absolute top-0 left-0 w-full text-4xl md:text-5xl font-black tracking-tighter text-amber-500/20 translate-x-[2px] leading-tight select-none">
+                            SR. SOFTWARE <span className="">ENGINEER</span>
+                        </h1>
+                        {/* Blue Shift */}
+                        <h1 className="absolute top-0 left-0 w-full text-4xl md:text-5xl font-black tracking-tighter text-cyan-500/20 -translate-x-[2px] leading-tight select-none">
+                            SR. SOFTWARE <span className="">ENGINEER</span>
+                        </h1>
+
+                        {/* Scanning Lines (Internal) */}
+                        <div className="absolute left-0 right-0 h-[1px] bg-white/20 blur-[1px] animate-[scan_2s_infinite_linear]"></div>
+                    </div>
+                </div>
+
+                {/* Technical Meta Tag - Moved outside the title flow to prevent wrapping issues */}
+                <div className="flex justify-center mb-6 h-4">
+                    <div className="opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+                        <span className="text-[8px] font-mono text-cyan-500/60 uppercase tracking-[0.6em] border-x border-cyan-500/20 px-4">
+                            System_Architect // v4.0.Final
+                        </span>
+                    </div>
+                </div>
 
                 <p className="text-sm md:text-base text-slate-200 font-normal mb-8 leading-relaxed">
                     Building <span className="text-amber-400 font-semibold">horizontally scalable platforms</span> and <span className="text-cyan-400 font-semibold">real-time AI infrastructure</span>. Core focus on event-driven architectures and distributed pipelines.

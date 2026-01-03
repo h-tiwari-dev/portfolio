@@ -17,10 +17,8 @@ export default function SystemMetrics() {
         return () => clearInterval(interval);
     }, []);
 
-    if (!mounted) return null;
-
     return (
-        <div className="p-4 h-full flex flex-col justify-center group">
+        <div className={`p-4 h-full flex flex-col justify-center group transition-opacity duration-700 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center text-[10px] font-bold text-amber-400 tracking-[0.2em] uppercase">
                     <Zap size={14} className="mr-2 text-amber-500" />

@@ -5,7 +5,17 @@
 :root {
 
   /* Custom System Cursor */
-  * {
+  html,
+  body,
+  p,
+  a,
+  button,
+  h1,
+  h2,
+  h3,
+  h4,
+  span,
+  div {
     cursor: none !important;
   }
 
@@ -159,12 +169,32 @@
 }
 
 @keyframes scan {
-  from {
-    transform: translateY(-100%);
+  0% {
+    top: -10%;
+    opacity: 0;
   }
 
-  to {
-    transform: translateY(300%);
+  25% {
+    opacity: 1;
+  }
+
+  75% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 110%;
+    opacity: 0;
+  }
+}
+
+@keyframes text-shimmer {
+  0% {
+    background-position: 200% center;
+  }
+
+  100% {
+    background-position: -200% center;
   }
 }
 

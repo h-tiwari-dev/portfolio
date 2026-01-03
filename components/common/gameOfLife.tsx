@@ -18,7 +18,7 @@ export default function GameOfLife() {
         const container = containerRef.current;
         if (!canvas || !container) return;
 
-        const ctx = canvas.getContext("2d", { alpha: false });
+        const ctx = canvas.getContext("2d", { alpha: true });
         if (!ctx) return;
 
         let animationId: number;
@@ -41,9 +41,8 @@ export default function GameOfLife() {
             const universe = universeRef.current;
             if (!universe) return;
 
-            // Manual clear for performance with alpha:false
-            ctx.fillStyle = "#020617";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Clear the canvas to maintain transparency
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             const { width, height, cells } = universe;
 
