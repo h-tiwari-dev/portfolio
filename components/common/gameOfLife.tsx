@@ -130,10 +130,11 @@ export default function GameOfLife() {
     };
 
     return (
-        <div ref={containerRef} className="w-full h-full min-h-[150px] relative overflow-hidden bg-slate-950/20 group/sim">
+        <div ref={containerRef} className="w-full h-full min-h-[200px] md:min-h-[150px] relative overflow-hidden bg-slate-950/20 group/sim touch-pan-y">
             <canvas
                 ref={canvasRef}
                 className="absolute inset-0 w-full h-full cursor-crosshair z-10"
+                style={{ touchAction: 'auto' }}
                 onMouseDown={(e) => {
                     setIsDrawing(true);
                     handleInteraction(e.clientX, e.clientY, true);

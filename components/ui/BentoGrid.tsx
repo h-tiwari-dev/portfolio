@@ -11,7 +11,7 @@ export const BentoGrid = ({
     return (
         <div
             className={cn(
-                "grid grid-cols-1 md:grid-cols-4 md:grid-rows-5 gap-3 w-full h-full p-3 bg-grid scanline-moving relative",
+                "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 xl:grid-rows-5 gap-3 w-full min-h-screen p-2 md:p-4 bg-grid scanline-moving relative",
                 className
             )}
         >
@@ -53,7 +53,7 @@ export const BentoGridItem = ({
                     <div className="text-[11px] text-white/80 font-mono tracking-tighter uppercase font-bold">{title || "SYS_PROCESS"}</div>
                 </div>
             </div>
-            <div className="flex-1 overflow-hidden relative">
+            <div className="flex-1 overflow-auto relative min-h-0">
                 {children}
             </div>
 

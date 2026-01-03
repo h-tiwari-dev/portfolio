@@ -6,7 +6,7 @@ import GameOfLife from "@/components/common/gameOfLife";
 
 export default function Hero() {
     return (
-        <div className="flex flex-col items-center justify-center h-full w-full p-8 text-center relative overflow-hidden group">
+        <div className="flex flex-col items-center justify-start h-full w-full p-4 md:p-6 text-center relative overflow-hidden group">
             {/* Background Simulation */}
             <div className="absolute inset-0 opacity-[0.4] group-hover:opacity-[0.7] transition-opacity duration-1000">
                 <div className="relative z-10 h-full w-full pointer-events-auto">
@@ -27,9 +27,9 @@ export default function Hero() {
             </div>
 
             {/* Profile Image with Enhanced Glow */}
-            <div className="relative mb-8 group shrink-0">
+            <div className="relative mb-3 md:mb-4 mt-4 md:mt-6 group shrink-0">
                 <div className="absolute -inset-2 bg-gradient-to-r from-amber-500 to-cyan-500 rounded-full blur-xl opacity-10 group-hover:opacity-30 transition-opacity duration-1000"></div>
-                <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-white/10 shadow-[0_0_30px_rgba(245,158,11,0.2)]">
+                <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-white/10 shadow-[0_0_30px_rgba(245,158,11,0.2)]">
                     <Image
                         src="/profile.jpeg"
                         alt="Harsh Tiwari"
@@ -39,8 +39,8 @@ export default function Hero() {
                         priority
                     />
                 </div>
-                <div className="absolute -bottom-2 -right-2 bg-slate-900 border border-amber-500/50 p-1 rounded shadow-lg">
-                    <Cpu size={14} className="text-amber-400 animate-spin-slow" />
+                <div className="absolute -bottom-1 -right-1 md:-bottom-2 md:-right-2 bg-slate-900 border border-amber-500/50 p-1 rounded shadow-lg">
+                    <Cpu size={12} className="text-amber-400 animate-spin-slow" />
                 </div>
             </div>
 
@@ -55,25 +55,25 @@ export default function Hero() {
                     <span className="h-px w-8 bg-gradient-to-l from-transparent to-amber-500/50"></span>
                 </div>
 
-                <div className="relative inline-block mb-3">
+                <div className="relative mb-3 grid grid-cols-1">
                     {/* Main Title Layer */}
-                    <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-white leading-tight relative z-10">
+                    <h1 className="col-start-1 row-start-1 text-2xl md:text-5xl font-black tracking-tighter text-white leading-tight relative z-10">
                         SR. SOFTWARE <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-200 to-cyan-400 bg-[length:200%_100%] animate-[text-shimmer_3s_infinite_linear]">ENGINEER</span>
                     </h1>
 
-                    {/* Glitch Overlay - Mapped to match exactly to parent wrap */}
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-80 transition-opacity pointer-events-none z-20">
+                    {/* Glitch Overlay - Perfectly aligned via grid stacking */}
+                    <div className="col-start-1 row-start-1 opacity-0 group-hover:opacity-80 transition-opacity pointer-events-none z-20 grid grid-cols-1">
                         {/* Red Shift */}
-                        <h1 className="absolute top-0 left-0 w-full text-4xl md:text-5xl font-black tracking-tighter text-amber-500/20 translate-x-[2px] leading-tight select-none">
+                        <h1 className="col-start-1 row-start-1 text-2xl md:text-5xl font-black tracking-tighter text-amber-500/20 translate-x-[2px] leading-tight select-none">
                             SR. SOFTWARE <span className="">ENGINEER</span>
                         </h1>
                         {/* Blue Shift */}
-                        <h1 className="absolute top-0 left-0 w-full text-4xl md:text-5xl font-black tracking-tighter text-cyan-500/20 -translate-x-[2px] leading-tight select-none">
+                        <h1 className="col-start-1 row-start-1 text-2xl md:text-5xl font-black tracking-tighter text-cyan-500/20 -translate-x-[2px] leading-tight select-none">
                             SR. SOFTWARE <span className="">ENGINEER</span>
                         </h1>
 
                         {/* Scanning Lines (Internal) */}
-                        <div className="absolute left-0 right-0 h-[1px] bg-white/20 blur-[1px] animate-[scan_2s_infinite_linear]"></div>
+                        <div className="absolute left-0 right-0 h-[1px] bg-white/20 blur-[1px] animate-[scan_2s_infinite_linear] top-1/2"></div>
                     </div>
                 </div>
 
@@ -86,7 +86,7 @@ export default function Hero() {
                     </div>
                 </div>
 
-                <p className="text-sm md:text-base text-slate-200 font-normal mb-8 leading-relaxed">
+                <p className="text-sm md:text-base text-slate-200 font-normal mb-4 md:mb-6 leading-relaxed">
                     Building <span className="text-amber-400 font-semibold">horizontally scalable platforms</span> and <span className="text-cyan-400 font-semibold">real-time AI infrastructure</span>. Core focus on event-driven architectures and distributed pipelines.
                 </p>
 

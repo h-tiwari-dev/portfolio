@@ -37,7 +37,7 @@ export default function Skills() {
                 </h3>
             </div>
 
-            <div className="flex-1 overflow-y-auto scrollbar-none grid grid-cols-2 gap-2 pr-1">
+            <div className="flex-1 overflow-y-auto scrollbar-none grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 pr-1">
                 {categories.map((cat, idx) => (
                     <div key={idx} className="space-y-1.5 overflow-hidden mb-2">
                         <div className="text-[14px] font-mono text-slate-400 uppercase tracking-tighter flex items-center mb-0.5">

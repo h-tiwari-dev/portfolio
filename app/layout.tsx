@@ -28,7 +28,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <head />
-            <body className={`min-h-screen bg-background overflow-hidden font-sans antialiased text-white ${spaceMono.variable} ${inter.variable}`}>
+            <body className={`min-h-screen bg-background overflow-x-hidden font-sans antialiased text-white ${spaceMono.variable} ${inter.variable}`}>
                 {
                     Number.parseInt(process.env.LOOKING_FOR_WORK ?? "0") === 1 ?
                         <div className="fixed top-0 left-0 right-0 bg-red-800 text-white font-bold text-center z-50">

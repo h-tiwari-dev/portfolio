@@ -19,6 +19,18 @@
     cursor: none !important;
   }
 
+  html {
+    height: -webkit-fill-available;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
   /* Mouse position will be handled via JS in RootLayout to avoid lag */
   /* Industrial Amber Theme */
   --background: 30 15% 2%;

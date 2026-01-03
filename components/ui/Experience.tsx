@@ -94,14 +94,14 @@ export default function Experience() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 flex-1 overflow-hidden relative">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 overflow-y-auto lg:overflow-visible relative pr-1 scrollbar-none mb-4 items-start">
                 {/* Horizontal Trace Line */}
-                <div className="absolute top-[4.5rem] left-0 right-0 h-px bg-gradient-to-r from-amber-500/5 via-amber-500/20 to-amber-500/5 hidden md:block"></div>
+                <div className="absolute top-[4.5rem] left-0 right-0 h-px bg-gradient-to-r from-amber-500/5 via-amber-500/20 to-amber-500/5 hidden lg:block"></div>
 
                 {experiences.map((exp, index) => (
-                    <div key={index} className="flex flex-col relative group/item overflow-hidden">
+                    <div key={index} className="flex flex-col relative group/item min-h-0 mb-8 lg:mb-0">
                         {/* Process ID & Status Header */}
-                        <div className="flex items-center justify-between mb-4 px-3 py-1.5 rounded-md bg-white/[0.03] border border-white/[0.05] group-hover/item:border-amber-500/30 transition-all shrink-0">
+                        <div className="flex items-center justify-between mb-3 px-3 py-1.5 rounded-md bg-white/[0.03] border border-white/[0.05] group-hover/item:border-amber-500/30 transition-all shrink-0">
                             <span className="text-[9px] font-mono text-amber-400/80 font-bold">{exp.pid}</span>
                             <div className="flex items-center">
                                 <span className={`text-[8px] font-mono mr-2 ${index === 0 ? 'text-green-500' : 'text-slate-600'}`}>
@@ -111,29 +111,29 @@ export default function Experience() {
                             </div>
                         </div>
 
-                        <div className="mb-4 shrink-0 px-1">
-                            <div className="text-[11px] font-mono text-slate-400 mb-1">{exp.period}</div>
-                            <h4 className="text-[16px] font-bold text-white uppercase tracking-tight group-hover/item:text-amber-300 transition-colors">
+                        <div className="mb-3 shrink-0 px-1">
+                            <div className="text-[10px] font-mono text-slate-500 mb-1">{exp.period}</div>
+                            <h4 className="text-[14px] lg:text-[16px] font-bold text-white uppercase tracking-tight group-hover/item:text-amber-300 transition-colors leading-tight">
                                 {exp.role}
                             </h4>
-                            <div className="text-[13px] text-amber-400 font-mono font-bold mt-1.5 flex items-center">
+                            <div className="text-[12px] lg:text-[13px] text-amber-400 font-mono font-bold mt-1.5 flex items-center">
                                 {exp.company}
                                 <Zap size={10} className="ml-2 text-amber-500/40" />
                             </div>
                         </div>
 
-                        <div className="space-y-3 flex-1 overflow-y-auto scrollbar-none px-1 py-1">
+                        <div className="space-y-2.5 flex-1 lg:overflow-y-auto scrollbar-none px-1 py-1 min-h-0">
                             {exp.highlights.map((point, i) => (
-                                <div key={i} className="flex items-start text-[12px] text-slate-300 leading-relaxed font-bold">
+                                <div key={i} className="flex items-start text-[11px] lg:text-[12px] text-slate-300 leading-relaxed font-bold break-words">
                                     <div className="w-1.5 h-1.5 rounded-full border border-amber-500/40 mt-1.5 mr-3 shrink-0 group-hover/item:border-amber-400 transition-colors"></div>
                                     <span dangerouslySetInnerHTML={{ __html: point }}></span>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="mt-4 flex flex-wrap gap-2 shrink-0 px-1 pb-1">
+                        <div className="mt-4 flex flex-wrap gap-1.5 shrink-0 px-1 pb-1">
                             {exp.tech.map((t, i) => (
-                                <span key={i} className="text-[10px] font-mono bg-amber-500/10 text-amber-200 px-2.5 py-1 rounded border border-amber-500/20 hover:border-amber-400/50 transition-colors">
+                                <span key={i} className="text-[9px] font-mono bg-amber-500/10 text-amber-200 px-2 py-0.5 rounded border border-amber-500/20 hover:border-amber-400/50 transition-colors">
                                     {t}
                                 </span>
                             ))}
@@ -143,7 +143,7 @@ export default function Experience() {
             </div>
 
             {/* Footer Metrics */}
-            <div className="mt-8 pt-5 border-t border-white/10 flex items-center justify-between shrink-0">
+            <div className="mt-auto pt-5 border-t border-white/10 flex items-center justify-between shrink-0">
                 <div className="flex items-center space-x-6">
                     <div className="flex items-center text-[11px] text-slate-400 font-mono">
                         <div className="w-2 h-2 rounded-full bg-amber-500/50 mr-2 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
