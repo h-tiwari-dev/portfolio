@@ -20,12 +20,12 @@ export default function Socials() {
             {/* Background Grid */}
             <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
 
-            <div className="flex items-center justify-between mb-3 shrink-0 relative z-10">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 shrink-0 relative z-10 gap-y-2 sm:gap-y-0">
                 <div className="flex items-center text-[10px] font-bold text-cyan-400 tracking-[0.2em] uppercase">
                     <Share2 size={14} className="mr-2 text-cyan-500" />
                     Comms_Interface.link
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 self-end sm:self-auto">
                     <div className="opacity-80">
                         <BinaryClock />
                     </div>
@@ -45,10 +45,10 @@ export default function Socials() {
                         <div className="text-[9px] font-mono text-amber-500/60 font-bold uppercase tracking-tight">
                             Identity.fetch_resume()
                         </div>
-                        <div className="text-[12px] text-white font-bold tracking-tight flex items-center">
+                        <div className="text-[10px] sm:text-[12px] text-white font-bold tracking-tight flex flex-wrap items-center gap-y-0.5">
                             <span className="opacity-70">system_service.dl</span>
                             <span className="text-amber-400/80">(</span>
-                            <span className="text-amber-400">&apos;harsh_resume_new.pdf&apos;</span>
+                            <span className="text-amber-400 break-all sm:break-normal">&apos;harsh_resume_new.pdf&apos;</span>
                             <span className="text-amber-400/80">)</span>
                             <ChevronRight size={14} className="ml-1 text-amber-500/40" />
                         </div>
@@ -114,7 +114,7 @@ export default function Socials() {
             </div>
 
             <div className="mt-2 pt-2 border-t border-white/5 flex justify-center shrink-0">
-                <div className="text-[8px] text-slate-600 font-mono flex items-center space-x-6">
+                <div className="text-[8px] text-slate-600 font-mono flex flex-wrap justify-center gap-x-6 gap-y-1">
                     <span className="flex items-center"><div className="w-1.5 h-1.5 bg-cyan-500 rounded-full mr-2 shadow-[0_0_5px_#06b6d4]"></div> UPLINK: STABLE</span>
                     <span className="flex items-center"><div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2 shadow-[0_0_5px_#22c55e]"></div> LATENCY: 12ms</span>
                     <span className="flex items-center"><div className="w-1.5 h-1.5 bg-amber-500 rounded-full mr-2 shadow-[0_0_5px_#f59e0b]"></div> BUFFER: 0%</span>
