@@ -37,19 +37,20 @@ export default function Skills() {
                 </h3>
             </div>
 
-            <div className="flex-1 overflow-y-auto scrollbar-none grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 pr-1">
+            <div className="flex-1 overflow-y-auto scrollbar-none grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 pr-1 content-between">
                 {categories.map((cat, idx) => (
                     <div key={idx} className="space-y-1.5 overflow-hidden mb-2">
                         <div className="text-[14px] font-mono text-slate-400 uppercase tracking-tighter flex items-center mb-0.5">
                             <div className="w-1 h-1 bg-amber-500/50 rounded-full mr-1.5"></div>
                             {cat.name}
                         </div>
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap gap-1.5">
                             {cat.skills.map((skill, i) => (
                                 <span
                                     key={i}
-                                    className="bg-amber-500/5 text-slate-300 text-[12px] font-mono px-1.5 py-0.5 rounded border border-amber-500/10 hover:border-amber-400/40 transition-all cursor-default"
+                                    className="bg-amber-500/5 text-slate-300 text-[10px] font-mono px-2 py-1 rounded-sm border border-amber-500/10 hover:border-amber-400/40 transition-all cursor-default flex items-center group/skill"
                                 >
+                                    <span className="text-amber-500/30 mr-1.5 group-hover/skill:text-amber-500/60 transition-colors">[{`0x${(skill.length * i + 10).toString(16).toUpperCase()}`}]</span>
                                     {skill}
                                 </span>
                             ))}

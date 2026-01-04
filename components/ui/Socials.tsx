@@ -16,8 +16,11 @@ export default function Socials() {
     ];
 
     return (
-        <div className="p-4 h-full flex flex-col group/comms">
-            <div className="flex items-center justify-between mb-3 shrink-0">
+        <div className="p-4 h-full flex flex-col group/comms relative overflow-hidden">
+            {/* Background Grid */}
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
+
+            <div className="flex items-center justify-between mb-3 shrink-0 relative z-10">
                 <div className="flex items-center text-[10px] font-bold text-cyan-400 tracking-[0.2em] uppercase">
                     <Share2 size={14} className="mr-2 text-cyan-500" />
                     Comms_Interface.link

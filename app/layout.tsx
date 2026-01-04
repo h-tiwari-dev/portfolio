@@ -1,4 +1,4 @@
-import { Space_Mono, Inter } from 'next/font/google';
+import { Space_Grotesk, JetBrains_Mono } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import Link from 'next/link';
@@ -7,15 +7,14 @@ import GameOfLife from '@/components/common/gameOfLife';
 
 import './globals.css';
 
-const spaceMono = Space_Mono({
-    weight: ['400', '700'],
+const jetbrainsMono = JetBrains_Mono({
     subsets: ['latin'],
-    variable: '--font-space-mono',
+    variable: '--font-jetbrains-mono',
 });
 
-const inter = Inter({
+const spaceGrotesk = Space_Grotesk({
     subsets: ['latin'],
-    variable: '--font-inter',
+    variable: '--font-space-grotesk',
 });
 
 import CustomCursor from '@/components/common/CustomCursor';
@@ -28,7 +27,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <head />
-            <body className={`min-h-screen bg-background overflow-x-hidden font-sans antialiased text-white ${spaceMono.variable} ${inter.variable}`}>
+            <body className={`min-h-screen bg-background overflow-x-hidden font-sans antialiased text-white ${jetbrainsMono.variable} ${spaceGrotesk.variable}`}>
                 {
                     Number.parseInt(process.env.LOOKING_FOR_WORK ?? "0") === 1 ?
                         <div className="fixed top-0 left-0 right-0 bg-red-800 text-white font-bold text-center z-50">

@@ -51,8 +51,8 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-inter)"],
-        mono: ["var(--font-space-mono)"],
+        sans: ["var(--font-space-grotesk)"],
+        mono: ["var(--font-jetbrains-mono)"],
       },
     },
   },
