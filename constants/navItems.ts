@@ -5,5 +5,5 @@ export const navItems: {
         { name: 'Home', url: '#home' },
         { name: 'Skills', url: '#skills' },
         { name: 'Projects', url: '#projects' },
-        { name: 'Blogs', url: 'https://htiwaridev.hashnode.dev/' },
+        { name: 'Blogs', url: 'https://betriumalpha.hashnode.dev/' },
     ];
