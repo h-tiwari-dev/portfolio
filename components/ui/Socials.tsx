@@ -11,7 +11,7 @@ export default function Socials() {
     const links = [
         { icon: Github, label: "GH_Vault", color: "group-hover:text-white", sub: "Source_Control", url: "https://github.com/h-tiwari-dev", id: "01" },
         { icon: Linkedin, label: "LI_Network", color: "group-hover:text-blue-400", sub: "Social_Sync", url: "https://www.linkedin.com/in/tiwari-ai-harsh/", id: "02" },
-        { icon: BookOpen, label: "BG_Hub", color: "group-hover:text-purple-400", sub: "Tech_Logs", url: "https://htiwaridev.hashnode.dev", id: "03" },
+        { icon: BookOpen, label: "BG_Hub", color: "group-hover:text-purple-400", sub: "Tech_Logs", url: "https://betriumalpha.hashnode.dev", id: "03" },
         { icon: Mail, label: "EM_Gateway", color: "group-hover:text-red-400", sub: "Direct_Comms", onClick: () => setIsContactOpen(true), id: "04" },
     ];
 
