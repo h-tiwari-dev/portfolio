@@ -224,17 +224,28 @@
   animation: fade-in-up 0.5s ease-out forwards;
 }
 
+/* Hide scrollbar for clean snap scroll experience */
+.snap-scroll-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.snap-scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Default scrollbar for other elements */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(var(--background));
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
   background: hsl(var(--muted));
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {

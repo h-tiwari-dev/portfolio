@@ -20,5 +20,13 @@
   ],
   "rules": {
     "react/react-in-jsx-scope": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["components/three/**/*.tsx"],
+      "rules": {
+        "react/no-unknown-property": "off"
+      }
+    }
+  ]
 }
