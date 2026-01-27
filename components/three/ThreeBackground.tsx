@@ -1,11 +1,13 @@
-"use client";
+'use client';
 
-import { Suspense, useState, useEffect } from "react";
-import { Canvas } from "@react-three/fiber";
-import GlobeScene from "./GlobeScene";
+import { Suspense, useState, useEffect } from 'react';
+import { Canvas } from '@react-three/fiber';
+import GlobeScene from './GlobeScene';
+import { useSection } from '@/contexts/SectionContext';
 
 export default function ThreeBackground() {
   const [isMobile, setIsMobile] = useState(false);
+  const { activeSection } = useSection();
 
   useEffect(() => {
     const checkMobile = () => {
@@ -13,8 +15,8 @@ export default function ThreeBackground() {
     };
 
     checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   return (
@@ -25,15 +27,15 @@ export default function ThreeBackground() {
         gl={{
           antialias: true,
           alpha: true,
-          powerPreference: "high-performance",
+          powerPreference: 'high-performance',
         }}
-        style={{ background: "transparent" }}
+        style={{ background: 'transparent' }}
       >
         <Suspense fallback={null}>
           <ambientLight intensity={0.1} />
-          <GlobeScene isMobile={isMobile} />
+          <GlobeScene isMobile={isMobile} activeSection={activeSection} />
         </Suspense>
-        <fog attach="fog" args={["#0c0b0a", 4, 12]} />
+        <fog attach="fog" args={['#0c0b0a', 4, 12]} />
       </Canvas>
     </div>
   );

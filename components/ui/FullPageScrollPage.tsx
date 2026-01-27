@@ -14,6 +14,7 @@ import Skills from '@/components/ui/Skills';
 import Socials from '@/components/ui/Socials';
 import ExperienceSectionContent from '@/components/ui/ExperienceSectionContent';
 import ThreeBackground from '@/components/three/ThreeBackground';
+import { useSection } from '@/contexts/SectionContext';
 
 // Context for sharing scroll state
 interface ScrollContextType {
@@ -52,12 +53,18 @@ export default function FullPageScrollPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const lastScrollTime = useRef(0);
   const touchStartY = useRef(0);
+  const { setActiveSection } = useSection();
 
   const totalSections = sections.length;
   const scrollCooldown = 700; // ms between scroll actions
 
   // Calculate if we're in experience section
   const isInExperience = currentSection === experienceSectionIndex;
+
+  // Sync active section with SectionContext for ThreeBackground
+  useEffect(() => {
+    setActiveSection(sections[currentSection].id);
+  }, [currentSection, setActiveSection]);
 
   // Navigate to a section
   const goToSection = useCallback(
@@ -219,10 +226,10 @@ export default function FullPageScrollPage() {
   };
 
   // Get current experience color
-  const experienceColors = ['#f59e0b', '#06b6d4', '#a855f7'];
+  const experienceColors = ['#ff3366', '#ffcc00', '#ff5500'];
   const currentColor = isInExperience
-    ? experienceColors[currentExperienceSlide] || '#f59e0b'
-    : '#f59e0b';
+    ? experienceColors[currentExperienceSlide] || '#ff3366'
+    : '#ff3366';
 
   return (
     <ScrollContext.Provider value={contextValue}>
@@ -267,11 +274,8 @@ export default function FullPageScrollPage() {
           </section>
 
           {/* Skills Section */}
-          <section
-            id="skills"
-            className="h-screen w-full flex items-center justify-center p-4 md:p-8"
-          >
-            <div className="w-full max-w-4xl mx-auto bg-background/60 backdrop-blur-md rounded-2xl border border-white/10 p-4 md:p-6 shadow-[0_0_50px_-12px_rgba(245,158,11,0.15)]">
+          <section id="skills" className="h-screen w-full">
+            <div className="w-full h-full p-4 md:p-8 max-w-7xl mx-auto">
               <Skills />
             </div>
           </section>
@@ -325,9 +329,9 @@ function ScrollNav({
   const [isHovered, setIsHovered] = useState(false);
 
   const experienceItems = [
-    { company: 'WellnessLiving', color: '#f59e0b' },
-    { company: 'Kusho', color: '#06b6d4' },
-    { company: 'Castler', color: '#a855f7' },
+    { company: 'WellnessLiving', color: '#ff3366' },
+    { company: 'Kusho', color: '#ffcc00' },
+    { company: 'Castler', color: '#ff5500' },
   ];
 
   return (
@@ -391,9 +395,9 @@ function ScrollNav({
                         color: isActive
                           ? isExperienceSection && isInExperience
                             ? currentColor
-                            : '#f59e0b'
+                            : '#ff3366'
                           : isPast
-                          ? '#06b6d4'
+                          ? '#ffcc00'
                           : '#64748b',
                       }}
                     >

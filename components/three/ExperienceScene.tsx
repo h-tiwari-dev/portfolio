@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useRef, useMemo } from "react";
-import { useFrame } from "@react-three/fiber";
-import * as THREE from "three";
+import { useRef, useMemo } from 'react';
+import { useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
 
 interface ExperienceSceneProps {
   activeIndex: number;
@@ -10,9 +10,9 @@ interface ExperienceSceneProps {
 }
 
 const colors = {
-  0: { primary: "#f59e0b", secondary: "#fbbf24" }, // amber
-  1: { primary: "#06b6d4", secondary: "#22d3ee" }, // cyan
-  2: { primary: "#a855f7", secondary: "#c084fc" }, // purple
+  0: { primary: '#ff3366', secondary: '#ff6699' }, // hot magenta
+  1: { primary: '#ffcc00', secondary: '#ffdd44' }, // electric gold
+  2: { primary: '#ff5500', secondary: '#ff7733' }, // vivid orange
 };
 
 function FloatingShape({
@@ -21,7 +21,7 @@ function FloatingShape({
   speed,
   rotationSpeed,
   scale = 1,
-  shape = "octahedron"
+  shape = 'octahedron',
 }: {
   position: [number, number, number];
   color: string;
@@ -35,22 +35,23 @@ function FloatingShape({
 
   useFrame((state) => {
     if (!meshRef.current) return;
-    meshRef.current.position.y = initialY + Math.sin(state.clock.elapsedTime * speed) * 0.3;
+    meshRef.current.position.y =
+      initialY + Math.sin(state.clock.elapsedTime * speed) * 0.3;
     meshRef.current.rotation.x += rotationSpeed * 0.01;
     meshRef.current.rotation.y += rotationSpeed * 0.015;
   });
 
   const geometry = useMemo(() => {
     switch (shape) {
-      case "icosahedron":
+      case 'icosahedron':
         return new THREE.IcosahedronGeometry(0.5 * scale, 0);
-      case "dodecahedron":
+      case 'dodecahedron':
         return new THREE.DodecahedronGeometry(0.5 * scale, 0);
-      case "tetrahedron":
+      case 'tetrahedron':
         return new THREE.TetrahedronGeometry(0.5 * scale, 0);
-      case "torus":
+      case 'torus':
         return new THREE.TorusGeometry(0.4 * scale, 0.15 * scale, 16, 32);
-      case "torusKnot":
+      case 'torusKnot':
         return new THREE.TorusKnotGeometry(0.35 * scale, 0.1 * scale, 64, 8);
       default:
         return new THREE.OctahedronGeometry(0.5 * scale, 0);
@@ -71,7 +72,13 @@ function FloatingShape({
   );
 }
 
-function ParticleField({ color, count = 50 }: { color: string; count?: number }) {
+function ParticleField({
+  color,
+  count = 50,
+}: {
+  color: string;
+  count?: number;
+}) {
   const particlesRef = useRef<THREE.Points>(null);
 
   const [positions, velocities] = useMemo(() => {
@@ -93,7 +100,8 @@ function ParticleField({ color, count = 50 }: { color: string; count?: number })
 
   useFrame(() => {
     if (!particlesRef.current) return;
-    const positionAttr = particlesRef.current.geometry.attributes.position as THREE.BufferAttribute;
+    const positionAttr = particlesRef.current.geometry.attributes
+      .position as THREE.BufferAttribute;
 
     for (let i = 0; i < count; i++) {
       positionAttr.setX(i, positionAttr.getX(i) + velocities[i * 3]);
@@ -131,7 +139,13 @@ function ParticleField({ color, count = 50 }: { color: string; count?: number })
   );
 }
 
-function ConnectionLines({ color, activeIndex }: { color: string; activeIndex: number }) {
+function ConnectionLines({
+  color,
+  activeIndex,
+}: {
+  color: string;
+  activeIndex: number;
+}) {
   const linesRef = useRef<THREE.Group>(null);
 
   useFrame((state) => {
@@ -172,7 +186,7 @@ function ConnectionLines({ color, activeIndex }: { color: string; activeIndex: n
             <bufferAttribute
               attach="attributes-position"
               count={2}
-              array={new Float32Array(points.flatMap(p => [p.x, p.y, p.z]))}
+              array={new Float32Array(points.flatMap((p) => [p.x, p.y, p.z]))}
               itemSize={3}
             />
           </bufferGeometry>
@@ -188,7 +202,10 @@ function ConnectionLines({ color, activeIndex }: { color: string; activeIndex: n
   );
 }
 
-export default function ExperienceScene({ activeIndex, progress }: ExperienceSceneProps) {
+export default function ExperienceScene({
+  activeIndex,
+  progress,
+}: ExperienceSceneProps) {
   const groupRef = useRef<THREE.Group>(null);
   const currentColors = colors[activeIndex as keyof typeof colors] || colors[0];
 
@@ -202,9 +219,9 @@ export default function ExperienceScene({ activeIndex, progress }: ExperienceSce
 
   const shapes = useMemo(() => {
     const shapeTypes = [
-      ["octahedron", "icosahedron", "torusKnot"],
-      ["dodecahedron", "torus", "tetrahedron"],
-      ["icosahedron", "torusKnot", "octahedron"],
+      ['octahedron', 'icosahedron', 'torusKnot'],
+      ['dodecahedron', 'torus', 'tetrahedron'],
+      ['icosahedron', 'torusKnot', 'octahedron'],
     ];
     return shapeTypes[activeIndex] || shapeTypes[0];
   }, [activeIndex]);
@@ -212,8 +229,16 @@ export default function ExperienceScene({ activeIndex, progress }: ExperienceSce
   return (
     <group ref={groupRef}>
       <ambientLight intensity={0.2} />
-      <pointLight position={[5, 5, 5]} intensity={0.5} color={currentColors.primary} />
-      <pointLight position={[-5, -5, -5]} intensity={0.3} color={currentColors.secondary} />
+      <pointLight
+        position={[5, 5, 5]}
+        intensity={0.5}
+        color={currentColors.primary}
+      />
+      <pointLight
+        position={[-5, -5, -5]}
+        intensity={0.3}
+        color={currentColors.secondary}
+      />
 
       {/* Central shape */}
       <FloatingShape
@@ -255,7 +280,10 @@ export default function ExperienceScene({ activeIndex, progress }: ExperienceSce
       <ParticleField color={currentColors.primary} count={60} />
 
       {/* Connection lines */}
-      <ConnectionLines color={currentColors.secondary} activeIndex={activeIndex} />
+      <ConnectionLines
+        color={currentColors.secondary}
+        activeIndex={activeIndex}
+      />
     </group>
   );
 }

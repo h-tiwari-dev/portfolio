@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Section {
   id: string;
@@ -13,9 +13,9 @@ interface ScrollNavProps {
 }
 
 const experienceItems = [
-  { company: "WellnessLiving", color: "#f59e0b" },
-  { company: "Kusho", color: "#06b6d4" },
-  { company: "Castler", color: "#a855f7" },
+  { company: 'WellnessLiving', color: '#ff3366' },
+  { company: 'Kusho', color: '#ffcc00' },
+  { company: 'Castler', color: '#ff5500' },
 ];
 
 export default function ScrollNav({ sections }: ScrollNavProps) {
@@ -37,13 +37,13 @@ export default function ScrollNav({ sections }: ScrollNavProps) {
           entries.forEach((entry) => {
             if (entry.isIntersecting && entry.intersectionRatio >= 0.3) {
               setActiveSection(index);
-              setIsInExperience(section.id === "experience");
+              setIsInExperience(section.id === 'experience');
             }
           });
         },
         {
           threshold: 0.3,
-          rootMargin: "-10% 0px -10% 0px",
+          rootMargin: '-10% 0px -10% 0px',
         }
       );
 
@@ -53,7 +53,7 @@ export default function ScrollNav({ sections }: ScrollNavProps) {
 
     // Track experience scroll progress
     const handleScroll = () => {
-      const experienceSection = document.getElementById("experience");
+      const experienceSection = document.getElementById('experience');
       if (!experienceSection) return;
 
       const rect = experienceSection.getBoundingClientRect();
@@ -65,29 +65,34 @@ export default function ScrollNav({ sections }: ScrollNavProps) {
         const scrollableHeight = sectionHeight - viewportHeight;
         const progress = Math.min(Math.max(scrolled / scrollableHeight, 0), 1);
         setExperienceProgress(progress);
-        setActiveExperience(Math.min(Math.floor(progress * experienceItems.length), experienceItems.length - 1));
+        setActiveExperience(
+          Math.min(
+            Math.floor(progress * experienceItems.length),
+            experienceItems.length - 1
+          )
+        );
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
     handleScroll();
 
     return () => {
       observers.forEach((observer) => observer.disconnect());
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, [sections]);
 
   const scrollToSection = useCallback((id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   }, []);
 
   const currentColor = isInExperience
-    ? experienceItems[activeExperience]?.color || "#f59e0b"
-    : "#f59e0b";
+    ? experienceItems[activeExperience]?.color || '#ff3366'
+    : '#ff3366';
 
   return (
     <motion.nav
@@ -102,7 +107,9 @@ export default function ScrollNav({ sections }: ScrollNavProps) {
       <motion.div
         className="absolute inset-y-0 -inset-x-3 bg-background/60 backdrop-blur-md rounded-full border border-white/10 -z-10"
         animate={{
-          borderColor: isInExperience ? `${currentColor}30` : "rgba(255,255,255,0.1)"
+          borderColor: isInExperience
+            ? `${currentColor}30`
+            : 'rgba(255,255,255,0.1)',
         }}
         transition={{ duration: 0.3 }}
       />
@@ -113,20 +120,25 @@ export default function ScrollNav({ sections }: ScrollNavProps) {
           <motion.div
             className="absolute top-0 left-0 w-full"
             style={{ backgroundColor: currentColor }}
-            initial={{ height: "0%" }}
+            initial={{ height: '0%' }}
             animate={{
               height: isInExperience
-                ? `${((sections.findIndex(s => s.id === "experience") + experienceProgress) / sections.length) * 100}%`
-                : `${((activeSection + 1) / sections.length) * 100}%`
+                ? `${
+                    ((sections.findIndex((s) => s.id === 'experience') +
+                      experienceProgress) /
+                      sections.length) *
+                    100
+                  }%`
+                : `${((activeSection + 1) / sections.length) * 100}%`,
             }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
           />
         </div>
 
         {sections.map((section, index) => {
           const isActive = activeSection === index;
           const isPast = index < activeSection;
-          const isExperienceSection = section.id === "experience";
+          const isExperienceSection = section.id === 'experience';
 
           return (
             <div key={section.id} className="relative">
@@ -145,8 +157,12 @@ export default function ScrollNav({ sections }: ScrollNavProps) {
                       className="absolute right-8 whitespace-nowrap text-[10px] font-mono uppercase tracking-widest transition-colors duration-300"
                       style={{
                         color: isActive
-                          ? (isExperienceSection && isInExperience ? currentColor : "#f59e0b")
-                          : isPast ? "#06b6d4" : "#64748b"
+                          ? isExperienceSection && isInExperience
+                            ? currentColor
+                            : '#ff3366'
+                          : isPast
+                          ? '#ffcc00'
+                          : '#64748b',
                       }}
                     >
                       {section.label}
@@ -162,7 +178,11 @@ export default function ScrollNav({ sections }: ScrollNavProps) {
                       className="absolute -inset-1.5 rounded-full border"
                       style={{ borderColor: `${currentColor}50` }}
                       initial={false}
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 300,
+                        damping: 30,
+                      }}
                     />
                   )}
 
@@ -181,9 +201,9 @@ export default function ScrollNav({ sections }: ScrollNavProps) {
                       backgroundColor: isActive
                         ? currentColor
                         : isPast
-                        ? "#06b6d4"
-                        : "#475569",
-                      boxShadow: isActive ? `0 0 12px ${currentColor}` : "none"
+                        ? '#ffcc00'
+                        : '#475569',
+                      boxShadow: isActive ? `0 0 12px ${currentColor}` : 'none',
                     }}
                     whileHover={{ scale: 1.3 }}
                     whileTap={{ scale: 0.9 }}
@@ -196,7 +216,7 @@ export default function ScrollNav({ sections }: ScrollNavProps) {
                 {isExperienceSection && isInExperience && isActive && (
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
+                    animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden"
@@ -217,7 +237,12 @@ export default function ScrollNav({ sections }: ScrollNavProps) {
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: 5 }}
                                 className="text-[8px] font-mono uppercase tracking-wider whitespace-nowrap"
-                                style={{ color: i === activeExperience ? exp.color : "#64748b" }}
+                                style={{
+                                  color:
+                                    i === activeExperience
+                                      ? exp.color
+                                      : '#64748b',
+                                }}
                               >
                                 {exp.company}
                               </motion.span>
@@ -226,9 +251,16 @@ export default function ScrollNav({ sections }: ScrollNavProps) {
                           <div
                             className="w-1.5 h-1.5 rounded-full transition-all duration-300"
                             style={{
-                              backgroundColor: i <= activeExperience ? exp.color : "#475569",
-                              transform: i === activeExperience ? "scale(1.3)" : "scale(1)",
-                              boxShadow: i === activeExperience ? `0 0 8px ${exp.color}` : "none"
+                              backgroundColor:
+                                i <= activeExperience ? exp.color : '#475569',
+                              transform:
+                                i === activeExperience
+                                  ? 'scale(1.3)'
+                                  : 'scale(1)',
+                              boxShadow:
+                                i === activeExperience
+                                  ? `0 0 8px ${exp.color}`
+                                  : 'none',
                             }}
                           />
                         </motion.div>
@@ -248,9 +280,11 @@ export default function ScrollNav({ sections }: ScrollNavProps) {
           className="mt-2 text-[9px] font-mono flex items-center gap-1"
           style={{ color: currentColor }}
         >
-          <span>{String(activeSection + 1).padStart(2, "0")}</span>
+          <span>{String(activeSection + 1).padStart(2, '0')}</span>
           <span className="text-slate-600">/</span>
-          <span className="text-slate-500">{String(sections.length).padStart(2, "0")}</span>
+          <span className="text-slate-500">
+            {String(sections.length).padStart(2, '0')}
+          </span>
         </motion.div>
       </div>
     </motion.nav>

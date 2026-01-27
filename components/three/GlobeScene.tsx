@@ -1,11 +1,13 @@
-"use client";
+'use client';
 
-import { useRef, useMemo, useState } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
-import * as THREE from "three";
+import { useRef, useMemo, useState } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
+import * as THREE from 'three';
+import OrbitingSkills from './OrbitingSkills';
 
 interface GlobeSceneProps {
   isMobile?: boolean;
+  activeSection?: string;
 }
 
 function NetworkArc({
@@ -52,7 +54,7 @@ function NetworkArc({
       <mesh position={pointOnCurve}>
         <sphereGeometry args={[0.025, 8, 8]} />
         <meshBasicMaterial
-          color="#22d3d4"
+          color="#ffdd44"
           transparent
           opacity={0.9}
           blending={THREE.AdditiveBlending}
@@ -62,10 +64,15 @@ function NetworkArc({
   );
 }
 
-export default function GlobeScene({ isMobile = false }: GlobeSceneProps) {
+export default function GlobeScene({
+  isMobile = false,
+  activeSection = 'hero',
+}: GlobeSceneProps) {
   const globeRef = useRef<THREE.Group>(null);
   const { mouse, viewport } = useThree();
   const targetRotation = useRef({ x: 0, y: 0 });
+
+  const showSkills = activeSection === 'skills';
 
   const detailLevel = isMobile ? 1 : 2;
   const arcCount = isMobile ? 6 : 10;
@@ -100,7 +107,7 @@ export default function GlobeScene({ isMobile = false }: GlobeSceneProps) {
 
     const pointsGeo = new THREE.BufferGeometry();
     pointsGeo.setAttribute(
-      "position",
+      'position',
       new THREE.BufferAttribute(pointsPositions, 3)
     );
 
@@ -144,7 +151,7 @@ export default function GlobeScene({ isMobile = false }: GlobeSceneProps) {
   const wireframeMaterial = useMemo(
     () =>
       new THREE.LineBasicMaterial({
-        color: new THREE.Color("#f59e0b"),
+        color: new THREE.Color('#ff3366'),
         transparent: true,
         opacity: 0.15,
         blending: THREE.AdditiveBlending,
@@ -155,7 +162,7 @@ export default function GlobeScene({ isMobile = false }: GlobeSceneProps) {
   const pointsMaterial = useMemo(
     () =>
       new THREE.PointsMaterial({
-        color: new THREE.Color("#22d3d4"),
+        color: new THREE.Color('#ffcc00'),
         size: 0.04,
         transparent: true,
         opacity: 0.8,
@@ -177,31 +184,46 @@ export default function GlobeScene({ isMobile = false }: GlobeSceneProps) {
       delta *
       2;
     globeRef.current.rotation.y +=
-      (targetRotation.current.y * 0.1 - globeRef.current.rotation.y * 0.1 + 0.3) *
+      (targetRotation.current.y * 0.1 -
+        globeRef.current.rotation.y * 0.1 +
+        0.3) *
       delta *
       0.5;
   });
 
-  const arcColor = useMemo(() => new THREE.Color("#f59e0b"), []);
+  const arcColor = useMemo(() => new THREE.Color('#ff5500'), []);
 
   return (
-    <group ref={globeRef} position={[0, 0, 0]}>
-      <lineSegments geometry={wireframeGeometry} material={wireframeMaterial} />
-      <points geometry={pointsGeometry} material={pointsMaterial} />
-
-      {arcs.map((arc, i) => (
-        <NetworkArc key={i} start={arc.start} end={arc.end} color={arcColor} />
-      ))}
-
-      <mesh>
-        <sphereGeometry args={[1.75, 32, 32]} />
-        <meshBasicMaterial
-          color="#0a0a0a"
-          transparent
-          opacity={0.3}
-          side={THREE.BackSide}
+    <>
+      <group ref={globeRef} position={[0, 0, 0]}>
+        <lineSegments
+          geometry={wireframeGeometry}
+          material={wireframeMaterial}
         />
-      </mesh>
-    </group>
+        <points geometry={pointsGeometry} material={pointsMaterial} />
+
+        {arcs.map((arc, i) => (
+          <NetworkArc
+            key={i}
+            start={arc.start}
+            end={arc.end}
+            color={arcColor}
+          />
+        ))}
+
+        <mesh>
+          <sphereGeometry args={[1.75, 32, 32]} />
+          <meshBasicMaterial
+            color="#0a0a0a"
+            transparent
+            opacity={0.3}
+            side={THREE.BackSide}
+          />
+        </mesh>
+      </group>
+
+      {/* Orbiting Skills - shown when on skills section */}
+      <OrbitingSkills visible={showSkills} />
+    </>
   );
 }

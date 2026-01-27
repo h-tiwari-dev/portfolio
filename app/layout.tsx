@@ -1,45 +1,49 @@
 import { Space_Grotesk, JetBrains_Mono } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import Link from 'next/link';
 import { navItems } from '@/constants/navItems';
 import GameOfLife from '@/components/common/gameOfLife';
+import { SectionProvider } from '@/contexts/SectionContext';
 
 import './globals.css';
 
 const jetbrainsMono = JetBrains_Mono({
-    subsets: ['latin'],
-    variable: '--font-jetbrains-mono',
+  subsets: ['latin'],
+  variable: '--font-jetbrains-mono',
 });
 
 const spaceGrotesk = Space_Grotesk({
-    subsets: ['latin'],
-    variable: '--font-space-grotesk',
+  subsets: ['latin'],
+  variable: '--font-space-grotesk',
 });
 
 import CustomCursor from '@/components/common/CustomCursor';
 
 export default function RootLayout({
-    children,
+  children,
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-    return (
-        <html lang="en">
-            <head />
-            <body className={`min-h-screen bg-background overflow-x-hidden font-sans antialiased text-white ${jetbrainsMono.variable} ${spaceGrotesk.variable}`}>
-                {
-                    Number.parseInt(process.env.LOOKING_FOR_WORK ?? "0") === 1 ?
-                        <div className="fixed top-0 left-0 right-0 bg-red-800 text-white font-bold text-center z-50">
-                            I&apos;m looking for work. Give me money!
-                        </div> : <></>
-                }
+  return (
+    <html lang="en">
+      <head />
+      <body
+        className={`min-h-screen bg-background overflow-x-hidden font-sans antialiased text-white ${jetbrainsMono.variable} ${spaceGrotesk.variable}`}
+      >
+        {Number.parseInt(process.env.LOOKING_FOR_WORK ?? '0') === 1 ? (
+          <div className="fixed top-0 left-0 right-0 bg-red-800 text-white font-bold text-center z-50">
+            I&apos;m looking for work. Give me money!
+          </div>
+        ) : (
+          <></>
+        )}
 
-                {children}
-                <CustomCursor />
-                <Analytics />
-                <SpeedInsights />
-            </body>
-        </html>
-    );
+        <SectionProvider>{children}</SectionProvider>
+        <CustomCursor />
+        <Analytics />
+        <SpeedInsights />
+      </body>
+    </html>
+  );
 }

@@ -1,63 +1,77 @@
-"use client";
+'use client';
 
-import { Cpu, Binary } from "lucide-react";
-import NeuralCore from "./NeuralCore";
+import { Cpu, Globe } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function Skills() {
-    const categories = [
-        {
-            name: "Languages",
-            skills: ["Python", "GoLang", "Rust", "C++", "SQL", "Java", "TypeScript", "JavaScript"]
-        },
-        {
-            name: "Frontend/Web",
-            skills: ["ReactJS", "Next.js", "Vue", "NuxtJs", "AngularJS", "HTML", "CSS", "Tailwind"]
-        },
-        {
-            name: "Backend/Infra",
-            skills: ["Node.js", "NestJS", "Kubernetes", "Docker", "Kafka", "Redis", "Airflow"]
-        },
-        {
-            name: "Storage/ML",
-            skills: ["MySQL", "Postgres", "MongoDB", "ClickHouse", "Pinecone", "PyTorch", "TensorFlow"]
-        },
-        {
-            name: "DevOps & Tools",
-            skills: ["Bash", "Git", "GitHub", "Linux", "Vim/NeoVim", "VS Code", "Jupyter"]
-        }
-    ];
+  const categories = [
+    {
+      name: 'Languages',
+      color: '#ff3366', // Magenta
+      description: 'Core programming languages',
+    },
+    {
+      name: 'Frontend',
+      color: '#ffcc00', // Yellow
+      description: 'Web & UI frameworks',
+    },
+    {
+      name: 'Backend',
+      color: '#ff5500', // Orange
+      description: 'Server & Infrastructure',
+    },
+    {
+      name: 'Data/ML',
+      color: '#ff6699', // Pink
+      description: 'Database & Intelligence',
+    },
+  ];
 
-    return (
-        <div className="p-4 h-full overflow-hidden flex flex-col group relative">
-            <NeuralCore />
-            <div className="flex items-center justify-between mb-3 shrink-0">
-                <h3 className="text-[11px] font-bold text-amber-400 uppercase tracking-[0.2em] flex items-center">
-                    <Cpu size={14} className="mr-2 text-amber-500/70" />
-                    Core_Stack.kernel
-                </h3>
-            </div>
-
-            <div className="flex-1 overflow-y-auto scrollbar-none grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 pr-1 content-between">
-                {categories.map((cat, idx) => (
-                    <div key={idx} className="space-y-1.5 overflow-hidden mb-2">
-                        <div className="text-[14px] font-mono text-slate-400 uppercase tracking-tighter flex items-center mb-0.5">
-                            <div className="w-1 h-1 bg-amber-500/50 rounded-full mr-1.5"></div>
-                            {cat.name}
-                        </div>
-                        <div className="flex flex-wrap gap-1.5">
-                            {cat.skills.map((skill, i) => (
-                                <span
-                                    key={i}
-                                    className="bg-amber-500/5 text-slate-300 text-[10px] font-mono px-2 py-1 rounded-sm border border-amber-500/10 hover:border-amber-400/40 transition-all cursor-default flex items-center group/skill"
-                                >
-                                    <span className="text-amber-500/30 mr-1.5 group-hover/skill:text-amber-500/60 transition-colors">[{`0x${(skill.length * i + 10).toString(16).toUpperCase()}`}]</span>
-                                    {skill}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-                ))}
-            </div>
+  return (
+    <div className="h-full flex flex-col justify-end pb-12 pointer-events-none">
+      <div className="pointer-events-auto bg-black/40 backdrop-blur-md border border-white/10 p-6 rounded-xl max-w-sm ml-auto mr-auto md:mr-0 md:ml-auto">
+        <div className="flex items-center gap-3 mb-4 border-b border-white/10 pb-3">
+          <Globe className="text-[#ff3366]" size={18} />
+          <h3 className="text-sm font-bold tracking-widest text-white uppercase">
+            Skill System
+          </h3>
         </div>
-    );
+
+        <div className="space-y-3">
+          {categories.map((cat, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: idx * 0.1 }}
+              className="flex items-center gap-3 group"
+            >
+              <div
+                className="w-2 h-2 rounded-full shadow-[0_0_8px]"
+                style={{
+                  backgroundColor: cat.color,
+                  boxShadow: `0 0 8px ${cat.color}`,
+                }}
+              />
+              <div className="flex flex-col">
+                <span
+                  className="text-xs font-mono font-bold tracking-wider uppercase transition-colors"
+                  style={{ color: cat.color }}
+                >
+                  {cat.name}
+                </span>
+                <span className="text-[10px] text-slate-400">
+                  {cat.description}
+                </span>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="mt-4 pt-3 border-t border-white/5 text-[9px] font-mono text-slate-500 text-right">
+          Interactive 3D Visualization
+        </div>
+      </div>
+    </div>
+  );
 }
