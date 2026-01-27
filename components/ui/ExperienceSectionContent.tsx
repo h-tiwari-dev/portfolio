@@ -1,13 +1,7 @@
 'use client';
 
-import React, {
-  useRef,
-  useState,
-  useEffect,
-  useCallback,
-  Suspense,
-} from 'react';
-import { motion, animate } from 'framer-motion';
+import React, { Suspense } from 'react';
+import { motion } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
 import { Activity, Zap, Building2, Calendar, ChevronRight } from 'lucide-react';
 import ExperienceScene from '@/components/three/ExperienceScene';
@@ -96,185 +90,22 @@ const colorConfig = {
   },
 };
 
-export default function Experience() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isInView, setIsInView] = useState(false);
-  const isAnimatingRef = useRef(false);
-  const lastScrollTimeRef = useRef(0);
-  const scrollCooldown = 600; // ms between slides
+interface ExperienceSectionContentProps {
+  activeIndex: number;
+  onSlideChange: (index: number) => void;
+}
 
+export default function ExperienceSectionContent({
+  activeIndex,
+  onSlideChange,
+}: ExperienceSectionContentProps) {
   const totalSlides = experiences.length;
-
-  // Check if section is in view
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        // Consider in view when section occupies most of viewport
-        setIsInView(entry.intersectionRatio > 0.5);
-      },
-      { threshold: [0, 0.5, 1] }
-    );
-
-    observer.observe(container);
-    return () => observer.disconnect();
-  }, []);
-
-  // Navigate to a specific slide with animation
-  const goToSlide = useCallback(
-    (index: number, instant = false) => {
-      if (index < 0 || index >= totalSlides) return;
-
-      isAnimatingRef.current = true;
-      setActiveIndex(index);
-
-      // Clear animating flag after animation completes
-      setTimeout(
-        () => {
-          isAnimatingRef.current = false;
-        },
-        instant ? 0 : 500
-      );
-    },
-    [totalSlides]
-  );
-
-  // Scroll to adjacent sections
-  const scrollToSection = useCallback((sectionId: string) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, []);
-
-  // Handle wheel events - capture and translate to horizontal slides
-  useEffect(() => {
-    const handleWheel = (e: WheelEvent) => {
-      // Only capture if section is in view
-      if (!isInView) return;
-
-      // Prevent default scroll immediately to capture the event
-      e.preventDefault();
-
-      // Debounce rapid scrolls
-      const now = Date.now();
-      if (now - lastScrollTimeRef.current < scrollCooldown) return;
-      if (isAnimatingRef.current) return;
-
-      const scrollingDown = e.deltaY > 0;
-      const scrollingUp = e.deltaY < 0;
-
-      if (scrollingDown) {
-        if (activeIndex < totalSlides - 1) {
-          // Go to next slide
-          lastScrollTimeRef.current = now;
-          goToSlide(activeIndex + 1);
-        } else {
-          // At last slide, scroll to next section
-          lastScrollTimeRef.current = now;
-          scrollToSection('skills');
-        }
-      } else if (scrollingUp) {
-        if (activeIndex > 0) {
-          // Go to previous slide
-          lastScrollTimeRef.current = now;
-          goToSlide(activeIndex - 1);
-        } else {
-          // At first slide, scroll to previous section
-          lastScrollTimeRef.current = now;
-          scrollToSection('hero');
-        }
-      }
-    };
-
-    // Attach to window to capture all wheel events when in view
-    window.addEventListener('wheel', handleWheel, { passive: false });
-
-    return () => {
-      window.removeEventListener('wheel', handleWheel);
-    };
-  }, [isInView, activeIndex, totalSlides, goToSlide, scrollToSection]);
-
-  // Handle keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isInView) return;
-
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        if (activeIndex < totalSlides - 1) {
-          goToSlide(activeIndex + 1);
-        } else {
-          scrollToSection('skills');
-        }
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        if (activeIndex > 0) {
-          goToSlide(activeIndex - 1);
-        } else {
-          scrollToSection('hero');
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isInView, activeIndex, totalSlides, goToSlide, scrollToSection]);
-
-  // Touch handling for mobile swipe
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    let touchStartX = 0;
-    let touchStartY = 0;
-
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-    };
-
-    const handleTouchEnd = (e: TouchEvent) => {
-      if (!isInView) return;
-
-      const touchEndX = e.changedTouches[0].clientX;
-      const touchEndY = e.changedTouches[0].clientY;
-      const deltaX = touchStartX - touchEndX;
-      const deltaY = touchStartY - touchEndY;
-
-      // Only handle horizontal swipes
-      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
-        if (deltaX > 0 && activeIndex < totalSlides - 1) {
-          goToSlide(activeIndex + 1);
-        } else if (deltaX < 0 && activeIndex > 0) {
-          goToSlide(activeIndex - 1);
-        }
-      }
-    };
-
-    container.addEventListener('touchstart', handleTouchStart, {
-      passive: true,
-    });
-    container.addEventListener('touchend', handleTouchEnd, { passive: true });
-
-    return () => {
-      container.removeEventListener('touchstart', handleTouchStart);
-      container.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [isInView, activeIndex, totalSlides, goToSlide]);
-
   const currentColors =
     colorConfig[experiences[activeIndex].color as keyof typeof colorConfig];
   const progress = activeIndex / (totalSlides - 1);
 
   return (
-    <section
-      ref={containerRef}
-      className="relative h-full w-full overflow-hidden"
-    >
+    <div className="relative h-full w-full overflow-hidden">
       {/* Three.js Background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <Canvas
@@ -336,13 +167,13 @@ export default function Experience() {
         </div>
       </div>
 
-      {/* Progress bar */}
+      {/* Progress bar - left side */}
       <div className="absolute top-1/2 -translate-y-1/2 left-6 md:left-8 z-20 hidden md:block">
         <div className="flex flex-col gap-3">
           {experiences.map((exp, i) => (
             <button
               key={exp.pid}
-              onClick={() => goToSlide(i)}
+              onClick={() => onSlideChange(i)}
               className="group flex items-center gap-3"
             >
               <div
@@ -380,7 +211,7 @@ export default function Experience() {
         </div>
       </div>
 
-      {/* Slides container - instant snap with transform */}
+      {/* Horizontal slides container */}
       <div className="absolute inset-0 z-10">
         <motion.div
           className="h-full flex"
@@ -556,7 +387,7 @@ export default function Experience() {
         {experiences.map((exp, i) => (
           <button
             key={exp.pid}
-            onClick={() => goToSlide(i)}
+            onClick={() => onSlideChange(i)}
             className={`w-3 h-3 rounded-full transition-all duration-300 ${
               i === activeIndex
                 ? `${
@@ -579,6 +410,6 @@ export default function Experience() {
           />
         ))}
       </div>
-    </section>
+    </div>
   );
 }
