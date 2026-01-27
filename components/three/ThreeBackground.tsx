@@ -20,14 +20,17 @@ export default function ThreeBackground() {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none">
+    <div className="fixed inset-0 z-0 pointer-events-auto">
       <Canvas
-        camera={{ position: [0, 0, 5], fov: 45 }}
-        dpr={[1, 2]}
+        camera={{ position: [-6.5, 5.0, 6.5], fov: 60 }}
+        dpr={[1, 1.5]}
         gl={{
           antialias: true,
           alpha: true,
           powerPreference: 'high-performance',
+          toneMapping: 3, // ACESFilmic
+          toneMappingExposure: 1.2,
+          outputColorSpace: 'srgb',
         }}
         style={{ background: 'transparent' }}
       >
@@ -35,7 +38,7 @@ export default function ThreeBackground() {
           <ambientLight intensity={0.1} />
           <GlobeScene isMobile={isMobile} activeSection={activeSection} />
         </Suspense>
-        <fog attach="fog" args={['#0c0b0a', 4, 12]} />
+        <fogExp2 attach="fog" args={['#020104', 0.025]} />
       </Canvas>
     </div>
   );

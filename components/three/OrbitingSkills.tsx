@@ -10,23 +10,23 @@ interface OrbitingSkillsProps {
 }
 
 const allSkills = [
-  // Languages - Magenta orbit
+  // Languages - Cyan
   { name: 'Python', category: 0 },
   { name: 'TypeScript', category: 0 },
   { name: 'GoLang', category: 0 },
   { name: 'Rust', category: 0 },
   { name: 'Java', category: 0 },
-  // Frontend - Yellow orbit
+  // Frontend - White
   { name: 'React', category: 1 },
   { name: 'Next.js', category: 1 },
   { name: 'Vue', category: 1 },
   { name: 'Tailwind', category: 1 },
-  // Backend - Orange orbit
+  // Backend - Red-Orange
   { name: 'Node.js', category: 2 },
   { name: 'Docker', category: 2 },
   { name: 'Kubernetes', category: 2 },
   { name: 'Kafka', category: 2 },
-  // Data/ML - Pink orbit
+  // Data/ML - Electric Purple
   { name: 'PostgreSQL', category: 3 },
   { name: 'MongoDB', category: 3 },
   { name: 'PyTorch', category: 3 },
@@ -34,15 +34,16 @@ const allSkills = [
 ];
 
 const categoryColors = [
-  '#ff3366', // Magenta - Languages
-  '#ffcc00', // Yellow - Frontend
-  '#ff5500', // Orange - Backend
-  '#ff6699', // Pink - Data/ML
+  '#00f0ff', // Cyan - Languages
+  '#ffffff', // White - Frontend
+  '#ff3300', // Red-Orange - Backend
+  '#9d00ff', // Electric Purple - Data/ML
 ];
 
-const categoryRadii = [2.8, 3.2, 3.6, 4.0];
-const categoryTilts = [0.2, -0.15, 0.1, -0.25];
-const categorySpeeds = [0.15, 0.12, 0.1, 0.08];
+// Align orbits to the new Black Hole Disk tilt (Math.PI / 3.0)
+const categoryRadii = [4.5, 5.5, 6.5, 7.5]; // Increased radii to fit new larger disk
+const categoryTilts = [0.05, -0.05, 0.02, -0.02];
+const categorySpeeds = [0.2, 0.15, 0.12, 0.1];
 
 interface SkillNodeProps {
   skill: { name: string; category: number };
@@ -79,11 +80,11 @@ function SkillNode({ skill, index, totalInCategory, visible }: SkillNodeProps) {
 
     groupRef.current.position.set(x, y, z);
 
-    // Fade out when close to camera (z > 2.0) to prevent blocking view
-    // Camera is at z=5. Max radius is 4.
-    const distToCamera = 5 - z;
-    const fadeThreshold = 3.0; // Start fading when closer than this (z > 2.0)
-    const minDistance = 1.5; // Fully transparent when this close (z > 3.5)
+    // Fade out when close to camera
+    // Camera is at z=8 (approx).
+    const distToCamera = 8 - z;
+    const fadeThreshold = 3.5;
+    const minDistance = 2.0;
 
     let distanceOpacity = 1;
     if (distToCamera < fadeThreshold) {
@@ -152,7 +153,7 @@ function SkillNode({ skill, index, totalInCategory, visible }: SkillNodeProps) {
           anchorX="center"
           anchorY="middle"
           fillOpacity={0} // Controlled in useFrame
-          outlineWidth={0.01}
+          outlineWidth={0.02}
           outlineColor="#000000"
           outlineOpacity={0} // Controlled in useFrame
         >
@@ -213,7 +214,9 @@ export default function OrbitingSkills({ visible }: OrbitingSkillsProps) {
   const categoryIndices: { [key: number]: number } = {};
 
   return (
-    <group ref={groupRef}>
+    // Rotate to match the Black Hole Accretion Disk tilt
+    // Disk is tilted at Math.PI/3
+    <group ref={groupRef} rotation={[Math.PI / 3.0, 0, 0]}>
       {/* Orbit rings */}
       {categoryRadii.map((radius, i) => (
         <OrbitRing

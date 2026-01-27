@@ -7,22 +7,22 @@ export default function Skills() {
   const categories = [
     {
       name: 'Languages',
-      color: '#ff3366', // Magenta
+      color: '#00f0ff', // Cyan
       description: 'Core programming languages',
     },
     {
       name: 'Frontend',
-      color: '#ffcc00', // Yellow
+      color: '#ffffff', // White
       description: 'Web & UI frameworks',
     },
     {
       name: 'Backend',
-      color: '#ff5500', // Orange
+      color: '#ff3300', // Red-Orange
       description: 'Server & Infrastructure',
     },
     {
       name: 'Data/ML',
-      color: '#ff6699', // Pink
+      color: '#9d00ff', // Electric Purple
       description: 'Database & Intelligence',
     },
   ];
@@ -31,7 +31,7 @@ export default function Skills() {
     <div className="h-full flex flex-col justify-end pb-12 pointer-events-none">
       <div className="pointer-events-auto bg-black/40 backdrop-blur-md border border-white/10 p-6 rounded-xl max-w-sm ml-auto mr-auto md:mr-0 md:ml-auto">
         <div className="flex items-center gap-3 mb-4 border-b border-white/10 pb-3">
-          <Globe className="text-[#ff3366]" size={18} />
+          <Globe className="text-[#00f0ff]" size={18} />
           <h3 className="text-sm font-bold tracking-widest text-white uppercase">
             Skill System
           </h3>
