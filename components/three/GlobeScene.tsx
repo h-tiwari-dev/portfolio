@@ -8,6 +8,7 @@ import OrbitingSkills from './OrbitingSkills';
 import BlackHoleCore from './BlackHoleCore';
 import StarField from './StarField';
 import SceneEffects from './SceneEffects';
+import AccretionParticles from './AccretionParticles';
 
 interface GlobeSceneProps {
   isMobile?: boolean;
@@ -31,11 +32,13 @@ export default function GlobeScene({
 
       {/* Controls to rotate view */}
       <OrbitControls
+        makeDefault
         enableDamping
         dampingFactor={0.035}
         rotateSpeed={0.4}
         autoRotate={true}
         autoRotateSpeed={0.5}
+        enableZoom={false} // Disable zoom to avoid conflict with page scroll
         minDistance={3}
         maxDistance={20}
         enablePan={false}
@@ -45,6 +48,9 @@ export default function GlobeScene({
       <group ref={sceneRef} position={[0, 0, 0]}>
         {/* The Black Hole Core (Disk, Event Horizon) */}
         <BlackHoleCore />
+
+        {/* Swirling Accretion Matter */}
+        <AccretionParticles />
 
         {/* Background Stars */}
         <StarField />

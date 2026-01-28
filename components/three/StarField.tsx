@@ -18,7 +18,7 @@ const StarFieldShader = {
         vTwinkle = sin(uTime * 2.5 + twinkle) * 0.5 + 0.5;
         
         vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-        gl_PointSize = size * uPixelRatio * (300.0 / -mvPosition.z);
+        gl_PointSize = size * uPixelRatio * (800.0 / -mvPosition.z);
         gl_Position = projectionMatrix * mvPosition;
     }
   `,
@@ -42,8 +42,8 @@ export default function StarField() {
   const materialRef = useRef<THREE.ShaderMaterial>(null);
 
   const { positions, colors, sizes, twinkle } = useMemo(() => {
-    const starCount = 15000; // Reduced slightly for performance in React context
-    const starFieldRadius = 2000;
+    const starCount = 75000; // Significantly increased for dense star field
+    const starFieldRadius = 2500; // Increased radius to spread them out more
 
     const positions = new Float32Array(starCount * 3);
     const colors = new Float32Array(starCount * 3);
@@ -80,7 +80,7 @@ export default function StarField() {
       colors[i3 + 1] = starColor.g;
       colors[i3 + 2] = starColor.b;
 
-      sizes[i] = Math.random() * 2.4 + 0.6; // Random size 0.6 to 3.0
+      sizes[i] = Math.random() * 3.0 + 1.0; // Random size 1.0 to 4.0
       twinkle[i] = Math.random() * Math.PI * 2;
     }
 

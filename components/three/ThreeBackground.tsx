@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import GlobeScene from './GlobeScene';
 import { useSection } from '@/contexts/SectionContext';
@@ -8,6 +8,7 @@ import { useSection } from '@/contexts/SectionContext';
 export default function ThreeBackground() {
   const [isMobile, setIsMobile] = useState(false);
   const { activeSection } = useSection();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -20,9 +21,11 @@ export default function ThreeBackground() {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-0 pointer-events-auto">
+    <div ref={containerRef} className="fixed inset-0 z-0 pointer-events-auto">
       <Canvas
-        camera={{ position: [-6.5, 5.0, 6.5], fov: 60 }}
+        eventSource={containerRef as React.MutableRefObject<HTMLElement>}
+        className="touch-action-none" // Prevent browser gestures
+        camera={{ position: [-16.0, 10.0, 16.0], fov: 50 }}
         dpr={[1, 1.5]}
         gl={{
           antialias: true,

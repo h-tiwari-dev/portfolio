@@ -2,7 +2,7 @@
 
 import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Text, Billboard, Line } from '@react-three/drei';
+import { Text, Billboard, Line, Trail, Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface OrbitingSkillsProps {
@@ -41,9 +41,9 @@ const categoryColors = [
 ];
 
 // Align orbits to the new Black Hole Disk tilt (Math.PI / 3.0)
-const categoryRadii = [4.5, 5.5, 6.5, 7.5]; // Increased radii to fit new larger disk
-const categoryTilts = [0.05, -0.05, 0.02, -0.02];
-const categorySpeeds = [0.2, 0.15, 0.12, 0.1];
+const categoryRadii = [11.0, 13.0, 15.0, 17.0]; // Pushed out to fit larger disk (radius 14)
+const categoryTilts = [0, 0, 0, 0]; // Flatten orbits perfectly to avoid messy intersections
+const categorySpeeds = [0.15, 0.12, 0.1, 0.08]; // Slightly slower for scale
 
 interface SkillNodeProps {
   skill: { name: string; category: number };
@@ -80,36 +80,22 @@ function SkillNode({ skill, index, totalInCategory, visible }: SkillNodeProps) {
 
     groupRef.current.position.set(x, y, z);
 
-    // Fade out when close to camera
-    // Camera is at z=8 (approx).
-    const distToCamera = 8 - z;
-    const fadeThreshold = 3.5;
-    const minDistance = 2.0;
-
-    let distanceOpacity = 1;
-    if (distToCamera < fadeThreshold) {
-      distanceOpacity = Math.max(
-        0,
-        (distToCamera - minDistance) / (fadeThreshold - minDistance)
-      );
-    }
-
-    // Apply visibility prop (section active or not)
-    const finalOpacity = visible ? distanceOpacity : 0;
+    // Visibility purely based on section
+    const finalOpacity = visible ? 1 : 0;
 
     // Pulsing glow effect
-    const pulse = 0.8 + Math.sin(time * 2 + index) * 0.2;
+    const pulse = 0.8 + Math.sin(time * 3 + index) * 0.2; // Faster pulse
     nodeRef.current.scale.setScalar(pulse);
 
     // Update materials manually for performance
     const nodeMat = nodeRef.current.material as THREE.MeshBasicMaterial;
     if (nodeMat) {
-      nodeMat.opacity = finalOpacity * 0.9;
+      nodeMat.opacity = finalOpacity;
     }
 
     const glowMat = glowRef.current?.material as THREE.MeshBasicMaterial;
     if (glowMat) {
-      glowMat.opacity = finalOpacity * 0.3;
+      glowMat.opacity = finalOpacity * 0.4;
     }
 
     // Update Text opacity
@@ -121,34 +107,53 @@ function SkillNode({ skill, index, totalInCategory, visible }: SkillNodeProps) {
 
   return (
     <group ref={groupRef}>
-      {/* Glowing node sphere */}
-      <mesh ref={nodeRef}>
-        <sphereGeometry args={[0.06, 16, 16]} />
+      {/* Trail */}
+      <Trail
+        width={1.5} // Wider trail
+        length={12} // Longer trail
+        color={new THREE.Color(color)}
+        attenuation={(t) => t * t}
+      >
+        <mesh ref={nodeRef}>
+          <sphereGeometry args={[0.15, 16, 16]} /> {/* Larger core */}
+          <meshBasicMaterial
+            color="#ffffff" // White core for hot look
+            transparent
+            opacity={0}
+            blending={THREE.AdditiveBlending}
+          />
+        </mesh>
+      </Trail>
+
+      {/* Outer Glow Halo (attached to group, moves with it) */}
+      <mesh ref={glowRef}>
+        <sphereGeometry args={[0.4, 32, 32]} /> {/* Large soft glow */}
         <meshBasicMaterial
           color={color}
           transparent
-          opacity={0} // Controlled in useFrame
+          opacity={0}
           blending={THREE.AdditiveBlending}
+          depthWrite={false}
         />
       </mesh>
 
-      {/* Outer glow */}
-      <mesh ref={glowRef}>
-        <sphereGeometry args={[0.12, 16, 16]} />
-        <meshBasicMaterial
-          color={color}
-          transparent
-          opacity={0} // Controlled in useFrame
-          blending={THREE.AdditiveBlending}
-        />
-      </mesh>
+      {/* Particle Dust / Sparkles */}
+      <Sparkles
+        count={12}
+        scale={0.8}
+        size={2}
+        speed={0.4}
+        opacity={visible ? 0.6 : 0}
+        color={color}
+        noise={0.2}
+      />
 
       {/* Text label */}
       <Billboard follow lockX={false} lockY={false} lockZ={false}>
         <Text
           ref={textRef}
-          position={[0, 0.2, 0]}
-          fontSize={0.1}
+          position={[0, 0.25, 0]}
+          fontSize={0.18}
           color={color}
           anchorX="center"
           anchorY="middle"
@@ -193,7 +198,7 @@ function OrbitRing({
       color={color}
       lineWidth={1}
       transparent
-      opacity={visible ? 0.2 : 0}
+      opacity={visible ? 0.08 : 0}
     />
   );
 }
@@ -217,7 +222,8 @@ export default function OrbitingSkills({ visible }: OrbitingSkillsProps) {
     // Rotate to match the Black Hole Accretion Disk tilt
     // Disk is tilted at Math.PI/3
     <group ref={groupRef} rotation={[Math.PI / 3.0, 0, 0]}>
-      {/* Orbit rings */}
+      {/* Orbit rings - Removed as requested */}
+      {/* 
       {categoryRadii.map((radius, i) => (
         <OrbitRing
           key={i}
@@ -226,7 +232,8 @@ export default function OrbitingSkills({ visible }: OrbitingSkillsProps) {
           tilt={categoryTilts[i]}
           visible={visible}
         />
-      ))}
+      ))} 
+      */}
 
       {/* Skill nodes */}
       {allSkills.map((skill, globalIndex) => {

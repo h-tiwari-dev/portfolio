@@ -4,9 +4,9 @@ import { useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
-const BLACK_HOLE_RADIUS = 1.3;
-const DISK_INNER_RADIUS = 1.5;
-const DISK_OUTER_RADIUS = 8.0;
+const BLACK_HOLE_RADIUS = 2.6; // Doubled from 1.3
+const DISK_INNER_RADIUS = 3.0; // Doubled from 1.5
+const DISK_OUTER_RADIUS = 14.0; // Increased from 8.0
 const DISK_TILT_ANGLE = Math.PI / 3.0;
 
 const EventHorizonShader = {

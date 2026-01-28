@@ -246,7 +246,7 @@ export default function FullPageScrollPage() {
 
         {/* Sections container */}
         <motion.div
-          className="h-full w-full relative z-10"
+          className="h-full w-full relative z-10 pointer-events-none"
           animate={{ y: `-${currentSection * 100}%` }}
           transition={{
             type: 'spring',
@@ -260,13 +260,16 @@ export default function FullPageScrollPage() {
             id="hero"
             className="h-screen w-full flex items-center justify-center p-4 md:p-8"
           >
-            <div className="w-full max-w-4xl mx-auto">
+            <div className="w-full max-w-4xl mx-auto pointer-events-auto">
               <Hero />
             </div>
           </section>
 
           {/* Experience Section */}
-          <section id="experience" className="h-screen w-full">
+          <section
+            id="experience"
+            className="h-screen w-full pointer-events-auto"
+          >
             <ExperienceSectionContent
               activeIndex={currentExperienceSlide}
               onSlideChange={goToExperienceSlide}
@@ -275,7 +278,7 @@ export default function FullPageScrollPage() {
 
           {/* Skills Section */}
           <section id="skills" className="h-screen w-full">
-            <div className="w-full h-full p-4 md:p-8 max-w-7xl mx-auto">
+            <div className="w-full h-full p-4 md:p-8 max-w-7xl mx-auto pointer-events-auto">
               <Skills />
             </div>
           </section>
@@ -285,7 +288,7 @@ export default function FullPageScrollPage() {
             id="connect"
             className="h-screen w-full flex items-center justify-center p-4 md:p-8"
           >
-            <div className="w-full max-w-4xl mx-auto bg-background/60 backdrop-blur-md rounded-2xl border border-white/10 p-4 md:p-6 shadow-[0_0_30px_-12px_rgba(6,182,212,0.15)]">
+            <div className="w-full max-w-4xl mx-auto bg-background/60 backdrop-blur-md rounded-2xl border border-white/10 p-4 md:p-6 shadow-[0_0_30px_-12px_rgba(6,182,212,0.15)] pointer-events-auto">
               <Socials />
             </div>
           </section>
