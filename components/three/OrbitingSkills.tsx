@@ -209,7 +209,7 @@ const CometNucleusShader = {
 
       gl_FragColor = vec4(litColor, uOpacity);
     }
-  `
+  `,
 };
 
 // Comet coma/tail shader - creates glowing gas effect
@@ -254,7 +254,7 @@ const CometComaShader = {
 
       gl_FragColor = vec4(uColor, alpha);
     }
-  `
+  `,
 };
 
 interface SkillNodeProps {
@@ -266,7 +266,14 @@ interface SkillNodeProps {
   onPositionUpdate?: (index: number, position: SkillPosition) => void;
 }
 
-function SkillNode({ skill, index, totalInCategory, visible, globalIndex, onPositionUpdate }: SkillNodeProps) {
+function SkillNode({
+  skill,
+  index,
+  totalInCategory,
+  visible,
+  globalIndex,
+  onPositionUpdate,
+}: SkillNodeProps) {
   const groupRef = useRef<THREE.Group>(null);
   const nucleusRef = useRef<THREE.Mesh>(null);
   const comaRef = useRef<THREE.Mesh>(null);
@@ -515,41 +522,10 @@ function SkillNode({ skill, index, totalInCategory, visible, globalIndex, onPosi
   );
 }
 
-function OrbitRing({
-  radius,
-  color,
-  tilt,
+export default function OrbitingSkills({
   visible,
-}: {
-  radius: number;
-  color: string;
-  tilt: number;
-  visible: boolean;
-}) {
-  const points = useMemo(() => {
-    const pts: [number, number, number][] = [];
-    for (let i = 0; i <= 64; i++) {
-      const angle = (i / 64) * Math.PI * 2;
-      const x = Math.cos(angle) * radius;
-      const z = Math.sin(angle) * radius;
-      const y = Math.sin(angle) * tilt * radius * 0.3;
-      pts.push([x, y, z]);
-    }
-    return pts;
-  }, [radius, tilt]);
-
-  return (
-    <Line
-      points={points}
-      color={color}
-      lineWidth={1}
-      transparent
-      opacity={visible ? 0.08 : 0}
-    />
-  );
-}
-
-export default function OrbitingSkills({ visible, skillPositionsRef }: OrbitingSkillsProps) {
+  skillPositionsRef,
+}: OrbitingSkillsProps) {
   const groupRef = useRef<THREE.Group>(null);
   const positionsRef = useRef<SkillPosition[]>([]);
 
