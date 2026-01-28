@@ -2,9 +2,7 @@
 
 import Image from 'next/image';
 import {
-  Terminal,
   Cpu,
-  ShieldCheck,
   ChevronDown,
   FileDown,
   BookOpen,
@@ -14,24 +12,11 @@ import { motion } from 'framer-motion';
 
 export default function Hero() {
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full p-4 md:p-8 text-center relative overflow-hidden group">
-      {/* Background Decorative ID */}
-      <div className="absolute top-8 left-8 flex items-center space-x-2 opacity-40 group-hover:opacity-80 transition-opacity duration-500 pointer-events-none">
-        <ShieldCheck size={16} className="text-rose-400" />
-        <span className="text-[11px] font-mono text-slate-300 uppercase tracking-widest">
-          Authenticated_Entity
-        </span>
-        <div className="w-1 h-4 bg-rose-500 animate-pulse"></div>
-      </div>
-
-      <div className="absolute top-8 right-8 text-white/5 group-hover:text-rose-500/20 transition-colors pointer-events-none">
-        <Terminal size={140} strokeWidth={0.5} />
-      </div>
-
+    <div className="flex flex-col items-center justify-center h-full w-full px-4 py-6 sm:p-6 md:p-8 text-center relative overflow-hidden group">
       {/* Profile Image with Enhanced Glow */}
-      <div className="relative mb-6 md:mb-8 group shrink-0">
-        <div className="absolute -inset-4 bg-gradient-to-r from-rose-500 to-yellow-400 rounded-full blur-2xl opacity-15 group-hover:opacity-40 transition-opacity duration-1000"></div>
-        <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-2 border-white/10 shadow-[0_0_50px_rgba(255,51,102,0.3)]">
+      <div className="relative mb-4 sm:mb-6 md:mb-8 group shrink-0">
+        <div className="absolute -inset-3 sm:-inset-4 bg-gradient-to-r from-rose-500 to-yellow-400 rounded-full blur-2xl opacity-15 group-hover:opacity-40 transition-opacity duration-1000"></div>
+        <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-2 border-white/10 shadow-[0_0_50px_rgba(255,51,102,0.3)]">
           <Image
             src="/profile.jpeg"
             alt="Harsh Tiwari"
@@ -41,92 +26,70 @@ export default function Hero() {
             priority
           />
         </div>
-        <div className="absolute -bottom-2 -right-2 md:-bottom-3 md:-right-3 bg-slate-900 border border-rose-500/50 p-1.5 rounded-lg shadow-lg">
-          <Cpu size={16} className="text-rose-400 animate-spin-slow" />
+        <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 md:-bottom-3 md:-right-3 bg-slate-900 border border-rose-500/50 p-1 sm:p-1.5 rounded-lg shadow-lg">
+          <Cpu size={14} className="text-rose-400 animate-spin-slow sm:w-4 sm:h-4" />
         </div>
       </div>
 
       {/* Introduction with Premium Typography */}
-      <div className="text-center z-10 max-w-2xl relative">
+      <div className="text-center z-10 max-w-2xl relative w-full">
         {/* Subtle backdrop for text legibility */}
         <div className="absolute inset-x-0 inset-y-[-40px] bg-[#0c0b0a]/70 blur-3xl rounded-full -z-10"></div>
 
-        <div className="flex items-center justify-center space-x-3 mb-4">
-          <span className="h-px w-12 bg-gradient-to-r from-transparent to-rose-500/50"></span>
-          <span className="text-[11px] font-mono text-rose-400 tracking-[0.3em] uppercase">
+        {/* Security Level Badge - Hidden on mobile for cleaner look */}
+        <div className="hidden sm:flex items-center justify-center space-x-3 mb-4">
+          <span className="h-px w-8 sm:w-12 bg-gradient-to-r from-transparent to-rose-500/50"></span>
+          <span className="text-[10px] sm:text-[11px] font-mono text-rose-400 tracking-[0.2em] sm:tracking-[0.3em] uppercase">
             Security Level 10
           </span>
-          <span className="h-px w-12 bg-gradient-to-l from-transparent to-rose-500/50"></span>
+          <span className="h-px w-8 sm:w-12 bg-gradient-to-l from-transparent to-rose-500/50"></span>
         </div>
 
-        <div className="relative mb-4 grid grid-cols-1">
+        {/* Mobile-only simple badge */}
+        <div className="flex sm:hidden justify-center mb-3">
+          <span className="text-[10px] font-mono text-rose-400 tracking-wider uppercase px-3 py-1 border border-rose-500/20 rounded-full">
+            Sr. Engineer
+          </span>
+        </div>
+
+        <div className="relative mb-3 sm:mb-4">
           {/* Main Title Layer */}
-          <h1 className="col-start-1 row-start-1 text-3xl md:text-6xl lg:text-7xl font-black tracking-tighter text-white leading-tight relative z-10">
-            SR. SOFTWARE{' '}
+          <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-black tracking-tight sm:tracking-tighter text-white leading-tight relative z-10">
+            <span className="block sm:inline">SOFTWARE</span>{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-yellow-300 to-orange-400 bg-[length:200%_100%] animate-[text-shimmer_3s_infinite_linear]">
               ENGINEER
             </span>
           </h1>
-
-          {/* Glitch Overlay - Perfectly aligned via grid stacking */}
-          <div className="col-start-1 row-start-1 opacity-0 group-hover:opacity-80 transition-opacity pointer-events-none z-20 grid grid-cols-1">
-            {/* Red Shift */}
-            <h1 className="col-start-1 row-start-1 text-3xl md:text-6xl lg:text-7xl font-black tracking-tighter text-rose-500/20 translate-x-[2px] leading-tight select-none">
-              SR. SOFTWARE <span className="">ENGINEER</span>
-            </h1>
-            {/* Gold Shift */}
-            <h1 className="col-start-1 row-start-1 text-3xl md:text-6xl lg:text-7xl font-black tracking-tighter text-yellow-400/20 -translate-x-[2px] leading-tight select-none">
-              SR. SOFTWARE <span className="">ENGINEER</span>
-            </h1>
-
-            {/* Scanning Lines (Internal) */}
-            <div className="absolute left-0 right-0 h-[1px] bg-white/20 blur-[1px] animate-[scan_2s_infinite_linear] top-1/2"></div>
-          </div>
         </div>
 
-        {/* Technical Meta Tag */}
-        <div className="flex justify-center mb-8 h-5">
-          <div className="opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
-            <span className="text-[9px] font-mono text-yellow-400/60 uppercase tracking-[0.6em] border-x border-yellow-400/20 px-4">
-              System_Architect // v4.0.Final
-            </span>
-          </div>
-        </div>
-
-        <p className="text-base md:text-lg text-slate-200 font-normal mb-8 leading-relaxed max-w-xl mx-auto">
+        <p className="text-sm sm:text-base md:text-lg text-slate-300 font-normal mb-6 sm:mb-8 leading-relaxed max-w-xl mx-auto px-2">
           Building{' '}
           <span className="text-rose-400 font-semibold">
-            horizontally scalable platforms
+            scalable platforms
           </span>{' '}
           and{' '}
           <span className="text-yellow-400 font-semibold">
-            real-time AI infrastructure
+            AI infrastructure
           </span>
-          . Core focus on event-driven architectures and distributed pipelines.
+          . Focused on event-driven architectures.
         </p>
 
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
+        {/* CTA Buttons - Optimized for mobile */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-6 sm:mb-8 px-2">
           {/* Resume Button */}
           <motion.button
             onClick={() => window.open('/harsh_resume_new.pdf', '_blank')}
-            className="group relative flex items-center gap-3 px-6 py-3 bg-rose-500/10 border border-rose-500/30 rounded-lg hover:bg-rose-500/20 hover:border-rose-500/50 transition-all duration-300 cursor-pointer overflow-hidden"
-            whileHover={{ scale: 1.02 }}
+            className="group relative w-full sm:w-auto flex items-center justify-center gap-3 px-5 sm:px-6 py-3 sm:py-3 bg-rose-500/10 border border-rose-500/30 rounded-xl hover:bg-rose-500/20 hover:border-rose-500/50 transition-all duration-300 cursor-pointer overflow-hidden"
             whileTap={{ scale: 0.98 }}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-rose-500/0 via-rose-500/10 to-rose-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
             <FileDown size={18} className="text-rose-400" />
-            <div className="flex flex-col items-start">
-              <span className="text-[9px] font-mono text-rose-500/60 uppercase tracking-wider">
-                Download
-              </span>
-              <span className="text-sm font-mono text-white font-medium">
-                Resume.pdf
-              </span>
-            </div>
+            <span className="text-sm font-medium text-white">
+              Download Resume
+            </span>
             <ExternalLink
               size={14}
-              className="text-rose-500/40 group-hover:text-rose-400 transition-colors ml-2"
+              className="text-rose-500/40 group-hover:text-rose-400 transition-colors"
             />
           </motion.button>
 
@@ -135,59 +98,46 @@ export default function Hero() {
             onClick={() =>
               window.open('https://betriumalpha.hashnode.dev', '_blank')
             }
-            className="group relative flex items-center gap-3 px-6 py-3 bg-yellow-400/10 border border-yellow-400/30 rounded-lg hover:bg-yellow-400/20 hover:border-yellow-400/50 transition-all duration-300 cursor-pointer overflow-hidden"
-            whileHover={{ scale: 1.02 }}
+            className="group relative w-full sm:w-auto flex items-center justify-center gap-3 px-5 sm:px-6 py-3 sm:py-3 bg-yellow-400/10 border border-yellow-400/30 rounded-xl hover:bg-yellow-400/20 hover:border-yellow-400/50 transition-all duration-300 cursor-pointer overflow-hidden"
             whileTap={{ scale: 0.98 }}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/10 to-yellow-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
             <BookOpen size={18} className="text-yellow-400" />
-            <div className="flex flex-col items-start">
-              <span className="text-[9px] font-mono text-yellow-400/60 uppercase tracking-wider">
-                Read
-              </span>
-              <span className="text-sm font-mono text-white font-medium">
-                Tech Blog
-              </span>
-            </div>
+            <span className="text-sm font-medium text-white">
+              Read Blog
+            </span>
             <ExternalLink
               size={14}
-              className="text-yellow-400/40 group-hover:text-yellow-400 transition-colors ml-2"
+              className="text-yellow-400/40 group-hover:text-yellow-400 transition-colors"
             />
           </motion.button>
         </div>
 
-        <div className="flex items-center justify-center space-x-8">
-          <div className="flex flex-col items-center">
-            <span className="text-[11px] font-mono text-slate-500 uppercase mb-1">
-              Status
+        {/* Status indicators - Simplified on mobile */}
+        <div className="flex items-center justify-center gap-4 sm:gap-8">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]"></div>
+            <span className="text-[11px] sm:text-xs text-green-400 font-medium">
+              Available
             </span>
-            <div className="flex items-center space-x-2 px-4 py-1.5 bg-green-500/5 border border-green-500/20 rounded-full">
-              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-              <span className="text-[11px] text-green-500 font-mono font-bold uppercase tracking-widest">
-                Active
-              </span>
-            </div>
           </div>
-          <div className="w-px h-10 bg-white/10"></div>
-          <div className="flex flex-col items-center">
-            <span className="text-[11px] font-mono text-slate-500 uppercase mb-1">
-              Uptime
-            </span>
-            <span className="text-[14px] text-slate-300 font-mono">100.0%</span>
+          <div className="w-px h-4 bg-white/10 hidden sm:block"></div>
+          <div className="hidden sm:flex flex-col items-center">
+            <span className="text-xs text-slate-400">Based in India</span>
           </div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll Indicator - Adjusted position for mobile */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        animate={{ y: [0, 8, 0] }}
+        className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 sm:gap-2"
+        animate={{ y: [0, 6, 0] }}
         transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <span className="text-[9px] font-mono text-slate-500 uppercase tracking-widest">
-          Scroll
+        <span className="text-[8px] sm:text-[9px] font-mono text-slate-500 uppercase tracking-widest">
+          Swipe
         </span>
-        <ChevronDown size={20} className="text-rose-500/50" />
+        <ChevronDown size={18} className="text-rose-500/50 sm:w-5 sm:h-5" />
       </motion.div>
     </div>
   );

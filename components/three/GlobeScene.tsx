@@ -5,7 +5,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { OrbitControls } from '@react-three/drei';
 import OrbitingSkills from './OrbitingSkills';
-import BlackHoleCore from './BlackHoleCore';
+import BlackHoleCore, { SkillPosition } from './BlackHoleCore';
 import StarField from './StarField';
 import SceneEffects from './SceneEffects';
 import AccretionParticles from './AccretionParticles';
@@ -20,6 +20,7 @@ export default function GlobeScene({
   activeSection = 'hero',
 }: GlobeSceneProps) {
   const sceneRef = useRef<THREE.Group>(null);
+  const skillPositionsRef = useRef<SkillPosition[]>([]);
   const showSkills = activeSection === 'skills';
 
   // Auto-rotate the scene slowly if needed, or let OrbitControls handle it
@@ -47,7 +48,7 @@ export default function GlobeScene({
 
       <group ref={sceneRef} position={[0, 0, 0]}>
         {/* The Black Hole Core (Disk, Event Horizon) */}
-        <BlackHoleCore />
+        <BlackHoleCore skillPositionsRef={showSkills ? skillPositionsRef : undefined} />
 
         {/* Swirling Accretion Matter */}
         <AccretionParticles />
@@ -55,13 +56,14 @@ export default function GlobeScene({
         {/* Background Stars */}
         <StarField />
 
-        {/* 
-          Orbiting Skills 
+        {/*
+          Orbiting Skills
           - Inside the scene so they exist in the same space
           - Note: If OrbitControls rotates camera, these stay fixed in world space relative to black hole.
           - If we want them to orbit the black hole, the OrbitingSkills component handles that animation.
+          - Skills report their positions to destabilize the accretion disk
         */}
-        <OrbitingSkills visible={showSkills} />
+        <OrbitingSkills visible={showSkills} skillPositionsRef={skillPositionsRef} />
       </group>
 
       {/* Post-Processing Effects (Bloom + Lensing) */}

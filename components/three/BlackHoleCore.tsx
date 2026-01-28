@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, MutableRefObject } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -8,6 +8,19 @@ const BLACK_HOLE_RADIUS = 2.6; // Doubled from 1.3
 const DISK_INNER_RADIUS = 3.0; // Doubled from 1.5
 const DISK_OUTER_RADIUS = 14.0; // Increased from 8.0
 const DISK_TILT_ANGLE = Math.PI / 3.0;
+const MAX_SKILL_DISTURBANCES = 17; // Maximum skills to track for disturbance
+
+export interface SkillPosition {
+  x: number;
+  z: number;
+  radius: number;
+  angle: number;
+  color: THREE.Color;
+}
+
+export interface BlackHoleCoreProps {
+  skillPositionsRef?: MutableRefObject<SkillPosition[]>;
+}
 
 const EventHorizonShader = {
   vertexShader: `
@@ -43,10 +56,12 @@ const DiskShader = {
     varying vec2 vUv;
     varying float vRadius;
     varying float vAngle;
+    varying vec2 vPosition2D;
     void main() {
         vUv = uv;
         vRadius = length(position.xy);
         vAngle = atan(position.y, position.x);
+        vPosition2D = position.xy;
         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     }
   `,
@@ -61,15 +76,21 @@ const DiskShader = {
     uniform float uFlowSpeed;
     uniform float uDensity;
 
+    // Skill disturbance uniforms
+    uniform vec2 uSkillPositions[${MAX_SKILL_DISTURBANCES}];
+    uniform int uActiveSkills;
+    uniform float uDisturbanceStrength;
+
     varying vec2 vUv;
     varying float vRadius;
     varying float vAngle;
+    varying vec2 vPosition2D;
 
     vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
     vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
     vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
     vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
-    
+
     float snoise(vec3 v) {
         const vec2 C = vec2(1.0/6.0, 1.0/3.0);
         const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
@@ -83,7 +104,7 @@ const DiskShader = {
         vec3 x2 = x0 - i2 + C.yyy;
         vec3 x3 = x0 - D.yyy;
         i = mod289(i);
-        vec4 p = permute( permute( permute( 
+        vec4 p = permute( permute( permute(
                  i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
                + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
                + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
@@ -113,34 +134,73 @@ const DiskShader = {
         return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3) ) );
     }
 
+    // Calculate flow disturbance from orbiting skills - affects turbulence pattern only
+    float calculateDisturbance(vec2 pos, float time) {
+        float totalDisturbance = 0.0;
+
+        for (int i = 0; i < ${MAX_SKILL_DISTURBANCES}; i++) {
+            if (i >= uActiveSkills) break;
+
+            vec2 skillPos = uSkillPositions[i];
+            float dist = length(pos - skillPos);
+
+            // Gentle ripple in flow pattern
+            float rippleWave = sin(dist * 1.5 - time * 2.0) * 0.5 + 0.5;
+            float rippleFalloff = exp(-dist * 1.0) * smoothstep(2.0, 0.0, dist);
+
+            // Wake turbulence trailing behind skill
+            float skillAngle = atan(skillPos.y, skillPos.x);
+            float posAngle = atan(pos.y, pos.x);
+            float angleDiff = abs(mod(skillAngle - posAngle + 3.14159, 6.28318) - 3.14159);
+            float wakeFactor = smoothstep(0.6, 0.0, angleDiff) * smoothstep(2.5, 0.0, dist) * 0.25;
+
+            totalDisturbance += (rippleWave * rippleFalloff * 0.3 + wakeFactor) * uDisturbanceStrength;
+        }
+
+        return clamp(totalDisturbance, 0.0, 0.4);
+    }
+
     void main() {
         // Normalize radius between inner and outer for coloring
         float normalizedRadius = smoothstep(${DISK_INNER_RADIUS.toFixed(
           2
         )}, ${DISK_OUTER_RADIUS.toFixed(2)}, vRadius);
-        
+
+        // Calculate subtle disturbance from skills - only affects flow pattern
+        float disturbance = calculateDisturbance(vPosition2D, uTime);
+
+        // Modify spiral based on disturbance - creates gentle warping in flow
         float spiral = vAngle * 3.0 - (1.0 / (normalizedRadius + 0.1)) * 2.0;
+        spiral += disturbance * 0.3; // Disturbance warps the spiral flow
+
         vec2 noiseUv = vec2(vUv.x + uTime * uFlowSpeed * (2.0 / (vRadius * 0.3 + 1.0)) + sin(spiral) * 0.1, vUv.y * 0.8 + cos(spiral) * 0.1);
+
+        // Add subtle turbulence to UV from disturbance
+        noiseUv += disturbance * 0.08;
+
         float noiseVal1 = snoise(vec3(noiseUv * uNoiseScale, uTime * 0.15));
         float noiseVal2 = snoise(vec3(noiseUv * uNoiseScale * 3.0 + 0.8, uTime * 0.22));
         float noiseVal3 = snoise(vec3(noiseUv * uNoiseScale * 6.0 + 1.5, uTime * 0.3));
-        
-        float noiseVal = (noiseVal1 * 0.45 + noiseVal2 * 0.35 + noiseVal3 * 0.2);
+
+        // Add extra turbulence layer where skills disturb the disk
+        float disturbanceNoise = snoise(vec3(noiseUv * uNoiseScale * 5.0, uTime * 0.4 + disturbance * 2.0)) * disturbance * 0.2;
+
+        float noiseVal = (noiseVal1 * 0.45 + noiseVal2 * 0.35 + noiseVal3 * 0.2 + disturbanceNoise);
         noiseVal = (noiseVal + 1.0) * 0.5;
-        
+
         vec3 color = uColorOuter;
         color = mix(color, uColorMid3, smoothstep(0.0, 0.25, normalizedRadius));
         color = mix(color, uColorMid2, smoothstep(0.2, 0.55, normalizedRadius));
         color = mix(color, uColorMid1, smoothstep(0.5, 0.75, normalizedRadius));
         color = mix(color, uColorHot, smoothstep(0.7, 0.95, normalizedRadius));
-        
+
         color *= (0.5 + noiseVal * 1.0);
         float brightness = pow(1.0 - normalizedRadius, 1.0) * 3.5 + 0.5;
         brightness *= (0.3 + noiseVal * 2.2);
-        
+
         float pulse = sin(uTime * 1.8 + normalizedRadius * 12.0 + vAngle * 2.0) * 0.15 + 0.85;
         brightness *= pulse;
-        
+
         float alpha = uDensity * (0.2 + noiseVal * 0.9);
         alpha *= smoothstep(0.0, 0.15, normalizedRadius);
         alpha *= (1.0 - smoothstep(0.85, 1.0, normalizedRadius));
@@ -151,10 +211,15 @@ const DiskShader = {
   `,
 };
 
-export default function BlackHoleCore() {
+export default function BlackHoleCore({ skillPositionsRef }: BlackHoleCoreProps) {
   const diskRef = useRef<THREE.Mesh>(null);
   const horizonRef = useRef<THREE.Mesh>(null);
   const { camera } = useThree();
+
+  // Initialize skill position arrays for uniforms
+  const initialSkillPositions = useMemo(() => {
+    return new Array(MAX_SKILL_DISTURBANCES).fill(null).map(() => new THREE.Vector2(0, 0));
+  }, []);
 
   const diskUniforms = useMemo(
     () => ({
@@ -167,8 +232,12 @@ export default function BlackHoleCore() {
       uNoiseScale: { value: 2.5 },
       uFlowSpeed: { value: 0.22 },
       uDensity: { value: 1.3 },
+      // Skill disturbance uniforms - affects flow turbulence only
+      uSkillPositions: { value: initialSkillPositions },
+      uActiveSkills: { value: 0 },
+      uDisturbanceStrength: { value: 0.5 },
     }),
-    []
+    [initialSkillPositions]
   );
 
   const horizonUniforms = useMemo(
@@ -182,8 +251,24 @@ export default function BlackHoleCore() {
   useFrame((state) => {
     if (diskRef.current) {
       diskRef.current.rotation.z += state.clock.getDelta() * 0.05; // Rotate disk
-      (diskRef.current.material as THREE.ShaderMaterial).uniforms.uTime.value =
-        state.clock.elapsedTime;
+      const material = diskRef.current.material as THREE.ShaderMaterial;
+      material.uniforms.uTime.value = state.clock.elapsedTime;
+
+      // Update skill positions from ref for flow disturbance
+      if (skillPositionsRef?.current) {
+        const skills = skillPositionsRef.current;
+        const positions = material.uniforms.uSkillPositions.value;
+
+        for (let i = 0; i < MAX_SKILL_DISTURBANCES; i++) {
+          if (i < skills.length) {
+            // Transform skill position to disk-local coordinates
+            positions[i].set(skills[i].x, skills[i].z);
+          } else {
+            positions[i].set(1000, 1000); // Move unused positions far away
+          }
+        }
+        material.uniforms.uActiveSkills.value = Math.min(skills.length, MAX_SKILL_DISTURBANCES);
+      }
     }
     if (horizonRef.current) {
       (

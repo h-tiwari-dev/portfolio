@@ -127,41 +127,41 @@ export default function ExperienceSectionContent({
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-background/80 z-[1] pointer-events-none" />
 
       {/* Header */}
-      <div className="absolute top-6 left-6 md:top-8 md:left-8 z-20">
+      <div className="absolute top-4 left-3 sm:top-6 sm:left-6 md:top-8 md:left-8 z-20">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-3"
+          className="flex items-center gap-2 sm:gap-3"
         >
           <div
-            className={`w-10 h-10 md:w-12 md:h-12 rounded-xl bg-background/50 backdrop-blur-sm flex items-center justify-center border ${currentColors.border} transition-colors duration-500`}
+            className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-lg sm:rounded-xl bg-background/50 backdrop-blur-sm flex items-center justify-center border ${currentColors.border} transition-colors duration-500`}
           >
             <Activity
-              size={20}
-              className={`${currentColors.text} transition-colors duration-500`}
+              size={16}
+              className={`${currentColors.text} transition-colors duration-500 sm:w-5 sm:h-5`}
             />
           </div>
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white">
               Experience
             </h2>
-            <p className="text-[9px] md:text-[10px] font-mono text-slate-500 uppercase tracking-wider">
-              Scroll to explore
+            <p className="text-[8px] sm:text-[9px] md:text-[10px] font-mono text-slate-500 uppercase tracking-wider">
+              Swipe to explore
             </p>
           </div>
         </motion.div>
       </div>
 
       {/* Progress counter */}
-      <div className="absolute top-6 right-6 md:top-8 md:right-20 z-20">
+      <div className="absolute top-4 right-3 sm:top-6 sm:right-6 md:top-8 md:right-20 z-20">
         <div className="text-right">
           <span
-            className={`text-3xl md:text-4xl font-bold ${currentColors.text} transition-colors duration-500`}
+            className={`text-2xl sm:text-3xl md:text-4xl font-bold ${currentColors.text} transition-colors duration-500`}
           >
             {String(activeIndex + 1).padStart(2, '0')}
           </span>
-          <span className="text-lg md:text-xl text-slate-600 mx-1">/</span>
-          <span className="text-lg md:text-xl text-slate-500">
+          <span className="text-base sm:text-lg md:text-xl text-slate-600 mx-0.5 sm:mx-1">/</span>
+          <span className="text-base sm:text-lg md:text-xl text-slate-500">
             {String(totalSlides).padStart(2, '0')}
           </span>
         </div>
@@ -230,9 +230,9 @@ export default function ExperienceSectionContent({
             return (
               <div
                 key={exp.pid}
-                className="min-w-full h-full flex items-center justify-center px-4 md:px-16 lg:px-24"
+                className="min-w-full h-full flex items-center justify-center px-3 sm:px-4 md:px-16 lg:px-24 pb-24 sm:pb-16 md:pb-0"
               >
-                <div className="w-full max-w-5xl grid lg:grid-cols-5 gap-6 md:gap-8 items-center">
+                <div className="w-full max-w-5xl grid lg:grid-cols-5 gap-4 sm:gap-6 md:gap-8 items-center">
                   {/* Content Card */}
                   <motion.div
                     initial={false}
@@ -242,52 +242,47 @@ export default function ExperienceSectionContent({
                       y: isActive ? 0 : 20,
                     }}
                     transition={{ duration: 0.4 }}
-                    className={`lg:col-span-3 relative p-6 md:p-8 rounded-2xl md:rounded-3xl border ${
+                    className={`lg:col-span-3 relative p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl border ${
                       colors.border
-                    } bg-background/60 backdrop-blur-xl ${
+                    } bg-background/70 backdrop-blur-xl ${
                       isActive ? colors.glow : ''
                     }`}
                   >
-                    {/* Status badge */}
-                    <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
-                      <span className="text-[9px] md:text-[10px] font-mono text-slate-500">
+                    {/* Status badge - Simplified on mobile */}
+                    <div className="flex items-center gap-2 mb-3 sm:mb-4 md:mb-6">
+                      {exp.isActive && (
+                        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/30">
+                          <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                          <span className="text-[9px] sm:text-[10px] font-mono text-green-400">
+                            Current
+                          </span>
+                        </div>
+                      )}
+                      <span className="text-[8px] sm:text-[9px] font-mono text-slate-500 hidden sm:inline">
                         {exp.pid}
                       </span>
-                      <span
-                        className={`text-[8px] md:text-[9px] font-mono px-2 py-0.5 rounded-full ${
-                          exp.isActive
-                            ? 'text-green-400 border border-green-500/30 bg-green-500/10'
-                            : 'text-slate-500 border border-slate-500/30 bg-slate-500/10'
-                        }`}
-                      >
-                        {exp.status}
-                      </span>
-                      {exp.isActive && (
-                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
-                      )}
                     </div>
 
                     {/* Role & Company */}
-                    <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2 md:mb-3">
+                    <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-1.5 sm:mb-2 md:mb-3 leading-tight">
                       {exp.role}
                     </h3>
-                    <div className="flex flex-wrap items-center gap-3 md:gap-4 mb-4 md:mb-6">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4 md:mb-6">
                       <span
-                        className={`text-lg md:text-xl font-mono font-bold ${colors.text} flex items-center gap-2`}
+                        className={`text-base sm:text-lg md:text-xl font-mono font-bold ${colors.text} flex items-center gap-1.5 sm:gap-2`}
                       >
-                        <Building2 size={16} className="opacity-60" />
+                        <Building2 size={14} className="opacity-60 sm:w-4 sm:h-4" />
                         {exp.company}
-                        <Zap size={12} className="opacity-40" />
                       </span>
-                      <span className="flex items-center gap-1.5 text-slate-400 text-xs md:text-sm font-mono">
-                        <Calendar size={12} />
+                      <span className="flex items-center gap-1 sm:gap-1.5 text-slate-400 text-[11px] sm:text-xs md:text-sm font-mono">
+                        <Calendar size={11} className="sm:w-3 sm:h-3" />
                         {exp.period}
                       </span>
                     </div>
 
-                    {/* Highlights */}
-                    <div className="space-y-2 md:space-y-3 mb-6 md:mb-8">
-                      {exp.highlights.map((point, i) => (
+                    {/* Highlights - Show fewer on mobile */}
+                    <div className="space-y-1.5 sm:space-y-2 md:space-y-3 mb-4 sm:mb-6 md:mb-8">
+                      {exp.highlights.slice(0, 3).map((point, i) => (
                         <motion.div
                           key={i}
                           initial={false}
@@ -299,25 +294,60 @@ export default function ExperienceSectionContent({
                             delay: isActive ? i * 0.05 : 0,
                             duration: 0.3,
                           }}
-                          className="flex items-start gap-2 md:gap-3"
+                          className="flex items-start gap-1.5 sm:gap-2 md:gap-3"
                         >
                           <ChevronRight
-                            size={14}
-                            className={`${colors.text} mt-0.5 shrink-0`}
+                            size={12}
+                            className={`${colors.text} mt-0.5 shrink-0 sm:w-3.5 sm:h-3.5`}
                           />
-                          <span className="text-xs md:text-sm text-slate-300 leading-relaxed">
+                          <span className="text-[11px] sm:text-xs md:text-sm text-slate-300 leading-relaxed">
                             {point}
                           </span>
                         </motion.div>
                       ))}
+                      {/* Show remaining highlights only on larger screens */}
+                      <div className="hidden sm:block">
+                        {exp.highlights.slice(3).map((point, i) => (
+                          <motion.div
+                            key={i + 3}
+                            initial={false}
+                            animate={{
+                              opacity: isActive ? 1 : 0.5,
+                              x: isActive ? 0 : -10,
+                            }}
+                            transition={{
+                              delay: isActive ? (i + 3) * 0.05 : 0,
+                              duration: 0.3,
+                            }}
+                            className="flex items-start gap-2 md:gap-3 mt-2 md:mt-3"
+                          >
+                            <ChevronRight
+                              size={14}
+                              className={`${colors.text} mt-0.5 shrink-0`}
+                            />
+                            <span className="text-xs md:text-sm text-slate-300 leading-relaxed">
+                              {point}
+                            </span>
+                          </motion.div>
+                        ))}
+                      </div>
                     </div>
 
                     {/* Tech Stack */}
-                    <div className="flex flex-wrap gap-1.5 md:gap-2">
-                      {exp.tech.map((t) => (
+                    <div className="flex flex-wrap gap-1 sm:gap-1.5 md:gap-2">
+                      {exp.tech.slice(0, 4).map((t) => (
                         <span
                           key={t}
-                          className={`text-[9px] md:text-[10px] font-mono px-2 md:px-3 py-1 md:py-1.5 rounded-lg border ${colors.tag}`}
+                          className={`text-[8px] sm:text-[9px] md:text-[10px] font-mono px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 md:py-1.5 rounded-md sm:rounded-lg border ${colors.tag}`}
+                        >
+                          {t}
+                        </span>
+                      ))}
+                      {/* Show remaining tech only on larger screens */}
+                      {exp.tech.slice(4).map((t) => (
+                        <span
+                          key={t}
+                          className={`hidden sm:inline text-[9px] md:text-[10px] font-mono px-2 md:px-3 py-1 md:py-1.5 rounded-lg border ${colors.tag}`}
                         >
                           {t}
                         </span>
@@ -355,12 +385,12 @@ export default function ExperienceSectionContent({
         </motion.div>
       </div>
 
-      {/* Bottom scroll indicator */}
+      {/* Bottom scroll indicator - Hidden on mobile where we have bottom nav */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
-        className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-20"
+        className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-20 hidden sm:block"
       >
         <div className="flex flex-col items-center gap-2">
           <span className="text-[9px] md:text-[10px] font-mono text-slate-500 uppercase tracking-widest">
@@ -382,32 +412,36 @@ export default function ExperienceSectionContent({
         </div>
       </motion.div>
 
-      {/* Mobile progress dots */}
-      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-20 flex gap-3 md:hidden">
+      {/* Mobile progress dots - Larger touch targets */}
+      <div className="absolute bottom-24 sm:bottom-20 left-1/2 -translate-x-1/2 z-20 flex gap-4 md:hidden">
         {experiences.map((exp, i) => (
           <button
             key={exp.pid}
             onClick={() => onSlideChange(i)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              i === activeIndex
-                ? `${
-                    colorConfig[exp.color as keyof typeof colorConfig].dot
-                  } scale-125`
-                : i < activeIndex
-                ? `${
-                    colorConfig[exp.color as keyof typeof colorConfig].dot
-                  } opacity-50`
-                : 'bg-slate-600'
-            }`}
-            style={{
-              boxShadow:
+            className="p-2 touch-manipulation"
+          >
+            <div
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
                 i === activeIndex
-                  ? `0 0 12px ${
-                      colorConfig[exp.color as keyof typeof colorConfig].accent
-                    }`
-                  : 'none',
-            }}
-          />
+                  ? `${
+                      colorConfig[exp.color as keyof typeof colorConfig].dot
+                    } scale-125`
+                  : i < activeIndex
+                  ? `${
+                      colorConfig[exp.color as keyof typeof colorConfig].dot
+                    } opacity-50`
+                  : 'bg-slate-600'
+              }`}
+              style={{
+                boxShadow:
+                  i === activeIndex
+                    ? `0 0 12px ${
+                        colorConfig[exp.color as keyof typeof colorConfig].accent
+                      }`
+                    : 'none',
+              }}
+            />
+          </button>
         ))}
       </div>
     </div>

@@ -37,10 +37,10 @@ export const useScrollContext = () => {
 };
 
 const sections = [
-  { id: 'hero', label: 'Identity' },
-  { id: 'experience', label: 'Lifeline' },
-  { id: 'skills', label: 'Stack' },
-  { id: 'connect', label: 'Comms' },
+  { id: 'hero', label: 'Home', icon: '01' },
+  { id: 'experience', label: 'Work', icon: '02' },
+  { id: 'skills', label: 'Skills', icon: '03' },
+  { id: 'connect', label: 'Contact', icon: '04' },
 ];
 
 const experienceSlideCount = 3;
@@ -50,23 +50,42 @@ export default function FullPageScrollPage() {
   const [currentSection, setCurrentSection] = useState(0);
   const [currentExperienceSlide, setCurrentExperienceSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const lastScrollTime = useRef(0);
   const touchStartY = useRef(0);
   const { setActiveSection } = useSection();
 
   const totalSections = sections.length;
-  const scrollCooldown = 700; // ms between scroll actions
+  const scrollCooldown = 700;
 
-  // Calculate if we're in experience section
+  // Check if mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Handle dynamic viewport height for mobile browsers
+  useEffect(() => {
+    const setVH = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+    setVH();
+    window.addEventListener('resize', setVH);
+    return () => window.removeEventListener('resize', setVH);
+  }, []);
+
   const isInExperience = currentSection === experienceSectionIndex;
 
-  // Sync active section with SectionContext for ThreeBackground
   useEffect(() => {
     setActiveSection(sections[currentSection].id);
   }, [currentSection, setActiveSection]);
 
-  // Navigate to a section
   const goToSection = useCallback(
     (index: number) => {
       if (index < 0 || index >= totalSections || isAnimating) return;
@@ -74,7 +93,6 @@ export default function FullPageScrollPage() {
       setIsAnimating(true);
       setCurrentSection(index);
 
-      // Reset experience slide when entering experience section
       if (index === experienceSectionIndex) {
         setCurrentExperienceSlide(0);
       }
@@ -84,7 +102,6 @@ export default function FullPageScrollPage() {
     [totalSections, isAnimating]
   );
 
-  // Navigate to experience slide
   const goToExperienceSlide = useCallback(
     (index: number) => {
       if (index < 0 || index >= experienceSlideCount || isAnimating) return;
@@ -97,7 +114,6 @@ export default function FullPageScrollPage() {
     [isAnimating]
   );
 
-  // Handle scroll direction
   const handleScroll = useCallback(
     (direction: 'up' | 'down') => {
       const now = Date.now();
@@ -106,28 +122,22 @@ export default function FullPageScrollPage() {
 
       if (direction === 'down') {
         if (isInExperience) {
-          // In experience section - navigate slides first
           if (currentExperienceSlide < experienceSlideCount - 1) {
             goToExperienceSlide(currentExperienceSlide + 1);
           } else {
-            // At last slide, go to next section
             goToSection(currentSection + 1);
           }
         } else {
-          // Normal section navigation
           goToSection(currentSection + 1);
         }
       } else {
         if (isInExperience) {
-          // In experience section - navigate slides first
           if (currentExperienceSlide > 0) {
             goToExperienceSlide(currentExperienceSlide - 1);
           } else {
-            // At first slide, go to previous section
             goToSection(currentSection - 1);
           }
         } else {
-          // Normal section navigation
           goToSection(currentSection - 1);
         }
       }
@@ -146,10 +156,7 @@ export default function FullPageScrollPage() {
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-
-      // Determine scroll direction with threshold
       if (Math.abs(e.deltaY) < 10) return;
-
       const direction = e.deltaY > 0 ? 'down' : 'up';
       handleScroll(direction);
     };
@@ -166,7 +173,7 @@ export default function FullPageScrollPage() {
     };
   }, [handleScroll]);
 
-  // Touch event handlers
+  // Touch event handlers with better mobile support
   useEffect(() => {
     const handleTouchStart = (e: TouchEvent) => {
       touchStartY.current = e.touches[0].clientY;
@@ -176,8 +183,8 @@ export default function FullPageScrollPage() {
       const touchEndY = e.changedTouches[0].clientY;
       const deltaY = touchStartY.current - touchEndY;
 
-      // Minimum swipe distance
-      if (Math.abs(deltaY) < 50) return;
+      // Lower threshold for mobile (30px instead of 50px)
+      if (Math.abs(deltaY) < 30) return;
 
       const direction = deltaY > 0 ? 'down' : 'up';
       handleScroll(direction);
@@ -225,7 +232,6 @@ export default function FullPageScrollPage() {
     isAnimating,
   };
 
-  // Get current experience color
   const experienceColors = ['#ff3366', '#ffcc00', '#ff5500'];
   const currentColor = isInExperience
     ? experienceColors[currentExperienceSlide] || '#ff3366'
@@ -236,13 +242,14 @@ export default function FullPageScrollPage() {
       <main
         ref={containerRef}
         className="fixed inset-0 overflow-hidden bg-background"
+        style={{ height: 'calc(var(--vh, 1vh) * 100)' }}
       >
-        {/* Three.js Globe Background - Fixed */}
+        {/* Three.js Globe Background */}
         <ThreeBackground />
 
         {/* Background Decorative Elements */}
         <div className="fixed inset-0 bg-grid opacity-10 pointer-events-none z-[1]"></div>
-        <div className="fixed inset-0 scanlines pointer-events-none z-[1]"></div>
+        <div className="fixed inset-0 scanlines pointer-events-none z-[1] hidden sm:block"></div>
 
         {/* Sections container */}
         <motion.div
@@ -258,7 +265,8 @@ export default function FullPageScrollPage() {
           {/* Hero Section */}
           <section
             id="hero"
-            className="h-screen w-full flex items-center justify-center p-4 md:p-8"
+            className="w-full flex items-center justify-center p-2 sm:p-4 md:p-8"
+            style={{ height: 'calc(var(--vh, 1vh) * 100)' }}
           >
             <div className="w-full max-w-4xl mx-auto pointer-events-auto">
               <Hero />
@@ -268,7 +276,8 @@ export default function FullPageScrollPage() {
           {/* Experience Section */}
           <section
             id="experience"
-            className="h-screen w-full pointer-events-auto"
+            className="w-full pointer-events-auto"
+            style={{ height: 'calc(var(--vh, 1vh) * 100)' }}
           >
             <ExperienceSectionContent
               activeIndex={currentExperienceSlide}
@@ -277,8 +286,12 @@ export default function FullPageScrollPage() {
           </section>
 
           {/* Skills Section */}
-          <section id="skills" className="h-screen w-full">
-            <div className="w-full h-full p-4 md:p-8 max-w-7xl mx-auto pointer-events-auto">
+          <section
+            id="skills"
+            className="w-full"
+            style={{ height: 'calc(var(--vh, 1vh) * 100)' }}
+          >
+            <div className="w-full h-full p-2 sm:p-4 md:p-8 max-w-7xl mx-auto pointer-events-auto">
               <Skills />
             </div>
           </section>
@@ -286,32 +299,45 @@ export default function FullPageScrollPage() {
           {/* Connect Section */}
           <section
             id="connect"
-            className="h-screen w-full flex items-center justify-center p-4 md:p-8"
+            className="w-full flex items-center justify-center p-2 sm:p-4 md:p-8"
+            style={{ height: 'calc(var(--vh, 1vh) * 100)' }}
           >
-            <div className="w-full max-w-4xl mx-auto bg-background/60 backdrop-blur-md rounded-2xl border border-white/10 p-4 md:p-6 shadow-[0_0_30px_-12px_rgba(6,182,212,0.15)] pointer-events-auto">
+            <div className="w-full max-w-4xl mx-auto bg-background/60 backdrop-blur-md rounded-2xl border border-white/10 p-3 sm:p-4 md:p-6 shadow-[0_0_30px_-12px_rgba(6,182,212,0.15)] pointer-events-auto">
               <Socials />
             </div>
           </section>
         </motion.div>
 
-        {/* Navigation */}
-        <ScrollNav
-          sections={sections}
-          currentSection={currentSection}
-          currentExperienceSlide={currentExperienceSlide}
-          isInExperience={isInExperience}
-          currentColor={currentColor}
-          goToSection={goToSection}
-          goToExperienceSlide={goToExperienceSlide}
-        />
+        {/* Desktop Navigation - Right side */}
+        <div className="hidden md:block">
+          <ScrollNavDesktop
+            sections={sections}
+            currentSection={currentSection}
+            currentExperienceSlide={currentExperienceSlide}
+            isInExperience={isInExperience}
+            currentColor={currentColor}
+            goToSection={goToSection}
+            goToExperienceSlide={goToExperienceSlide}
+          />
+        </div>
+
+        {/* Mobile Navigation - Bottom */}
+        <div className="md:hidden">
+          <ScrollNavMobile
+            sections={sections}
+            currentSection={currentSection}
+            currentColor={currentColor}
+            goToSection={goToSection}
+          />
+        </div>
       </main>
     </ScrollContext.Provider>
   );
 }
 
-// Integrated ScrollNav component
-interface ScrollNavProps {
-  sections: { id: string; label: string }[];
+// Desktop Navigation Component
+interface ScrollNavDesktopProps {
+  sections: { id: string; label: string; icon: string }[];
   currentSection: number;
   currentExperienceSlide: number;
   isInExperience: boolean;
@@ -320,7 +346,7 @@ interface ScrollNavProps {
   goToExperienceSlide: (index: number) => void;
 }
 
-function ScrollNav({
+function ScrollNavDesktop({
   sections,
   currentSection,
   currentExperienceSlide,
@@ -328,7 +354,7 @@ function ScrollNav({
   currentColor,
   goToSection,
   goToExperienceSlide,
-}: ScrollNavProps) {
+}: ScrollNavDesktopProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   const experienceItems = [
@@ -342,11 +368,10 @@ function ScrollNav({
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.5, duration: 0.5 }}
-      className="fixed right-4 md:right-6 top-1/2 -translate-y-1/2 z-50"
+      className="fixed right-6 top-1/2 -translate-y-1/2 z-50"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Background pill */}
       <motion.div
         className="absolute inset-y-0 -inset-x-3 bg-background/60 backdrop-blur-md rounded-full border border-white/10 -z-10"
         animate={{
@@ -358,7 +383,6 @@ function ScrollNav({
       />
 
       <div className="flex flex-col items-center gap-4 py-4 px-2">
-        {/* Progress line */}
         <div className="absolute left-1/2 -translate-x-1/2 top-4 bottom-4 w-px bg-white/10">
           <motion.div
             className="absolute top-0 left-0 w-full"
@@ -385,7 +409,6 @@ function ScrollNav({
                 onClick={() => goToSection(index)}
                 className="group relative flex items-center justify-end gap-3 z-10"
               >
-                {/* Label */}
                 <AnimatePresence>
                   {(isHovered || isActive) && (
                     <motion.span
@@ -409,7 +432,6 @@ function ScrollNav({
                   )}
                 </AnimatePresence>
 
-                {/* Dot indicator */}
                 <div className="relative">
                   {isActive && (
                     <motion.div
@@ -450,7 +472,6 @@ function ScrollNav({
                 </div>
               </button>
 
-              {/* Experience sub-items */}
               <AnimatePresence>
                 {isExperienceSection && isInExperience && isActive && (
                   <motion.div
@@ -515,7 +536,6 @@ function ScrollNav({
           );
         })}
 
-        {/* Section counter */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: isHovered ? 1 : 0.5 }}
@@ -528,6 +548,87 @@ function ScrollNav({
             {String(sections.length).padStart(2, '0')}
           </span>
         </motion.div>
+      </div>
+    </motion.nav>
+  );
+}
+
+// Mobile Navigation Component - Bottom bar
+interface ScrollNavMobileProps {
+  sections: { id: string; label: string; icon: string }[];
+  currentSection: number;
+  currentColor: string;
+  goToSection: (index: number) => void;
+}
+
+function ScrollNavMobile({
+  sections,
+  currentSection,
+  currentColor,
+  goToSection,
+}: ScrollNavMobileProps) {
+  return (
+    <motion.nav
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.3, duration: 0.4 }}
+      className="fixed bottom-0 left-0 right-0 z-50 pb-safe"
+    >
+      {/* Background blur */}
+      <div className="absolute inset-0 bg-background/80 backdrop-blur-lg border-t border-white/10" />
+
+      {/* Navigation items */}
+      <div className="relative flex items-center justify-around px-2 py-3">
+        {sections.map((section, index) => {
+          const isActive = currentSection === index;
+
+          return (
+            <button
+              key={section.id}
+              onClick={() => goToSection(index)}
+              className="relative flex flex-col items-center gap-1 px-4 py-2 min-w-[60px] touch-manipulation"
+            >
+              {/* Active indicator */}
+              {isActive && (
+                <motion.div
+                  layoutId="mobileActiveTab"
+                  className="absolute inset-0 rounded-xl"
+                  style={{ backgroundColor: `${currentColor}15` }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                />
+              )}
+
+              {/* Icon/Number */}
+              <span
+                className={`relative text-sm font-bold transition-colors duration-200 ${
+                  isActive ? '' : 'text-slate-500'
+                }`}
+                style={{ color: isActive ? currentColor : undefined }}
+              >
+                {section.icon}
+              </span>
+
+              {/* Label */}
+              <span
+                className={`relative text-[10px] font-medium transition-colors duration-200 ${
+                  isActive ? 'text-white' : 'text-slate-500'
+                }`}
+              >
+                {section.label}
+              </span>
+
+              {/* Active dot */}
+              {isActive && (
+                <motion.div
+                  layoutId="mobileActiveDot"
+                  className="absolute -top-1 w-1 h-1 rounded-full"
+                  style={{ backgroundColor: currentColor }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                />
+              )}
+            </button>
+          );
+        })}
       </div>
     </motion.nav>
   );

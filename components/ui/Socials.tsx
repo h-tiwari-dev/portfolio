@@ -2,18 +2,19 @@
 
 import React, { useState } from 'react';
 import {
-  Share2,
   Github,
   Linkedin,
   Mail,
   BookOpen,
-  ChevronRight,
   FileDown,
+  Clock,
+  MapPin,
+  Zap,
   ExternalLink,
-  Binary,
+  ArrowRight,
 } from 'lucide-react';
 import ContactModal from '@/components/common/ContactModal';
-import BinaryClock from './BinaryClock';
+import { motion } from 'framer-motion';
 
 export default function Socials() {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -21,168 +22,198 @@ export default function Socials() {
   const links = [
     {
       icon: Github,
-      label: 'GH_Vault',
-      color: 'group-hover:text-white',
-      sub: 'Source_Control',
+      label: 'GitHub',
+      description: 'Check out my projects',
       url: 'https://github.com/h-tiwari-dev',
-      id: '01',
+      color: '#ffffff',
     },
     {
       icon: Linkedin,
-      label: 'LI_Network',
-      color: 'group-hover:text-blue-400',
-      sub: 'Social_Sync',
+      label: 'LinkedIn',
+      description: "Let's connect professionally",
       url: 'https://www.linkedin.com/in/tiwari-ai-harsh/',
-      id: '02',
+      color: '#0a66c2',
     },
     {
       icon: BookOpen,
-      label: 'BG_Hub',
-      color: 'group-hover:text-purple-400',
-      sub: 'Tech_Logs',
+      label: 'Blog',
+      description: 'Read my tech articles',
       url: 'https://betriumalpha.hashnode.dev',
-      id: '03',
+      color: '#a855f7',
     },
     {
       icon: Mail,
-      label: 'EM_Gateway',
-      color: 'group-hover:text-red-400',
-      sub: 'Direct_Comms',
+      label: 'Email',
+      description: 'Send me a message',
       onClick: () => setIsContactOpen(true),
-      id: '04',
+      color: '#f43f5e',
     },
   ];
 
   return (
-    <div className="p-4 h-full flex flex-col group/comms relative overflow-hidden">
-      {/* Background Grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
-
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 shrink-0 relative z-10 gap-y-2 sm:gap-y-0">
-        <div className="flex items-center text-[10px] font-bold text-cyan-400 tracking-[0.2em] uppercase">
-          <Share2 size={14} className="mr-2 text-cyan-500" />
-          Comms_Interface.link
+    <div className="p-3 sm:p-4 md:p-6 h-full flex flex-col relative overflow-hidden">
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col justify-center max-w-lg md:max-w-4xl mx-auto w-full relative z-10">
+        {/* Header */}
+        <div className="text-center mb-4 sm:mb-6 md:mb-8">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1.5 md:mb-2">
+            Get In Touch
+          </h2>
+          <p className="text-xs sm:text-sm md:text-base text-slate-400">
+            Open for freelance & full-time opportunities
+          </p>
         </div>
-        <div className="flex items-center space-x-2 self-end sm:self-auto">
-          <div className="opacity-80">
-            <BinaryClock />
-          </div>
-        </div>
-      </div>
 
-      {/* Primary Action: Resume Download */}
-      <div
-        onClick={() => window.open('/harsh_resume_new.pdf', '_blank')}
-        className="mb-3 p-3 rounded-lg bg-rose-500/5 border border-rose-500/20 hover:bg-rose-500/10 hover:border-rose-500/50 transition-all cursor-pointer group flex items-center justify-between relative overflow-hidden shadow-[0_0_20px_rgba(255,51,102,0.05)] shrink-0"
-      >
-        <div className="flex items-center space-x-4 relative z-10">
-          <div className="w-10 h-10 rounded-lg bg-rose-500/10 flex items-center justify-center border border-rose-500/20 group-hover:border-rose-500/40 transition-all">
-            <FileDown size={20} className="text-rose-400" />
-          </div>
-          <div className="flex flex-col">
-            <div className="text-[9px] font-mono text-rose-500/60 font-bold uppercase tracking-tight">
-              Identity.fetch_resume()
+        {/* Desktop: Two column layout | Mobile: Stacked */}
+        <div className="md:grid md:grid-cols-2 md:gap-8">
+          {/* Left Column - Info & Resume */}
+          <div>
+            {/* Quick Info Cards */}
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4 sm:mb-5">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="bg-white/[0.03] border border-white/10 rounded-lg p-2.5 sm:p-3 md:p-4 text-center"
+              >
+                <MapPin size={14} className="text-cyan-400 mx-auto mb-1 sm:w-4 sm:h-4 md:w-5 md:h-5" />
+                <span className="text-[10px] sm:text-xs text-slate-400 block">Location</span>
+                <span className="text-xs sm:text-sm md:text-base text-white font-medium">India</span>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-white/[0.03] border border-white/10 rounded-lg p-2.5 sm:p-3 md:p-4 text-center"
+              >
+                <Clock size={14} className="text-yellow-400 mx-auto mb-1 sm:w-4 sm:h-4 md:w-5 md:h-5" />
+                <span className="text-[10px] sm:text-xs text-slate-400 block">Timezone</span>
+                <span className="text-xs sm:text-sm md:text-base text-white font-medium">IST +5:30</span>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="bg-white/[0.03] border border-white/10 rounded-lg p-2.5 sm:p-3 md:p-4 text-center"
+              >
+                <Zap size={14} className="text-green-400 mx-auto mb-1 sm:w-4 sm:h-4 md:w-5 md:h-5" />
+                <span className="text-[10px] sm:text-xs text-slate-400 block">Response</span>
+                <span className="text-xs sm:text-sm md:text-base text-white font-medium">&lt; 24h</span>
+              </motion.div>
             </div>
-            <div className="text-[10px] sm:text-[12px] text-white font-bold tracking-tight flex flex-wrap items-center gap-y-0.5">
-              <span className="opacity-70">system_service.dl</span>
-              <span className="text-rose-400/80">(</span>
-              <span className="text-rose-400 break-all sm:break-normal">
-                &apos;harsh_resume_new.pdf&apos;
-              </span>
-              <span className="text-rose-400/80">)</span>
-              <ChevronRight size={14} className="ml-1 text-rose-500/40" />
-            </div>
-          </div>
-        </div>
-        <div className="hidden lg:flex flex-col items-end text-[8px] font-mono text-rose-500/30 font-bold uppercase">
-          <span>DL_STATUS: READY</span>
-          <span>VER: 3.1.C</span>
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 flex-1 overflow-hidden">
-        {links.map((item, i) => (
-          <div
-            key={i}
-            onClick={item.onClick || (() => window.open(item.url, '_blank'))}
-            className="group flex flex-col p-4 rounded-xl bg-white/[0.03] border border-white/5 hover:border-cyan-500/40 hover:bg-white/[0.06] transition-all cursor-pointer relative overflow-hidden"
-          >
-            {/* Static Deco Lines */}
-            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-500/10 to-transparent"></div>
-
-            <div className="flex items-start justify-between relative z-10 mb-auto">
-              <div className="flex items-center">
-                <item.icon
-                  size={22}
-                  className={`mr-3 text-slate-500 ${item.color} transition-all duration-300 group-hover:scale-110`}
-                />
-                <div>
-                  <h4 className="text-[14px] font-mono text-slate-200 font-bold uppercase tracking-tight group-hover:text-white transition-colors">
-                    {item.label}
-                  </h4>
-                  <div className="text-[8px] font-mono text-cyan-500/60 uppercase tracking-widest mt-0.5">
-                    Channel.{item.id}
+            {/* Resume Download */}
+            <motion.button
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              onClick={() => window.open('/harsh_resume_new.pdf', '_blank')}
+              className="group w-full mb-4 sm:mb-5 md:mb-0 p-3 sm:p-4 md:p-5 rounded-xl bg-gradient-to-r from-rose-500/10 to-orange-500/10 border border-rose-500/20 hover:border-rose-500/40 transition-all duration-300 cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3 md:gap-4">
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <FileDown size={18} className="text-white md:w-6 md:h-6" />
+                  </div>
+                  <div className="text-left">
+                    <span className="text-sm sm:text-base md:text-lg font-semibold text-white block">
+                      Download Resume
+                    </span>
+                    <span className="text-[10px] sm:text-xs md:text-sm text-slate-400">
+                      PDF • Updated Jan 2025
+                    </span>
                   </div>
                 </div>
+                <ArrowRight size={18} className="text-rose-400/60 group-hover:text-rose-400 group-hover:translate-x-1 transition-all md:w-5 md:h-5" />
               </div>
-              <div className="flex space-x-0.5 opacity-20 group-hover:opacity-100 transition-opacity">
-                {[1, 2, 3, 4].map((bar) => (
-                  <div
-                    key={bar}
-                    className={`w-1 h-3 ${
-                      bar <= 4 - i
-                        ? 'bg-cyan-500 shadow-[0_0_5px_#06b6d4]'
-                        : 'bg-slate-800'
-                    }`}
-                  ></div>
-                ))}
-              </div>
-            </div>
-
-            {/* Space Filler: Technical Meta */}
-            <div className="flex-1 flex items-center justify-center opacity-[0.02] group-hover:opacity-[0.05] transition-opacity pointer-events-none my-1">
-              <Binary size={40} className="text-white" />
-            </div>
-
-            {/* Module Footer */}
-            <div className="flex items-center justify-between relative z-10 mt-auto pt-2 border-t border-white/5">
-              <div className="flex items-center space-x-2">
-                <span className="text-[9px] font-mono text-slate-500/80 group-hover:text-cyan-400/80 transition-colors">
-                  {item.sub}
-                </span>
-              </div>
-              <div className="flex items-center space-x-1.5">
-                <span className="text-[7px] font-mono text-slate-600 uppercase">
-                  protocol: SSL/WS
-                </span>
-                <ExternalLink
-                  size={10}
-                  className="text-slate-700 group-hover:text-cyan-500 transition-colors"
-                />
-              </div>
-            </div>
-
-            {/* Scanner Beam Effect */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent -translate-y-full group-hover:animate-[scan_2s_linear_infinite] pointer-events-none"></div>
+            </motion.button>
           </div>
-        ))}
-      </div>
 
-      <div className="mt-2 pt-2 border-t border-white/5 flex justify-center shrink-0">
-        <div className="text-[8px] text-slate-600 font-mono flex flex-wrap justify-center gap-x-6 gap-y-1">
-          <span className="flex items-center">
-            <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full mr-2 shadow-[0_0_5px_#06b6d4]"></div>{' '}
-            UPLINK: STABLE
-          </span>
-          <span className="flex items-center">
-            <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2 shadow-[0_0_5px_#22c55e]"></div>{' '}
-            LATENCY: 12ms
-          </span>
-          <span className="flex items-center">
-            <div className="w-1.5 h-1.5 bg-rose-500 rounded-full mr-2 shadow-[0_0_5px_#ff3366]"></div>{' '}
-            BUFFER: 0%
-          </span>
+          {/* Right Column - Social Links */}
+          <div>
+            {/* Mobile: Horizontal icons | Desktop: Card list */}
+            <div className="flex items-center justify-center gap-3 sm:gap-4 md:hidden mb-4">
+              {links.map((item, i) => (
+                <button
+                  key={i}
+                  onClick={item.onClick || (() => window.open(item.url, '_blank'))}
+                  className="group relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white/[0.03] border border-white/10 hover:border-white/30 transition-all duration-300 flex items-center justify-center"
+                >
+                  <item.icon
+                    size={20}
+                    className="text-slate-400 group-hover:text-white transition-colors sm:w-6 sm:h-6"
+                  />
+                  <div
+                    className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
+                    style={{ boxShadow: `0 0 20px -5px ${item.color}50` }}
+                  />
+                  <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[9px] sm:text-[10px] text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    {item.label}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {/* Desktop: Full card links */}
+            <div className="hidden md:grid md:grid-cols-2 md:gap-3">
+              {links.map((item, i) => (
+                <motion.button
+                  key={i}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 + i * 0.1 }}
+                  onClick={item.onClick || (() => window.open(item.url, '_blank'))}
+                  className="group flex items-center gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/10 hover:border-white/20 transition-all duration-300 text-left"
+                  style={{
+                    ['--hover-color' as string]: item.color,
+                  }}
+                >
+                  <div
+                    className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                    style={{
+                      backgroundColor: `${item.color}15`,
+                      border: `1px solid ${item.color}30`,
+                    }}
+                  >
+                    <item.icon
+                      size={18}
+                      style={{ color: item.color }}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-sm font-medium text-white block group-hover:text-white/90">
+                      {item.label}
+                    </span>
+                    <span className="text-xs text-slate-500">
+                      {item.description}
+                    </span>
+                  </div>
+                  <ExternalLink size={14} className="text-slate-600 group-hover:text-slate-400 transition-colors" />
+                </motion.button>
+              ))}
+            </div>
+          </div>
         </div>
+
+        {/* Preferred Contact Note - Mobile only */}
+        <div className="text-center md:hidden mt-2">
+          <p className="text-[10px] sm:text-xs text-slate-500">
+            <span className="text-slate-400">Preferred:</span> Email or LinkedIn
+          </p>
+        </div>
+
+        {/* Status Footer */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="mt-4 sm:mt-5 md:mt-8 pt-3 sm:pt-4 border-t border-white/5 flex justify-center"
+        >
+          <div className="flex items-center gap-1.5 text-[10px] sm:text-xs md:text-sm text-slate-500">
+            <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-green-500 animate-pulse" />
+            <span>Available for new projects • Preferred: Email or LinkedIn</span>
+          </div>
+        </motion.div>
       </div>
 
       <ContactModal

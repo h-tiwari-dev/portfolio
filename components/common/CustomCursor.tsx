@@ -6,8 +6,23 @@ export default function CustomCursor() {
   const [position, setPosition] = useState({ x: -100, y: -100 });
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(true); // Default to true to hide on SSR
 
   useEffect(() => {
+    // Check if it's a touch device
+    const checkTouchDevice = () => {
+      setIsTouchDevice(
+        'ontouchstart' in window ||
+        navigator.maxTouchPoints > 0 ||
+        window.matchMedia('(pointer: coarse)').matches
+      );
+    };
+
+    checkTouchDevice();
+
+    // Don't add mouse listeners on touch devices
+    if (isTouchDevice) return;
+
     const onMouseMove = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
       if (!isVisible) setIsVisible(true);
@@ -31,9 +46,10 @@ export default function CustomCursor() {
       document.documentElement.removeEventListener('mouseleave', onMouseLeave);
       document.documentElement.removeEventListener('mouseenter', onMouseEnter);
     };
-  }, [isVisible]);
+  }, [isVisible, isTouchDevice]);
 
-  if (!isVisible) return null;
+  // Don't render on touch devices or when not visible
+  if (isTouchDevice || !isVisible) return null;
 
   return (
     <>
