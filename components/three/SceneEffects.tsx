@@ -22,12 +22,12 @@ export default function SceneEffects() {
   const lensingPassRef = useRef<ShaderPass | null>(null);
 
   useEffect(() => {
-    // Bloom Pass
+    // Bloom Pass - reduced strength and higher threshold to prevent white buildup
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(size.width, size.height),
-      0.8, // strength
-      0.7, // radius
-      0.8 // threshold
+      0.5, // strength (reduced from 0.8)
+      0.5, // radius (reduced from 0.7)
+      0.92 // threshold (increased from 0.8 - only brightest parts bloom)
     );
     bloomPassRef.current = bloomPass;
     composer.addPass(bloomPass);

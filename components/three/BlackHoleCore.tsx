@@ -195,8 +195,8 @@ const DiskShader = {
         color = mix(color, uColorHot, smoothstep(0.7, 0.95, normalizedRadius));
 
         color *= (0.5 + noiseVal * 1.0);
-        float brightness = pow(1.0 - normalizedRadius, 1.0) * 3.5 + 0.5;
-        brightness *= (0.3 + noiseVal * 2.2);
+        float brightness = pow(1.0 - normalizedRadius, 1.0) * 2.5 + 0.4; // Reduced from 3.5/0.5
+        brightness *= (0.3 + noiseVal * 1.5); // Reduced from 2.2
 
         float pulse = sin(uTime * 1.8 + normalizedRadius * 12.0 + vAngle * 2.0) * 0.15 + 0.85;
         brightness *= pulse;
@@ -224,18 +224,18 @@ export default function BlackHoleCore({ skillPositionsRef }: BlackHoleCoreProps)
   const diskUniforms = useMemo(
     () => ({
       uTime: { value: 0.0 },
-      uColorHot: { value: new THREE.Color(0xffffff) },
+      uColorHot: { value: new THREE.Color(0xffaa66) }, // Warm orange instead of pure white
       uColorMid1: { value: new THREE.Color(0xff7733) },
       uColorMid2: { value: new THREE.Color(0xff4477) },
       uColorMid3: { value: new THREE.Color(0x7744ff) },
       uColorOuter: { value: new THREE.Color(0x4477ff) },
       uNoiseScale: { value: 2.5 },
       uFlowSpeed: { value: 0.22 },
-      uDensity: { value: 1.3 },
+      uDensity: { value: 1.0 }, // Reduced from 1.3
       // Skill disturbance uniforms - affects flow turbulence only
       uSkillPositions: { value: initialSkillPositions },
       uActiveSkills: { value: 0 },
-      uDisturbanceStrength: { value: 0.5 },
+      uDisturbanceStrength: { value: 0.15 }, // Reduced from 0.5
     }),
     [initialSkillPositions]
   );

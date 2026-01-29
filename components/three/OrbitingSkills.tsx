@@ -310,7 +310,7 @@ function SkillNode({
     });
   }, [colorObj, nucleusSeed]);
 
-  // Create coma material
+  // Create coma material - reduced intensity to prevent white buildup
   const comaMaterial = useMemo(() => {
     return new THREE.ShaderMaterial({
       vertexShader: CometComaShader.vertexShader,
@@ -319,7 +319,7 @@ function SkillNode({
         uColor: { value: colorObj },
         uTime: { value: 0 },
         uOpacity: { value: 0 },
-        uIntensity: { value: 1.0 },
+        uIntensity: { value: 0.6 }, // Reduced from 1.0
       },
       transparent: true,
       blending: THREE.AdditiveBlending,
@@ -328,7 +328,7 @@ function SkillNode({
     });
   }, [colorObj]);
 
-  // Create outer coma material
+  // Create outer coma material - reduced intensity
   const outerComaMaterial = useMemo(() => {
     return new THREE.ShaderMaterial({
       vertexShader: CometComaShader.vertexShader,
@@ -337,7 +337,7 @@ function SkillNode({
         uColor: { value: colorObj },
         uTime: { value: 0 },
         uOpacity: { value: 0 },
-        uIntensity: { value: 0.4 },
+        uIntensity: { value: 0.2 }, // Reduced from 0.4
       },
       transparent: true,
       blending: THREE.AdditiveBlending,
@@ -453,12 +453,12 @@ function SkillNode({
     nucleusRef.current.rotation.y = time * 0.3;
     nucleusRef.current.rotation.x = time * 0.2;
 
-    // Update coma
+    // Update coma - reduced opacity to prevent white buildup
     comaMaterial.uniforms.uTime.value = time;
-    comaMaterial.uniforms.uOpacity.value = finalOpacity * 0.6;
+    comaMaterial.uniforms.uOpacity.value = finalOpacity * 0.35;
 
     outerComaMaterial.uniforms.uTime.value = time;
-    outerComaMaterial.uniforms.uOpacity.value = finalOpacity * 0.3;
+    outerComaMaterial.uniforms.uOpacity.value = finalOpacity * 0.15;
 
     // Update tail
     tailMaterial.uniforms.uOpacity.value = finalOpacity;
@@ -490,13 +490,13 @@ function SkillNode({
       {/* Particle tail */}
       <points ref={tailRef} geometry={tailGeometry} material={tailMaterial} />
 
-      {/* Dust sparkles around nucleus */}
+      {/* Dust sparkles around nucleus - reduced opacity */}
       <Sparkles
         count={12}
         scale={0.8}
-        size={1.5}
+        size={1.2}
         speed={0.4}
-        opacity={visible ? 0.5 : 0}
+        opacity={visible ? 0.25 : 0}
         color={color}
         noise={0.2}
       />
