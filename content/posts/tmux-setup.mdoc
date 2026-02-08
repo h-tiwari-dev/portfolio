@@ -1,5 +1,5 @@
 ---
-title: "My Tmux Setup: A Developer's Terminal Multiplexer Configuration"
+title: 'My Tmux Setup: A Developer''s Terminal Multiplexer Configuration'
 excerpt: >-
   Tmux is central to how I work. It looks good and gets things done. Here is my
   complete setup with configuration files, custom scripts, and why I made each
@@ -327,12 +327,22 @@ set -g @continuum-restore 'on'
 set -g @continuum-save-interval '15'
 ```
 
-| Plugin | Purpose |
-|--------|---------|
-| tmux-sensible | Sensible defaults everyone agrees on |
-| tmux-yank | Better clipboard integration |
-| tmux-resurrect | Save and restore sessions across restarts |
-| tmux-continuum | Automatic session saving every 15 minutes |
+{% table %}
+- Plugin
+- Purpose
+---
+- tmux-sensible
+- Sensible defaults everyone agrees on
+---
+- tmux-yank
+- Better clipboard integration
+---
+- tmux-resurrect
+- Save and restore sessions across restarts
+---
+- tmux-continuum
+- Automatic session saving every 15 minutes
+{% /table %}
 
 The resurrect and continuum combo saves your entire tmux environment across system restarts. I use this every day.
 
@@ -473,13 +483,31 @@ alias tl='tmux list-sessions'
 alias tk='tmux kill-session -t'
 ```
 
-| Alias | Command | Usage |
-|-------|---------|-------|
-| t | tmux | Start tmux |
-| ta | tmux attach -t | Attach to session: ta myproject |
-| tn | tmux new -s | New named session: tn myproject |
-| tl | tmux list-sessions | List all sessions |
-| tk | tmux kill-session -t | Kill session: tk myproject |
+{% table %}
+- Alias
+- Command
+- Usage
+---
+- t
+- tmux
+- Start tmux
+---
+- ta
+- tmux attach -t
+- Attach to session: ta myproject
+---
+- tn
+- tmux new -s
+- New named session: tn myproject
+---
+- tl
+- tmux list-sessions
+- List all sessions
+---
+- tk
+- tmux kill-session -t
+- Kill session: tk myproject
+{% /table %}
 
 These single-letter aliases make common operations instant. Starting a new project session becomes tn projectname. Reattaching is ta projectname.
 
@@ -487,31 +515,71 @@ These single-letter aliases make common operations instant. Starting a new proje
 
 ### Keybindings
 
-| Keybinding | Action |
-|------------|--------|
-| C-a | Prefix key |
-| prefix + | | Split vertically |
-| prefix + - | Split horizontally |
-| prefix + h/j/k/l | Navigate panes |
-| prefix + H/J/K/L | Resize panes |
-| prefix + C-h/C-l | Previous/next window |
-| prefix + </> | Swap windows |
-| prefix + Space | Toggle last window |
-| prefix + f | Session finder |
-| prefix + s | Session list |
-| prefix + X | Kill sessions |
-| prefix + r | Reload config |
-| prefix + [ | Enter copy mode |
+{% table %}
+- Keybinding
+- Action
+---
+- C-a
+- Prefix key
+---
+- prefix +
+- 
+---
+- prefix + -
+- Split horizontally
+---
+- prefix + h/j/k/l
+- Navigate panes
+---
+- prefix + H/J/K/L
+- Resize panes
+---
+- prefix + C-h/C-l
+- Previous/next window
+---
+- prefix + </>
+- Swap windows
+---
+- prefix + Space
+- Toggle last window
+---
+- prefix + f
+- Session finder
+---
+- prefix + s
+- Session list
+---
+- prefix + X
+- Kill sessions
+---
+- prefix + r
+- Reload config
+---
+- prefix + [
+- Enter copy mode
+{% /table %}
 
 ### Shell Aliases
 
-| Alias | Action |
-|-------|--------|
-| t | Start tmux |
-| ta <name> | Attach to session |
-| tn <name> | New named session |
-| tl | List sessions |
-| tk <name> | Kill session |
+{% table %}
+- Alias
+- Action
+---
+- t
+- Start tmux
+---
+- ta <name>
+- Attach to session
+---
+- tn <name>
+- New named session
+---
+- tl
+- List sessions
+---
+- tk <name>
+- Kill session
+{% /table %}
 
 ## Final Thoughts
 
