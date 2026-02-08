@@ -1,0 +1,140 @@
+---
+title: Database Indexing Overview
+excerpt: >-
+  Databases store data in pages (commonly 8 KB each) containing multiple rows.
+  Without indexes, finding a specific record can require scanning many pages
+  sequentially, which is inefficient and slow. Indexes act as maps, guiding the
+  query engine directly to the required data, dramatically reducing lookup times.
+publishedDate: 2025-02-15
+tags:
+  - database
+  - indexing
+  - performance
+  - backend
+  - sql
+coverImage: /content/posts/database-indexing/coverImage.webp
+---
+Databases store data in pages (commonly 8 KB each) containing multiple rows. Without indexes, finding a specific record can require scanning many pages sequentially, which is inefficient and slow. Indexes act as maps, guiding the query engine directly to the required data, dramatically reducing lookup times.
+
+## The Indexing Problem & Its Solution
+
+### The Problem Without Indexing
+
+When a database query is executed without an index, the system loads pages sequentially into memory, scanning each for the target data. For large tables, this can mean reading hundreds of thousands or even millions of pages, resulting in high latency.
+
+### How Indexes Solve the Problem
+
+Indexes are specialized data structures stored on disk. They provide a pointer (or a set of pointers) to the disk pages where the actual data resides. This means the system can quickly locate and load only the relevant page(s), bypassing a full table scan.
+
+## Index Types and Visualizations
+
+### B-Tree Index
+
+B-Tree indexes are the most common type. They maintain sorted order and support both exact match and range queries efficiently.
+
+**How It Works:**
+
+1. **Load the Root Node:** The system reads the root of the B-Tree.
+2. **Traverse Internal Nodes:** The query navigates down the tree based on key comparisons.
+3. **Reach the Leaf Node:** The leaf contains pointers to the data pages where the records are stored.
+
+**B-Tree Structure:**
+
+```
+[B-Tree Root Node]
+       │
+       ▼
+[Internal Node]
+       │
+       ▼
+[Leaf Node with Data Pointers]
+```
+
+### Hash Index
+
+Hash indexes use a hash function to convert a key into a hash value, which then maps directly to a data page. They provide O(1) lookups for exact matches but do not support range queries well.
+
+**Hash Index Flow:**
+
+```
+[Input Key] → [Hash Function] → [Hash Map] → [Data Page Pointer]
+```
+
+**Note:** Hash indexes are commonly used in in-memory data stores rather than on-disk databases.
+
+### Geospatial Indexes
+
+Geospatial indexes are optimized for two-dimensional data (e.g., latitude and longitude). The three popular types include:
+
+- **Geohashing:** Converts 2D coordinates into 1D strings while preserving spatial locality.
+- **Quad Trees:** Recursively partitions the space into quadrants, splitting cells only where data density is high.
+- **R-Trees / Archeries:** A dynamic variant that supports overlapping regions, optimizing spatial queries.
+
+**Geospatial Indexing Structure:**
+
+```
+[World Map]
+     │
+     ▼
+[Divide into 4 Quadrants]
+     │
+     ▼
+[Geohash / Quad Tree Node]
+     │
+     ▼
+[Leaf Node with Spatial Data]
+```
+
+### Inverted Index
+
+Inverted indexes are designed for full-text search. They map each term (or token) to the documents or data pages in which they appear.
+
+**Inverted Index Structure:**
+
+```
+Document 1: "B-Trees are fast"
+Document 2: "Hash tables are limited"
+          │
+          ▼
+[Inverted Index: Term → Documents]
+          │
+          ▼
+Query: "fast"
+```
+
+## Indexing Decision Flowchart
+
+The following flowchart helps determine the appropriate indexing strategy based on the query characteristics and data type.
+
+| Question | Answer | Next Step |
+|----------|--------|-----------|
+| Need efficient data access? | No | Use Full Table Scan |
+| Need efficient data access? | Yes → Large Number of Rows? | No → Use Full Table Scan |
+| Large Number of Rows? | Yes | Determine Type of Data |
+| Type: Text Data | Use Inverted Index |
+| Type: Location Data | Use Geospatial Index |
+| Type: Exact Matches Only | Consider Hash Index or B-Tree |
+| Type: Other / Mixed | Use B-Tree Index |
+
+## Additional Considerations
+
+### Performance
+
+Indexes reduce disk I/O, leading to faster query responses.
+
+### Trade-Offs
+
+While indexes speed up data retrieval, they add overhead to write operations (inserts, updates, and deletes).
+
+### Real-World Usage
+
+| Index Type | Common Use Cases |
+|------------|------------------|
+| B-Trees | Relational databases for general-purpose indexing |
+| Geospatial Indexes | Mapping or location-based searches |
+| Inverted Indexes | Full-text search engines like Elasticsearch and PostgreSQL |
+| Hash Indexes | In-memory stores or specific exact-match use cases |
+
+## Conclusion
+
+Effective database indexing is essential for optimizing query performance and building scalable systems. By understanding the strengths and limitations of each index type, you can make informed decisions on which strategy to implement for a given application scenario.
