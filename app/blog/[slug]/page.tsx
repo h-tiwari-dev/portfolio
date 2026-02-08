@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { getAllPosts, getPost } from '@/lib/reader';
 import { ArrowLeft, Calendar, Tag } from 'lucide-react';
-import MarkdocRenderer, { transformContent } from '@/components/blog/MarkdocRenderer';
+import MarkdocRenderer, {
+  transformContent,
+} from '@/components/blog/MarkdocRenderer';
 
 export async function generateStaticParams() {
   const posts = await getAllPosts();
@@ -39,6 +41,16 @@ export default async function PostPage({
 
         {/* Post header */}
         <header className="mb-10">
+          {post.coverImage && (
+            <div className="mb-6 overflow-hidden rounded-xl border border-white/10">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={post.coverImage}
+                alt={post.title}
+                className="w-full h-auto object-cover"
+              />
+            </div>
+          )}
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white mb-4">
             {post.title}
           </h1>

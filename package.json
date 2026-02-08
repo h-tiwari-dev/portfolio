@@ -10,7 +10,8 @@
     "deploy:worker": "cd worker && npx wrangler deploy",
     "dev:cms": "cd cms && bun run dev",
     "deploy:cms": "cd cms && bun run deploy",
-    "lint": "next lint"
+    "lint": "next lint",
+    "enrich": "tsx scripts/enrich-post.ts"
   },
   "engines": {
     "node": "22.x"

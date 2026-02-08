@@ -53,6 +53,16 @@ export default async function BlogPage() {
               >
                 <article className="p-6 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-rose-500/30 hover:bg-white/[0.04] transition-all duration-300">
                   <div className="flex flex-col gap-3">
+                    {post.coverImage && (
+                      <div className="mb-3 overflow-hidden rounded-lg border border-white/10">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={post.coverImage}
+                          alt={post.title}
+                          className="w-full h-48 object-cover"
+                        />
+                      </div>
+                    )}
                     <h2 className="text-xl sm:text-2xl font-bold text-white group-hover:text-rose-400 transition-colors">
                       {post.title}
                     </h2>
@@ -67,11 +77,14 @@ export default async function BlogPage() {
                       {post.publishedDate && (
                         <span className="flex items-center gap-1.5 font-mono">
                           <Calendar size={12} className="text-rose-500/50" />
-                          {new Date(post.publishedDate).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                          })}
+                          {new Date(post.publishedDate).toLocaleDateString(
+                            'en-US',
+                            {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                            }
+                          )}
                         </span>
                       )}
 
