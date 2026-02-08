@@ -19,35 +19,14 @@ Claude Code is optimized for Anthropic models. OpenCode is model-agnostic from t
 
 Here is how they compare:-
 
-{% table %}
-- Feature
-- OpenCode
-- Claude Code
----
-- Open source
-- Yes, MIT license
-- Source available, proprietary license
----
-- Model choice
-- 75+ providers, native multi-provider support
-- Anthropic models primary, third-party models via API compatibility
----
-- Use existing subscriptions
-- GitHub Copilot, ChatGPT Plus/Pro, Claude Pro/Max
-- Claude Pro/Max or API credits
----
-- Local models
-- Ollama, LM Studio, llama.cpp
-- Ollama, LM Studio, llama.cpp (via Anthropic API compatibility)
----
-- Plugin system
-- Yes, npm packages
-- Yes, plugins with slash commands, subagents, MCP servers, and hooks
----
-- Free models
-- Big Pickle, GPT 5 Nano
-- None built-in (free local models via Ollama)
-{% /table %}
+| Feature | OpenCode | Claude Code |
+|---------|----------|-------------|
+| Open source | Yes, MIT license | Source available, proprietary license |
+| Model choice | 75+ providers, native multi-provider support | Anthropic models primary, third-party models via API compatibility |
+| Use existing subscriptions | GitHub Copilot, ChatGPT Plus/Pro, Claude Pro/Max | Claude Pro/Max or API credits |
+| Local models | Ollama, LM Studio, llama.cpp | Ollama, LM Studio, llama.cpp (via Anthropic API compatibility) |
+| Plugin system | Yes, npm packages | Yes, plugins with slash commands, subagents, MCP servers, and hooks |
+| Free models | Big Pickle, GPT 5 Nano | None built-in (free local models via Ollama) |
 
 Where OpenCode stands out is breadth of provider support. You bring your own API keys or use subscriptions you already pay for. Your GitHub Copilot subscription works. Your ChatGPT Plus works. Your Claude Pro works. Switching between providers is seamless and native, not a workaround.
 
@@ -99,8 +78,6 @@ opencode
 
 The terminal interface opens. You see a prompt at the bottom where you type messages.
 
-![OpenCode TUI interface showing the chat interface with prompt at bottom](/content/posts/getting-started-with-open-code/tui-interface.webp)
-
 Initialize your project by running:
 
 ```
@@ -112,8 +89,6 @@ OpenCode analyzes your codebase and creates an [AGENTS.md](http://AGENTS.md) fil
 ## Setting Up a Provider
 
 You need API access to at least one model provider. Here are your options.
-
-![Provider selection screen showing various model options like OpenCode Zen, GitHub Copilot, OpenAI, and Anthropic](/content/posts/getting-started-with-open-code/provider-setup.webp)
 
 ### OpenCode Zen
 
@@ -207,8 +182,6 @@ How is authentication handled in this project?
 
 Use the @ key to fuzzy search for files:
 
-![Using @ symbol to reference files with fuzzy search showing file suggestions](/content/posts/getting-started-with-open-code/file-references.webp)
-
 ```
 Explain the logic in @src/api/auth.ts
 ```
@@ -218,8 +191,6 @@ Drag and drop images into the terminal to include them in your prompt.
 ## Plan Mode and Build Mode
 
 OpenCode has two modes.
-
-![Mode indicator showing "Plan Mode" in the lower right corner of the TUI](/content/posts/getting-started-with-open-code/plan-mode-indicator.webp)
 
 Plan Mode thinks through problems without changing files. Use this to discuss approaches and create plans.
 
@@ -239,38 +210,20 @@ A good workflow:
 
 These commands work in the TUI.
 
-![Essential slash commands being typed in the OpenCode interface showing /models, /connect, /init options](/content/posts/getting-started-with-open-code/essential-commands.webp)
-
-{% table %}
-- Command
-- What it does
----
-- `/models`
-- Switch to a different model
----
-- `/connect`
-- Add credentials for a provider
----
-- `/init`
-- Analyze project and create [AGENTS.md](http://AGENTS.md)
----
-- `/undo`
-- Revert the last changes
----
-- `/redo`
-- Restore reverted changes
----
-- `/share`
-- Create a shareable link to the conversation
-{% /table %}
+| Command | What it does |
+|---------|--------------|
+| `/models` | Switch to a different model |
+| `/connect` | Add credentials for a provider |
+| `/init` | Analyze project and create AGENTS.md |
+| `/undo` | Revert the last changes |
+| `/redo` | Restore reverted changes |
+| `/share` | Create a shareable link to the conversation |
 
 Run `/undo` multiple times to revert multiple changes.
 
 ## Configuration
 
 OpenCode uses a JSON config file.
-
-![OpenCode configuration file showing opencode.json settings for theme and model selection](/content/posts/getting-started-with-open-code/configuration.webp)
 
 Global config lives at `~/.config/opencode/opencode.json`. Project config lives at `opencode.json` in your project root.
 
@@ -302,8 +255,6 @@ Share any conversation with your team.
 ```
 `/share`
 ```
-
-![Shared session link displayed in the terminal after running the /share command](/content/posts/getting-started-with-open-code/share-session.webp)
 
 This creates a link and copies it to your clipboard. The conversation is not shared by default. Only sessions you explicitly share become public.
 
