@@ -22,9 +22,52 @@ Databases store data in pages (commonly 8 KB each) containing multiple rows. Wit
 
 When a database query is executed without an index, the system loads pages sequentially into memory, scanning each for the target data. For large tables, this can mean reading hundreds of thousands or even millions of pages, resulting in high latency.
 
+**Without Index - Full Table Scan:**
+
+```
+Query: SELECT * FROM users WHERE email = 'john@example.com'
+
+Page 1    Page 2    Page 3    Page 4    Page 5    ...    Page N
+[=====]   [=====]   [=====]   [=====]   [=====]         [=====]
+ User1     User6     User11    User16    User21          User5M
+ User2     User7     User12    User17    User22          ...
+ User3     User8     User13    User18    User23
+ User4     User9     User14    User19    User24
+ User5     User10    User15    User20    User25
+   │         │         │         │         │               │
+   └─────────┴─────────┴─────────┴─────────┴───────────────┘
+                        ▼
+              Check EVERY row (slow!)
+              O(n) complexity
+```
+
 ### How Indexes Solve the Problem
 
 Indexes are specialized data structures stored on disk. They provide a pointer (or a set of pointers) to the disk pages where the actual data resides. This means the system can quickly locate and load only the relevant page(s), bypassing a full table scan.
+
+**With Index - Direct Lookup:**
+
+```
+Query: SELECT * FROM users WHERE email = 'john@example.com'
+
+         ┌─────────────────────────────────────┐
+         │         B-Tree Index                │
+         │                                     │
+         │    john@example.com → Page 3        │
+         └──────────────┬──────────────────────┘
+                        │
+                        ▼
+                    [Page 3]
+                   ┌────────┐
+                   │ User11 │  ← Found!
+                   │ User12 │
+                   │ User13 │
+                   │ User14 │
+                   │ User15 │
+                   └────────┘
+
+O(log n) complexity - Much faster!
+```
 
 ## Index Types and Visualizations
 
@@ -34,20 +77,39 @@ B-Tree indexes are the most common type. They maintain sorted order and support 
 
 **How It Works:**
 
-1. **Load the Root Node:** The system reads the root of the B-Tree.
-2. **Traverse Internal Nodes:** The query navigates down the tree based on key comparisons.
-3. **Reach the Leaf Node:** The leaf contains pointers to the data pages where the records are stored.
+1. **Load the Root Node:** The system reads the root of the B-Tree
+2. **Traverse Internal Nodes:** Navigate down based on key comparisons
+3. **Reach the Leaf Node:** Contains pointers to data pages
 
 **B-Tree Structure:**
 
 ```
-[B-Tree Root Node]
-       │
-       ▼
-[Internal Node]
-       │
-       ▼
-[Leaf Node with Data Pointers]
+                    ┌─────────────────┐
+                    │   Root Node     │
+                    │   [50, 100]     │
+                    └────────┬────────┘
+                             │
+            ┌────────────────┼────────────────┐
+            │                │                │
+            ▼                ▼                ▼
+    ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+    │  Internal    │ │  Internal    │ │  Internal    │
+    │  [25, 40]    │ │  [75, 90]    │ │  [120, 150]  │
+    └──────┬───────┘ └──────┬───────┘ └──────┬───────┘
+           │                │                │
+    ┌──────┼──────┐  ┌──────┼──────┐  ┌──────┼──────┐
+    │      │      │  │      │      │  │      │      │
+    ▼      ▼      ▼  ▼      ▼      ▼  ▼      ▼      ▼
+┌─────┐┌─────┐┌─────┐┌─────┐┌─────┐┌─────┐┌─────┐┌─────┐
+│Leaf ││Leaf ││Leaf ││Leaf ││Leaf ││Leaf ││Leaf ││Leaf │
+│1-25 ││26-40││41-50││51-75││76-90││91-10││101-1││121+ │
+└──┬──┘└──┬──┘└──┬──┘└──┬──┘└──┬──┘└──┬──┘└──┬──┘└──┬──┘
+   │      │      │      │      │      │      │      │
+   ▼      ▼      ▼      ▼      ▼      ▼      ▼      ▼
+ Data  Data   Data   Data   Data   Data   Data   Data
+ Pages Pages  Pages  Pages  Pages  Pages  Pages  Pages
+
+Height = log(n) → Only 3-4 levels for millions of rows!
 ```
 
 ### Hash Index
@@ -57,7 +119,29 @@ Hash indexes use a hash function to convert a key into a hash value, which then 
 **Hash Index Flow:**
 
 ```
-[Input Key] → [Hash Function] → [Hash Map] → [Data Page Pointer]
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  Input Key  │────▶│Hash Function│────▶│  Hash Map   │────▶│  Data Page  │
+│ john@example│     │  SHA-256    │     │ Bucket 42   │     │  Pointer    │
+└─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
+     │                                           │                    │
+     │         ┌─────────────────────────────────┘                    │
+     │         │                                                      │
+     ▼         ▼                                                      ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           Hash Table (In Memory)                             │
+│  ┌──────────┬─────────────────────────────────────────────────────────┐     │
+│  │ Hash     │ Value                                                   │     │
+│  │ Value    │                                                         │     │
+│  ├──────────┼─────────────────────────────────────────────────────────┤     │
+│  │ 0x42A... │ → Page 5, Row 23                                        │     │
+│  │ 0x7F1... │ → Page 12, Row 7                                        │     │
+│  │ 0xD92... │ → Page 3, Row 41                                        │     │
+│  │   ...    │   ...                                                   │     │
+│  └──────────┴─────────────────────────────────────────────────────────┘     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Lookup Time: O(1) - Constant time!
+Limitation: No range queries (WHERE age > 25)
 ```
 
 **Note:** Hash indexes are commonly used in in-memory data stores rather than on-disk databases.
@@ -66,23 +150,48 @@ Hash indexes use a hash function to convert a key into a hash value, which then 
 
 Geospatial indexes are optimized for two-dimensional data (e.g., latitude and longitude). The three popular types include:
 
-- **Geohashing:** Converts 2D coordinates into 1D strings while preserving spatial locality.
-- **Quad Trees:** Recursively partitions the space into quadrants, splitting cells only where data density is high.
-- **R-Trees / Archeries:** A dynamic variant that supports overlapping regions, optimizing spatial queries.
+- **Geohashing:** Converts 2D coordinates into 1D strings while preserving spatial locality
+- **Quad Trees:** Recursively partitions the space into quadrants, splitting cells only where data density is high
+- **R-Trees / Archeries:** A dynamic variant that supports overlapping regions, optimizing spatial queries
 
-**Geospatial Indexing Structure:**
+**Geospatial Indexing - Quad Tree Structure:**
 
 ```
-[World Map]
-     │
-     ▼
-[Divide into 4 Quadrants]
-     │
-     ▼
-[Geohash / Quad Tree Node]
-     │
-     ▼
-[Leaf Node with Spatial Data]
+                    ┌─────────────────┐
+                    │   World Map     │
+                    │   (Root)        │
+                    └────────┬────────┘
+                             │
+            ┌────────────────┼────────────────┐
+            │                │                │
+            ▼                ▼                ▼
+    ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+    │   NW Quad    │ │   NE Quad    │ │   Center     │
+    │  (High Res)  │ │  (High Res)  │ │  (Low Res)   │
+    └──────┬───────┘ └──────┬───────┘ └──────┬───────┘
+           │                │                │
+     ┌─────┴─────┐    ┌─────┴─────┐        │
+     │           │    │           │        │
+     ▼           ▼    ▼           ▼        │
+┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐│
+│ 1 NW   │ │ 1 NE   │ │ 2 NW   │ │ 2 NE   ││
+│Detail  │ │Detail  │ │Detail  │ │Detail  ││
+└────────┘ └────────┘ └────────┘ └────────┘│
+
+Example: Finding restaurants near you
+┌─────────────────────────────────────┐
+│  NW    │  NE    │      SE           │
+│        │        │                   │
+│   🍕   │   🍔   │        🌮         │
+│        │        │                   │
+├────────┼────────┼───────────────────┤
+│        │   👤   │                   │
+│   🍜   │  You   │        🍱         │
+│        │        │                   │
+│  SW    │        │                   │
+└─────────────────────────────────────┘
+
+Search radius → Only check relevant quadrants!
 ```
 
 ### Inverted Index
@@ -92,29 +201,131 @@ Inverted indexes are designed for full-text search. They map each term (or token
 **Inverted Index Structure:**
 
 ```
-Document 1: "B-Trees are fast"
-Document 2: "Hash tables are limited"
-          │
-          ▼
-[Inverted Index: Term → Documents]
-          │
-          ▼
-Query: "fast"
+Documents to Index:
+┌─────────────────────────────────┐  ┌──────────────────────────────────┐
+│ Document 1                      │  │ Document 2                       │
+│ "B-Trees are fast data          │  │ "Hash tables are limited but     │
+│  structures for databases"      │  │  useful for caching"             │
+└─────────────────────────────────┘  └──────────────────────────────────┘
+              │                                      │
+              └──────────────┬───────────────────────┘
+                             │
+                             ▼ Tokenization
+                    ┌──────────────────┐
+                    │  Text Processing │
+                    │  & Stemming      │
+                    └────────┬─────────┘
+                             │
+                             ▼
+┌──────────────────────────────────────────────────────────────────────────┐
+│                        INVERTED INDEX                                     │
+│  ┌──────────┬─────────────────────────────────────────────────────────┐  │
+│  │ Term     │ Document IDs + Positions                                │  │
+│  ├──────────┼─────────────────────────────────────────────────────────┤  │
+│  │ b-tree   │ → Doc1[0], Doc3[5], Doc7[2]                             │  │
+│  │ fast     │ → Doc1[3], Doc4[1], Doc8[0]                             │  │
+│  │ data     │ → Doc1[5], Doc2[7], Doc5[3], Doc9[1]                    │  │
+│  │ hash     │ → Doc2[0], Doc6[4], Doc10[2]                            │  │
+│  │ table    │ → Doc2[1], Doc5[0], Doc8[3]                             │  │
+│  │ cache    │ → Doc2[6], Doc4[4], Doc11[1]                            │  │
+│  └──────────┴─────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────────────────┘
+                             │
+                    Query: "fast hash"
+                             │
+                             ▼
+                    Intersection:
+                    "fast" → Doc1, Doc4, Doc8
+                    "hash" → Doc2, Doc6, Doc10
+                    Result: No exact match
+                    
+                    Query: "fast b-tree"
+                             │
+                             ▼
+                    "fast" → Doc1, Doc4, Doc8
+                    "b-tree" → Doc1, Doc3, Doc7
+                    Result: Doc1 ✓ (Both terms present!)
 ```
 
 ## Indexing Decision Flowchart
 
 The following flowchart helps determine the appropriate indexing strategy based on the query characteristics and data type.
 
-| Question | Answer | Next Step |
-|----------|--------|-----------|
-| Need efficient data access? | No | Use Full Table Scan |
-| Need efficient data access? | Yes → Large Number of Rows? | No → Use Full Table Scan |
-| Large Number of Rows? | Yes | Determine Type of Data |
-| Type: Text Data | Use Inverted Index |
-| Type: Location Data | Use Geospatial Index |
-| Type: Exact Matches Only | Consider Hash Index or B-Tree |
-| Type: Other / Mixed | Use B-Tree Index |
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                    INDEX SELECTION DECISION TREE                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+     ┌─────────────────────────────┐
+     │  Need efficient data        │
+     │  access?                    │
+     └──────────────┬──────────────┘
+                    │
+        ┌───────────┴───────────┐
+        │                       │
+       NO                      YES
+        │                       │
+        ▼                       ▼
+┌───────────────┐      ┌─────────────────┐
+│ Full Table    │      │ Large number    │
+│ Scan (OK for  │      │ of rows?        │
+│ small tables) │      └────────┬────────┘
+└───────────────┘               │
+                      ┌─────────┴─────────┐
+                      │                   │
+                     NO                 YES
+                      │                   │
+                      ▼                   ▼
+            ┌───────────────┐    ┌─────────────────┐
+            │ Full Table    │    │ What type of    │
+            │ Scan          │    │ data?           │
+            └───────────────┘    └────────┬────────┘
+                                          │
+                    ┌─────────────────────┼─────────────────────┐
+                    │                     │                     │
+                    ▼                     ▼                     ▼
+            ┌──────────────┐      ┌──────────────┐      ┌──────────────┐
+            │  Text Data   │      │  Location    │      │  Numeric/    │
+            │              │      │  Data        │      │  Other       │
+            └──────┬───────┘      └──────┬───────┘      └──────┬───────┘
+                   │                     │                     │
+                   ▼                     ▼                     │
+         ┌─────────────────┐    ┌─────────────────┐            │
+         │ Inverted Index  │    │ Geospatial      │            │
+         │ (Elasticsearch, │    │ Index           │            │
+         │  PostgreSQL FTS)│    │ (PostGIS, etc.) │            │
+         └─────────────────┘    └─────────────────┘            │
+                                                                │
+                                              ┌─────────────────┴──────────┐
+                                              │                            │
+                                              ▼                            ▼
+                                    ┌─────────────────┐        ┌─────────────────┐
+                                    │ Exact Match     │        │ Range Queries   │
+                                    │ Only?           │        │ Needed?         │
+                                    └────────┬────────┘        └────────┬────────┘
+                                             │                          │
+                                   ┌─────────┴─────────┐      ┌─────────┴─────────┐
+                                   │                   │      │                   │
+                                  YES                 NO    YES                 NO
+                                   │                   │      │                   │
+                                   ▼                   ▼      ▼                   ▼
+                         ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+                         │ Hash Index or   │  │ B-Tree Index    │  │ B-Tree Index    │
+                         │ B-Tree          │  │ (Default choice │  │ (Default choice │
+                         └─────────────────┘  │ for most cases) │  │ for most cases) │
+                                              └─────────────────┘  └─────────────────┘
+```
+
+**Quick Reference Table:**
+
+| Scenario | Recommended Index | Why |
+|----------|------------------|-----|
+| Primary key lookups | B-Tree | Balanced performance, supports range queries |
+| Full-text search | Inverted Index | Optimized for text token matching |
+| Location-based queries | Geospatial | Efficient 2D coordinate lookups |
+| Exact match cache lookups | Hash Index | O(1) constant time access |
+| Range queries (BETWEEN, >, <) | B-Tree | Sorted structure enables ranges |
+| Join operations | B-Tree on FK columns | Fast lookups during joins |
 
 ## Additional Considerations
 
@@ -122,19 +333,50 @@ The following flowchart helps determine the appropriate indexing strategy based 
 
 Indexes reduce disk I/O, leading to faster query responses.
 
+**Performance Comparison:**
+
+| Table Size | Without Index | With B-Tree Index | Speedup |
+|------------|---------------|-------------------|---------|
+| 1,000 rows | 10 ms | 2 ms | 5x |
+| 100,000 rows | 500 ms | 3 ms | 167x |
+| 10,000,000 rows | 50,000 ms | 4 ms | 12,500x |
+
 ### Trade-Offs
 
 While indexes speed up data retrieval, they add overhead to write operations (inserts, updates, and deletes).
 
+**Write Operation Impact:**
+
+| Operation | Without Index | With 3 Indexes | Overhead |
+|-----------|---------------|----------------|----------|
+| INSERT | 1 unit | 3.5 units | 3.5x slower |
+| UPDATE (indexed columns) | 1 unit | 4 units | 4x slower |
+| UPDATE (non-indexed) | 1 unit | 1.2 units | 1.2x slower |
+| DELETE | 1 unit | 3.2 units | 3.2x slower |
+
+**Best Practice:** Only index columns frequently used in WHERE, JOIN, and ORDER BY clauses.
+
 ### Real-World Usage
 
-| Index Type | Common Use Cases |
-|------------|------------------|
-| B-Trees | Relational databases for general-purpose indexing |
-| Geospatial Indexes | Mapping or location-based searches |
-| Inverted Indexes | Full-text search engines like Elasticsearch and PostgreSQL |
-| Hash Indexes | In-memory stores or specific exact-match use cases |
+| Index Type | Common Use Cases | Example Technologies |
+|------------|------------------|---------------------|
+| B-Trees | Relational databases for general-purpose indexing | PostgreSQL, MySQL, SQL Server |
+| Geospatial Indexes | Mapping or location-based searches | PostGIS, MongoDB 2dsphere |
+| Inverted Indexes | Full-text search engines | Elasticsearch, PostgreSQL FTS |
+| Hash Indexes | In-memory stores or specific exact-match use cases | Redis, Memcached |
+| Bitmap Indexes | Data warehousing with low cardinality columns | Oracle, PostgreSQL |
+| GiST/GIN | Complex data types (arrays, JSON, ranges) | PostgreSQL |
 
 ## Conclusion
 
 Effective database indexing is essential for optimizing query performance and building scalable systems. By understanding the strengths and limitations of each index type, you can make informed decisions on which strategy to implement for a given application scenario.
+
+**Key Takeaways:**
+
+1. **Start with B-Tree indexes** - They handle 95% of use cases effectively
+2. **Index only what you query** - Every index adds write overhead
+3. **Monitor query performance** - Use EXPLAIN to verify index usage
+4. **Choose specialized indexes for specialized data** - Geospatial for locations, inverted for text
+5. **Keep indexes maintained** - Rebuild periodically to prevent bloat
+
+Remember: The best index is the one that gets used by your query planner!
