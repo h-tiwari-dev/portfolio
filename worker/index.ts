@@ -41,7 +41,7 @@ export default {
         from: 'Portfolio Contact <onboarding@resend.dev>',
         to: 'h.tiwari.dev@gmail.com',
         subject: `New Message from ${name} via Portfolio`,
-        reply_to: email,
+        replyTo: email,
         text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
       });
 

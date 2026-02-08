@@ -1,6 +1,4 @@
 import { Space_Grotesk, JetBrains_Mono } from 'next/font/google';
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
 import Link from 'next/link';
 import { navItems } from '@/constants/navItems';
 import GameOfLife from '@/components/common/gameOfLife';
@@ -41,8 +39,6 @@ export default function RootLayout({
 
         <SectionProvider>{children}</SectionProvider>
         <CustomCursor />
-        <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );
