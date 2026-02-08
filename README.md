@@ -6,6 +6,7 @@ some more
 
 First, install dependencies:
 
+huh
 ```bash
 bun install
 ```
