@@ -10,15 +10,18 @@ import {
   Twitter,
   Linkedin,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { FadeIn, ScaleIn } from '@/components/animations/FadeIn';
+import { CopyLinkButton } from '@/components/blog/CopyLinkButton';
 import MarkdocRenderer, {
   transformContent,
 } from '@/components/blog/MarkdocRenderer';
 
-function calculateReadingTime(content: string): number {
+function calculateReadingTime(content: any): number {
+  if (!content) return 0;
   const wordsPerMinute = 200;
-  const words = content.split(/\s+/).length;
-  return Math.ceil(words / wordsPerMinute);
+  const text = typeof content === 'string' ? content : JSON.stringify(content);
+  const words = text.split(/\s+/).filter((word) => word.length > 0).length;
+  return Math.max(1, Math.ceil(words / wordsPerMinute));
 }
 
 export async function generateStaticParams() {
@@ -55,11 +58,7 @@ export default async function PostPage({
   if (!post) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[hsl(var(--background))]">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center glass-card p-12"
-        >
+        <FadeIn className="text-center glass-card p-12">
           <p className="text-slate-400 font-mono text-lg mb-4">
             404: Post Not Found
           </p>
@@ -69,13 +68,13 @@ export default async function PostPage({
           >
             cd ../blog
           </Link>
-        </motion.div>
+        </FadeIn>
       </div>
     );
   }
 
   const content = transformContent(post.content);
-  const readingTime = calculateReadingTime(JSON.stringify(post.content));
+  const readingTime = calculateReadingTime(post.content);
 
   return (
     <div className="min-h-screen bg-[hsl(var(--background))] relative">
@@ -89,11 +88,7 @@ export default async function PostPage({
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20 relative z-10">
         {/* Navigation */}
-        <motion.nav
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between mb-10"
-        >
+        <FadeIn className="flex items-center justify-between mb-10">
           <Link
             href="/blog"
             className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-rose-400 transition-colors group"
@@ -141,15 +136,10 @@ export default async function PostPage({
               />
             </a>
           </div>
-        </motion.nav>
+        </FadeIn>
 
         {/* Post Header */}
-        <motion.header
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-12"
-        >
+        <FadeIn delay={0.1} className="mb-12">
           {/* Section Label */}
           <div className="flex items-center gap-3 mb-6">
             <span className="h-px w-8 bg-gradient-to-r from-transparent to-rose-500/50" />
@@ -161,19 +151,16 @@ export default async function PostPage({
 
           {/* Cover Image */}
           {post.coverImage && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="mb-8 overflow-hidden rounded-2xl border border-white/10 shadow-[0_0_60px_-20px_rgba(255,51,102,0.15)]"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={post.coverImage}
-                alt={post.title}
-                className="w-full h-auto object-cover max-h-[400px]"
-              />
-            </motion.div>
+            <ScaleIn delay={0.2} className="mb-8">
+              <div className="overflow-hidden rounded-2xl border border-white/10 shadow-[0_0_60px_-20px_rgba(255,51,102,0.15)]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={post.coverImage}
+                  alt={post.title}
+                  className="w-full h-auto object-cover max-h-[400px]"
+                />
+              </div>
+            </ScaleIn>
           )}
 
           {/* Title */}
@@ -219,25 +206,17 @@ export default async function PostPage({
               </div>
             )}
           </div>
-        </motion.header>
+        </FadeIn>
 
         {/* Post Content */}
-        <motion.article
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="glass-card p-6 sm:p-8 lg:p-12"
-        >
-          <MarkdocRenderer content={content} />
-        </motion.article>
+        <FadeIn delay={0.3}>
+          <article className="glass-card p-6 sm:p-8 lg:p-12">
+            <MarkdocRenderer content={content} />
+          </article>
+        </FadeIn>
 
         {/* Article Footer */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="mt-12 pt-8 border-t border-white/[0.06]"
-        >
+        <FadeIn delay={0.4} className="mt-12 pt-8 border-t border-white/[0.06]">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             {/* Back Link */}
             <Link
@@ -287,20 +266,9 @@ export default async function PostPage({
                     className="text-slate-400 group-hover:text-rose-400 transition-colors"
                   />
                 </a>
-                <button
-                  onClick={() =>
-                    navigator.clipboard.writeText(
-                      `https://tiwariharsh.com/blog/${params.slug}`
-                    )
-                  }
-                  className="p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.06] hover:border-rose-500/30 hover:bg-rose-500/10 transition-all group"
-                  aria-label="Copy link"
-                >
-                  <Share2
-                    size={16}
-                    className="text-slate-400 group-hover:text-rose-400 transition-colors"
-                  />
-                </button>
+                <CopyLinkButton
+                  url={`https://tiwariharsh.com/blog/${params.slug}`}
+                />
               </div>
             </div>
           </div>
@@ -316,7 +284,7 @@ export default async function PostPage({
             </p>
             <p className="text-slate-400 mt-1">{new Date().toUTCString()}</p>
           </div>
-        </motion.div>
+        </FadeIn>
       </div>
     </div>
   );

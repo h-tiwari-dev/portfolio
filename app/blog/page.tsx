@@ -1,12 +1,18 @@
 import Link from 'next/link';
 import { getAllPosts } from '@/lib/reader';
 import { ArrowLeft, Calendar, Tag, Clock, ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import {
+  FadeIn,
+  StaggerContainer,
+  StaggerItem,
+} from '@/components/animations/FadeIn';
 
-function calculateReadingTime(content: string): number {
+function calculateReadingTime(content: any): number {
+  if (!content) return 0;
   const wordsPerMinute = 200;
-  const words = content.split(/\s+/).length;
-  return Math.ceil(words / wordsPerMinute);
+  const text = typeof content === 'string' ? content : JSON.stringify(content);
+  const words = text.split(/\s+/).filter((word) => word.length > 0).length;
+  return Math.max(1, Math.ceil(words / wordsPerMinute));
 }
 
 export default async function BlogPage() {
@@ -32,12 +38,7 @@ export default async function BlogPage() {
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20 relative z-10">
         {/* Header Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-16"
-        >
+        <FadeIn className="mb-16">
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-rose-400 transition-colors mb-10 group"
@@ -71,28 +72,19 @@ export default async function BlogPage() {
             <span className="typing-animation">cat thoughts.log | sort -r</span>
             <span className="inline-block w-2 h-4 bg-rose-500/50 animate-pulse ml-1"></span>
           </p>
-        </motion.div>
+        </FadeIn>
 
         {/* Posts Grid */}
         {sortedPosts.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center py-20 glass-card"
-          >
+          <FadeIn className="text-center py-20 glass-card">
             <p className="text-slate-500 font-mono text-sm">
               No posts found. Check back soon.
             </p>
-          </motion.div>
+          </FadeIn>
         ) : (
-          <div className="grid gap-8">
-            {sortedPosts.map((post, index) => (
-              <motion.div
-                key={post.slug}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
+          <StaggerContainer className="grid gap-8">
+            {sortedPosts.map((post) => (
+              <StaggerItem key={post.slug}>
                 <Link href={`/blog/${post.slug}`} className="block group">
                   <article className="glass-card p-6 sm:p-8 hover:border-rose-500/30 hover:bg-white/[0.04] transition-all duration-500 group-hover:shadow-[0_0_40px_-12px_rgba(255,51,102,0.2)]">
                     <div className="flex flex-col lg:flex-row gap-6">
@@ -193,23 +185,21 @@ export default async function BlogPage() {
                     </div>
                   </article>
                 </Link>
-              </motion.div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         )}
 
         {/* Footer */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
+        <FadeIn
+          delay={0.5}
           className="mt-16 pt-8 border-t border-white/[0.06] text-center"
         >
           <p className="text-slate-500 text-sm font-mono">
-            <span className="text-rose-500/50">$</span> echo "Thanks for
-            reading!"
+            <span className="text-rose-500/50">$</span> echo &quot;Thanks for
+            reading!&quot;
           </p>
-        </motion.div>
+        </FadeIn>
       </div>
     </div>
   );
