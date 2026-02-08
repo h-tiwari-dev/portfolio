@@ -126,7 +126,7 @@
 }
 
 .glass-card {
-  @apply glass rounded-xl shadow-2xl;
+  @apply glass rounded-lg shadow-xl;
 }
 
 /* Background Effects */

@@ -113,7 +113,7 @@ export default async function PostPage({
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-lg bg-white/[0.02] border border-white/[0.06] hover:border-rose-500/30 hover:bg-rose-500/10 transition-all"
+              className="p-2 bg-white/[0.02] border border-white/[0.06] hover:border-rose-500/30 hover:bg-rose-500/10 transition-all"
               aria-label="Share on Twitter"
             >
               <Twitter
@@ -127,7 +127,7 @@ export default async function PostPage({
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-lg bg-white/[0.02] border border-white/[0.06] hover:border-rose-500/30 hover:bg-rose-500/10 transition-all"
+              className="p-2 bg-white/[0.02] border border-white/[0.06] hover:border-rose-500/30 hover:bg-rose-500/10 transition-all"
               aria-label="Share on LinkedIn"
             >
               <Linkedin
@@ -152,7 +152,7 @@ export default async function PostPage({
           {/* Cover Image */}
           {post.coverImage && (
             <ScaleIn delay={0.2} className="mb-8">
-              <div className="overflow-hidden rounded-2xl border border-white/10 shadow-[0_0_60px_-20px_rgba(255,51,102,0.15)]">
+              <div className="overflow-hidden border border-white/[0.08] shadow-[0_4px_30px_-10px_rgba(0,0,0,0.5)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={post.coverImage}
@@ -198,7 +198,7 @@ export default async function PostPage({
                 {post.tags.map((tag: string) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 rounded-full bg-rose-500/10 text-rose-400/80 border border-rose-500/10 text-xs font-mono uppercase tracking-wider hover:bg-rose-500/20 transition-colors cursor-pointer"
+                    className="px-2.5 py-1 bg-white/[0.04] text-slate-400 border border-white/[0.08] text-xs font-mono uppercase tracking-wider hover:border-rose-500/30 hover:text-rose-400 transition-all cursor-pointer"
                   >
                     {tag}
                   </span>
@@ -210,7 +210,7 @@ export default async function PostPage({
 
         {/* Post Content */}
         <FadeIn delay={0.3}>
-          <article className="glass-card p-6 sm:p-8 lg:p-12">
+          <article className="border border-white/[0.08] bg-gradient-to-br from-white/[0.02] to-transparent p-6 sm:p-8 lg:p-12 shadow-[0_4px_30px_-10px_rgba(0,0,0,0.3)]">
             <MarkdocRenderer content={content} />
           </article>
         </FadeIn>
@@ -232,9 +232,7 @@ export default async function PostPage({
 
             {/* Share Section */}
             <div className="flex items-center gap-3">
-              <span className="text-xs text-slate-500 font-mono">
-                Share this article:
-              </span>
+              <span className="text-xs text-slate-500 font-mono">Share:</span>
               <div className="flex items-center gap-2">
                 <a
                   href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
@@ -244,11 +242,11 @@ export default async function PostPage({
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.06] hover:border-rose-500/30 hover:bg-rose-500/10 transition-all group"
+                  className="p-2 bg-white/[0.02] border border-white/[0.06] hover:border-rose-500/30 hover:bg-rose-500/10 transition-all group"
                   aria-label="Share on Twitter"
                 >
                   <Twitter
-                    size={16}
+                    size={14}
                     className="text-slate-400 group-hover:text-rose-400 transition-colors"
                   />
                 </a>
@@ -258,11 +256,11 @@ export default async function PostPage({
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.06] hover:border-rose-500/30 hover:bg-rose-500/10 transition-all group"
+                  className="p-2 bg-white/[0.02] border border-white/[0.06] hover:border-rose-500/30 hover:bg-rose-500/10 transition-all group"
                   aria-label="Share on LinkedIn"
                 >
                   <Linkedin
-                    size={16}
+                    size={14}
                     className="text-slate-400 group-hover:text-rose-400 transition-colors"
                   />
                 </a>
@@ -274,7 +272,7 @@ export default async function PostPage({
           </div>
 
           {/* Terminal-style Footer */}
-          <div className="mt-8 p-4 rounded-lg bg-black/30 border border-white/[0.06] font-mono text-xs">
+          <div className="mt-8 p-4 bg-black/20 border border-white/[0.06] font-mono text-xs">
             <p className="text-slate-500">
               <span className="text-rose-500/50">$</span> cat /proc/author
             </p>

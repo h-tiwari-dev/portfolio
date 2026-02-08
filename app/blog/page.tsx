@@ -82,23 +82,31 @@ export default async function BlogPage() {
             </p>
           </FadeIn>
         ) : (
-          <StaggerContainer className="grid gap-8">
-            {sortedPosts.map((post) => (
+          <StaggerContainer className="grid gap-6">
+            {sortedPosts.map((post, index) => (
               <StaggerItem key={post.slug}>
                 <Link href={`/blog/${post.slug}`} className="block group">
-                  <article className="glass-card p-6 sm:p-8 hover:border-rose-500/30 hover:bg-white/[0.04] transition-all duration-500 group-hover:shadow-[0_0_40px_-12px_rgba(255,51,102,0.2)]">
-                    <div className="flex flex-col lg:flex-row gap-6">
+                  <article className="relative overflow-hidden border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-transparent hover:border-rose-500/25 hover:from-white/[0.05] hover:to-rose-500/[0.02] transition-all duration-500 group-hover:shadow-[0_4px_20px_-4px_rgba(255,51,102,0.15)] p-5 sm:p-6">
+                    {/* Left accent border */}
+                    <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-rose-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                    {/* Post number indicator */}
+                    <div className="absolute top-4 right-4 text-[10px] font-mono text-slate-600 group-hover:text-rose-500/50 transition-colors">
+                      {String(index + 1).padStart(2, '0')}
+                    </div>
+
+                    <div className="flex flex-col lg:flex-row gap-5">
                       {/* Cover Image */}
                       {post.coverImage && (
-                        <div className="lg:w-1/3 shrink-0">
-                          <div className="relative overflow-hidden rounded-xl border border-white/10 group-hover:border-rose-500/20 transition-colors">
+                        <div className="lg:w-2/5 shrink-0">
+                          <div className="relative overflow-hidden border border-white/[0.08] group-hover:border-rose-500/20 transition-all duration-500 shadow-sm">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={post.coverImage}
                               alt={post.title}
-                              className="w-full h-48 lg:h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                              className="w-full h-44 lg:h-48 object-cover group-hover:scale-[1.02] transition-transform duration-700 ease-out"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-60"></div>
                           </div>
                         </div>
                       )}
@@ -107,26 +115,26 @@ export default async function BlogPage() {
                       <div className="flex-1 flex flex-col justify-between">
                         <div>
                           {/* Title */}
-                          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white group-hover:text-rose-400 transition-colors mb-3 leading-tight">
+                          <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-white group-hover:text-rose-400 transition-colors mb-2 leading-tight">
                             {post.title}
                           </h2>
 
                           {/* Excerpt */}
                           {post.excerpt && (
-                            <p className="text-slate-400 text-sm sm:text-base leading-relaxed line-clamp-2 mb-4">
+                            <p className="text-slate-400 text-sm leading-relaxed line-clamp-2 mb-4 group-hover:text-slate-300 transition-colors">
                               {post.excerpt}
                             </p>
                           )}
                         </div>
 
                         {/* Meta Info */}
-                        <div className="flex flex-wrap items-center gap-4 text-xs">
+                        <div className="flex flex-wrap items-center gap-3 text-[11px] pt-3 border-t border-white/[0.04]">
                           {/* Date */}
                           {post.publishedDate && (
                             <span className="flex items-center gap-1.5 font-mono text-slate-500">
                               <Calendar
-                                size={12}
-                                className="text-rose-500/50"
+                                size={11}
+                                className="text-rose-500/60"
                               />
                               {new Date(post.publishedDate).toLocaleDateString(
                                 'en-US',
@@ -142,44 +150,32 @@ export default async function BlogPage() {
                           {/* Reading Time */}
                           {post.content && (
                             <span className="flex items-center gap-1.5 font-mono text-slate-500">
-                              <Clock size={12} className="text-rose-500/50" />
+                              <Clock size={11} className="text-rose-500/60" />
                               {calculateReadingTime(
                                 JSON.stringify(post.content)
                               )}{' '}
-                              min read
+                              min
                             </span>
                           )}
 
                           {/* Tags */}
                           {post.tags && post.tags.length > 0 && (
-                            <div className="flex items-center gap-2">
-                              <Tag size={12} className="text-rose-500/50" />
-                              <div className="flex flex-wrap gap-2">
-                                {post.tags.slice(0, 3).map((tag: string) => (
-                                  <span
-                                    key={tag}
-                                    className="px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-400/80 border border-rose-500/10 text-[10px] font-mono uppercase tracking-wider"
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
-                                {post.tags.length > 3 && (
-                                  <span className="px-2.5 py-1 text-slate-500 text-[10px] font-mono">
-                                    +{post.tags.length - 3}
-                                  </span>
-                                )}
-                              </div>
+                            <div className="flex items-center gap-1.5 ml-auto">
+                              {post.tags.slice(0, 2).map((tag: string) => (
+                                <span
+                                  key={tag}
+                                  className="px-2 py-0.5 bg-white/[0.04] text-slate-400 border border-white/[0.06] text-[10px] font-mono uppercase tracking-wide group-hover:border-rose-500/20 group-hover:text-rose-400/70 transition-colors"
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                              {post.tags.length > 2 && (
+                                <span className="text-slate-600 text-[10px] font-mono">
+                                  +{post.tags.length - 2}
+                                </span>
+                              )}
                             </div>
                           )}
-
-                          {/* Read More Link */}
-                          <span className="ml-auto flex items-center gap-1 text-rose-400/80 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                            Read Article
-                            <ArrowRight
-                              size={12}
-                              className="group-hover:translate-x-1 transition-transform"
-                            />
-                          </span>
                         </div>
                       </div>
                     </div>
