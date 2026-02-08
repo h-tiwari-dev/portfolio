@@ -1,0 +1,318 @@
+---
+title: Getting Started with OpenCode
+excerpt: >-
+  OpenCode is an open source AI coding agent. It runs in your terminal. You
+  choose the model. You own your workflow.
+publishedDate: 2026-02-08
+tags:
+  - opencode
+  - ai
+  - llm
+  - agents
+coverImage: /content/posts/getting-started-with-open-code/coverImage.webp
+---
+OpenCode is an open source AI coding agent. It runs in your terminal. You choose the model. You own your workflow.
+
+## Why OpenCode Over Claude Code
+
+Claude Code is optimized for Anthropic models. OpenCode is model-agnostic from the ground up with 75+ providers.
+
+Here is how they compare:
+
+{% table %}
+- Feature
+- OpenCode
+- Claude Code
+---
+- Open source
+- Yes, MIT license
+- Source available, proprietary license
+---
+- Model choice
+- 75+ providers, native multi-provider support
+- Anthropic models primary, third-party models via API compatibility
+---
+- Use existing subscriptions
+- GitHub Copilot, ChatGPT Plus/Pro, Claude Pro/Max
+- Claude Pro/Max or API credits
+---
+- Local models
+- Ollama, LM Studio, llama.cpp
+- Ollama, LM Studio, llama.cpp (via Anthropic API compatibility)
+---
+- Plugin system
+- Yes, npm packages
+- Yes, plugins with slash commands, subagents, MCP servers, and hooks
+---
+- Free models
+- Big Pickle, GPT 5 Nano
+- None built-in (free local models via Ollama)
+{% /table %}
+
+Where OpenCode stands out is breadth of provider support. You bring your own API keys or use subscriptions you already pay for. Your GitHub Copilot subscription works. Your ChatGPT Plus works. Your Claude Pro works. Switching between providers is seamless and native, not a workaround.
+
+Want to run models locally for privacy? Ollama and LM Studio work out of the box.
+
+OpenCode does not store your code. It runs in air-gapped environments. The project is MIT licensed and you control everything.
+
+## Installation
+
+Pick your preferred method.
+
+Using curl:
+
+```
+curl -fsSL https://opencode.ai/install | bash
+```
+
+Using npm:
+
+```
+npm install -g opencode-ai
+```
+
+Using Homebrew on macOS or Linux:
+
+```
+brew install anomalyco/tap/opencode
+```
+
+Using Chocolatey on Windows:
+
+```
+choco install opencode
+```
+
+Using Scoop on Windows:
+
+```
+scoop install opencode
+```
+
+## First Run
+
+Navigate to a project directory and run:
+
+```
+opencode
+```
+
+The terminal interface opens. You see a prompt at the bottom where you type messages.
+
+Initialize your project by running:
+
+```
+/init
+```
+
+OpenCode analyzes your codebase and creates an [AGENTS.md](http://AGENTS.md) file. This file helps the agent understand your project structure and coding patterns. Commit it to git.
+
+## Setting Up a Provider
+
+You need API access to at least one model provider. Here are your options.
+
+### OpenCode Zen
+
+This is the easiest option for beginners. OpenCode Zen provides tested and verified models with pay-as-you-go pricing. Two models are free: Big Pickle and GPT 5 Nano.
+
+1. Run `/connect` in the TUI
+1. Select opencode
+1. Go to [opencode.ai/auth](http://opencode.ai/auth) in your browser
+1. Sign in and copy your API key
+1. Paste the key in the terminal
+
+Run `/models` to see available models.
+
+### GitHub Copilot
+
+Use your existing GitHub Copilot subscription.
+
+1. Run `/connect` in the TUI
+1. Select GitHub Copilot
+1. Go to [github.com/login/device](http://github.com/login/device)
+1. Enter the code shown in your terminal
+
+Your Copilot models now appear when you run `/models`.
+
+### ChatGPT Plus or Pro
+
+Use your existing OpenAI subscription.
+
+1. Run `/connect` in the TUI
+1. Select OpenAI
+1. Select ChatGPT Plus/Pro
+1. Your browser opens for authentication
+
+All OpenAI models become available after authentication.
+
+### Anthropic
+
+Use Claude Pro/Max or an API key.
+
+1. Run `/connect` in the TUI
+1. Select Anthropic
+1. Select Claude Pro/Max for OAuth or Manually enter API Key for direct access
+
+Claude models appear in your `/models` list.
+
+### Bring Your Own Key
+
+OpenCode works with any OpenAI-compatible provider. Popular options include OpenRouter, DeepSeek, Groq, Together AI, and Fireworks AI.
+
+1. Run `/connect` in the TUI
+1. Search for your provider
+1. Enter your API key
+
+For providers not in the list, select Other and configure them in your opencode.json file.
+
+### Local Models
+
+Run models on your machine with Ollama or LM Studio.
+
+Add this to your opencode.json:
+
+```
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": {
+        "baseURL": "http://localhost:11434/v1"
+      },
+      "models": {
+        "llama2": {
+          "name": "Llama 2"
+        }
+      }
+    }
+  }
+}
+```
+
+## Your First Project
+
+After setting up a provider, start working.
+
+Ask questions about the codebase:
+
+```
+How is authentication handled in this project?
+```
+
+Use the @ key to fuzzy search for files:
+
+```
+Explain the logic in @src/api/auth.ts
+```
+
+Drag and drop images into the terminal to include them in your prompt.
+
+## Plan Mode and Build Mode
+
+OpenCode has two modes.
+
+Plan Mode thinks through problems without changing files. Use this to discuss approaches and create plans.
+
+Build Mode makes changes to your code. This is the default mode.
+
+Press Tab to switch between modes. The current mode shows in the lower right corner.
+
+A good workflow:
+
+1. Switch to Plan Mode with Tab
+1. Describe what you want to build
+1. Review the plan and give feedback
+1. Switch to Build Mode with Tab
+1. Tell OpenCode to make the changes
+
+## Essential Commands
+
+These commands work in the TUI.
+
+{% table %}
+- Command
+- What it does
+---
+- `/models`
+- Switch to a different model
+---
+- `/connect`
+- Add credentials for a provider
+---
+- `/init`
+- Analyze project and create [AGENTS.md](http://AGENTS.md)
+---
+- `/undo`
+- Revert the last changes
+---
+- `/redo`
+- Restore reverted changes
+---
+- `/share`
+- Create a shareable link to the conversation
+{% /table %}
+
+Run `/undo` multiple times to revert multiple changes.
+
+## Configuration
+
+OpenCode uses a JSON config file.
+
+Global config lives at `~/.config/opencode/opencode.json`. Project config lives at `opencode.json` in your project root.
+
+A basic config:
+
+```
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "anthropic/claude-sonnet-4-5",
+  "theme": "opencode",
+  "autoupdate": true
+}
+```
+
+Set your default model:
+
+```
+{
+  "model": "openai/gpt-5.1-codex"
+}
+```
+
+Project configs override global configs. This lets you use different models for different projects.
+
+## Sharing Sessions
+
+Share any conversation with your team.
+
+```
+/share
+```
+
+This creates a link and copies it to your clipboard. The conversation is not shared by default. Only sessions you explicitly share become public.
+
+Here is an example shared session: [opencode.ai/s/4XP1fce5](http://opencode.ai/s/4XP1fce5)
+
+## Next Steps
+
+You now have OpenCode running with a provider configured. Explore themes by setting the `theme` field in your config, customize keybinds, and add MCP servers for extended functionality.
+
+The plugin system lets you extend OpenCode with npm packages. Add plugins to your config:
+
+```
+{
+  "plugin": ["opencode-helicone-session"]
+}
+```
+
+Check the docs at [opencode.ai/docs](http://opencode.ai/docs) for configuration options, custom commands, and agent customization.
+
+---
+
+## Coming Up Next: Claude Opus and Gemini 3 for Free
+
+The next post covers the Antigravity plugin. This plugin lets you use Claude Opus 4.5 Thinking, Claude Sonnet 4.5, and Gemini 3 Pro through your Google account. No API costs. You authenticate with Google OAuth and get access to both Antigravity and Gemini CLI quotas.
+
+The plugin handles multi-account rotation, extended thinking budgets, and automatic rate limit recovery. If you want access to premium models without paying for API access, the Antigravity setup guide shows you how.
