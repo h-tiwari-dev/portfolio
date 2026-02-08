@@ -8,6 +8,8 @@
     "start": "npx wrangler pages dev out",
     "deploy": "npm run build && npx wrangler pages deploy out --project-name=portfolio",
     "deploy:worker": "cd worker && npx wrangler deploy",
+    "dev:cms": "cd cms && bun run dev",
+    "deploy:cms": "cd cms && bun run deploy",
     "lint": "next lint"
   },
   "engines": {
@@ -15,7 +17,6 @@
   },
   "dependencies": {
     "@keystatic/core": "^0.5.48",
-    "@keystatic/next": "^5.0.4",
     "@markdoc/markdoc": "^0.5.4",
     "@react-three/drei": "^9.56.27",
     "@react-three/fiber": "^8.11.5",
