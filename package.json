@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:static": "STATIC_EXPORT=1 next build",
     "start": "npx wrangler pages dev out",
-    "deploy": "npx wrangler pages deploy out --project-name=portfolio",
+    "deploy": "bun run build:static && npx wrangler pages deploy out --project-name=portfolio",
     "deploy:worker": "cd worker && npx wrangler deploy",
     "lint": "next lint"
   },
@@ -34,7 +35,7 @@
     "tailwind-merge": "^3.4.0",
     "taos": "^1.0.2",
     "three": "^0.160.0",
-    "typescript": "4.9.5"
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@types/three": "^0.160.0",

@@ -1,12 +1,14 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import {
   Cpu,
   ChevronDown,
   FileDown,
   BookOpen,
   ExternalLink,
+  ArrowRight,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -94,23 +96,22 @@ export default function Hero() {
           </motion.button>
 
           {/* Blog Button */}
-          <motion.button
-            onClick={() =>
-              window.open('https://betriumalpha.hashnode.dev', '_blank')
-            }
-            className="group relative w-full sm:w-auto flex items-center justify-center gap-3 px-5 sm:px-6 py-3 sm:py-3 bg-yellow-400/10 border border-yellow-400/30 rounded-xl hover:bg-yellow-400/20 hover:border-yellow-400/50 transition-all duration-300 cursor-pointer overflow-hidden"
-            whileTap={{ scale: 0.98 }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/10 to-yellow-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-            <BookOpen size={18} className="text-yellow-400" />
-            <span className="text-sm font-medium text-white">
-              Read Blog
-            </span>
-            <ExternalLink
-              size={14}
-              className="text-yellow-400/40 group-hover:text-yellow-400 transition-colors"
-            />
-          </motion.button>
+          <Link href="/blog">
+            <motion.div
+              className="group relative w-full sm:w-auto flex items-center justify-center gap-3 px-5 sm:px-6 py-3 sm:py-3 bg-yellow-400/10 border border-yellow-400/30 rounded-xl hover:bg-yellow-400/20 hover:border-yellow-400/50 transition-all duration-300 cursor-pointer overflow-hidden"
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/10 to-yellow-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              <BookOpen size={18} className="text-yellow-400" />
+              <span className="text-sm font-medium text-white">
+                Read Blog
+              </span>
+              <ArrowRight
+                size={14}
+                className="text-yellow-400/40 group-hover:text-yellow-400 transition-colors"
+              />
+            </motion.div>
+          </Link>
         </div>
 
         {/* Status indicators - Simplified on mobile */}
