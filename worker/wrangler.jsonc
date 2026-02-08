@@ -1,8 +1,10 @@
 {
   "name": "portfolio-worker",
-  "main": "index.ts",
   "compatibility_date": "2026-02-08",
   "compatibility_flags": ["nodejs_compat"],
+  "pages": {
+    "outputDirectory": ".next"
+  },
   "observability": {
     "enabled": false,
     "head_sampling_rate": 1,
