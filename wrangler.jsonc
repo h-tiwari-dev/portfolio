@@ -4,7 +4,8 @@
   "compatibility_flags": ["nodejs_compat"],
   "pages": {
     "wrangler_config_hash": "auto",
-    "enable_service_binding": true
+    "enable_service_binding": true,
+    "build_output_dir": "out"
   },
   "dev": {
     "port": 3000

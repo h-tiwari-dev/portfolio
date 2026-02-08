@@ -48,8 +48,12 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     }, 100);
 
     try {
-      const { sendEmail } = await import('@/app/actions');
-      const result = await sendEmail(formData);
+      const response = await fetch('/api/sendEmail', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const result = await response.json();
 
       clearInterval(progressInterval);
       setProgress(100);
