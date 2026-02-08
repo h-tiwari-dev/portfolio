@@ -1,7 +1,5 @@
 "use client";
-import CardWrapper from '@/components/common/cardWrapper';
 import { useEffect, useRef, useState } from 'react';
-import { JsxEmit } from 'typescript';
 
 export default function Home() {
   const [_json, _setJson] = useState<string>();

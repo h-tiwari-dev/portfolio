@@ -1,7 +1,11 @@
 import { Resend } from 'resend';
 
+interface Env {
+  RESEND_API_KEY: string;
+}
+
 export default {
-  async fetch(request: Request): Promise<Response> {
+  async fetch(request: Request, env: Env): Promise<Response> {
     const corsHeaders = {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -32,7 +36,7 @@ export default {
         );
       }
 
-      const resend = new Resend(process.env.RESEND_API_KEY);
+      const resend = new Resend(env.RESEND_API_KEY);
       const data = await resend.emails.send({
         from: 'Portfolio Contact <onboarding@resend.dev>',
         to: 'h.tiwari.dev@gmail.com',

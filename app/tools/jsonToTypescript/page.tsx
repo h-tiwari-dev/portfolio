@@ -1,5 +1,4 @@
 "use client";
-import CardWrapper from '@/components/common/cardWrapper';
 import { json2ts } from 'json-ts';
 import { useEffect, useRef, useState } from 'react';
 
