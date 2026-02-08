@@ -4,7 +4,8 @@ excerpt: >-
   Databases store data in pages (commonly 8 KB each) containing multiple rows.
   Without indexes, finding a specific record can require scanning many pages
   sequentially, which is inefficient and slow. Indexes act as maps, guiding the
-  query engine directly to the required data, dramatically reducing lookup times.
+  query engine directly to the required data, dramatically reducing lookup
+  times.
 publishedDate: 2025-02-15
 tags:
   - database
@@ -78,8 +79,8 @@ B-Tree indexes are the most common type. They maintain sorted order and support 
 **How It Works:**
 
 1. **Load the Root Node:** The system reads the root of the B-Tree
-2. **Traverse Internal Nodes:** Navigate down based on key comparisons
-3. **Reach the Leaf Node:** Contains pointers to data pages
+1. **Traverse Internal Nodes:** Navigate down based on key comparisons
+1. **Reach the Leaf Node:** Contains pointers to data pages
 
 **B-Tree Structure:**
 
@@ -318,14 +319,35 @@ The following flowchart helps determine the appropriate indexing strategy based 
 
 **Quick Reference Table:**
 
-| Scenario | Recommended Index | Why |
-|----------|------------------|-----|
-| Primary key lookups | B-Tree | Balanced performance, supports range queries |
-| Full-text search | Inverted Index | Optimized for text token matching |
-| Location-based queries | Geospatial | Efficient 2D coordinate lookups |
-| Exact match cache lookups | Hash Index | O(1) constant time access |
-| Range queries (BETWEEN, >, <) | B-Tree | Sorted structure enables ranges |
-| Join operations | B-Tree on FK columns | Fast lookups during joins |
+{% table %}
+- Scenario
+- Recommended Index
+- Why
+---
+- Primary key lookups
+- B-Tree
+- Balanced performance, supports range queries
+---
+- Full-text search
+- Inverted Index
+- Optimized for text token matching
+---
+- Location-based queries
+- Geospatial
+- Efficient 2D coordinate lookups
+---
+- Exact match cache lookups
+- Hash Index
+- O(1) constant time access
+---
+- Range queries (BETWEEN, >, <)
+- B-Tree
+- Sorted structure enables ranges
+---
+- Join operations
+- B-Tree on FK columns
+- Fast lookups during joins
+{% /table %}
 
 ## Additional Considerations
 
@@ -335,11 +357,27 @@ Indexes reduce disk I/O, leading to faster query responses.
 
 **Performance Comparison:**
 
-| Table Size | Without Index | With B-Tree Index | Speedup |
-|------------|---------------|-------------------|---------|
-| 1,000 rows | 10 ms | 2 ms | 5x |
-| 100,000 rows | 500 ms | 3 ms | 167x |
-| 10,000,000 rows | 50,000 ms | 4 ms | 12,500x |
+{% table %}
+- Table Size
+- Without Index
+- With B-Tree Index
+- Speedup
+---
+- 1,000 rows
+- 10 ms
+- 2 ms
+- 5x
+---
+- 100,000 rows
+- 500 ms
+- 3 ms
+- 167x
+---
+- 10,000,000 rows
+- 50,000 ms
+- 4 ms
+- 12,500x
+{% /table %}
 
 ### Trade-Offs
 
@@ -347,25 +385,66 @@ While indexes speed up data retrieval, they add overhead to write operations (in
 
 **Write Operation Impact:**
 
-| Operation | Without Index | With 3 Indexes | Overhead |
-|-----------|---------------|----------------|----------|
-| INSERT | 1 unit | 3.5 units | 3.5x slower |
-| UPDATE (indexed columns) | 1 unit | 4 units | 4x slower |
-| UPDATE (non-indexed) | 1 unit | 1.2 units | 1.2x slower |
-| DELETE | 1 unit | 3.2 units | 3.2x slower |
+{% table %}
+- Operation
+- Without Index
+- With 3 Indexes
+- Overhead
+---
+- INSERT
+- 1 unit
+- 3.5 units
+- 3.5x slower
+---
+- UPDATE (indexed columns)
+- 1 unit
+- 4 units
+- 4x slower
+---
+- UPDATE (non-indexed)
+- 1 unit
+- 1.2 units
+- 1.2x slower
+---
+- DELETE
+- 1 unit
+- 3.2 units
+- 3.2x slower
+{% /table %}
 
 **Best Practice:** Only index columns frequently used in WHERE, JOIN, and ORDER BY clauses.
 
 ### Real-World Usage
 
-| Index Type | Common Use Cases | Example Technologies |
-|------------|------------------|---------------------|
-| B-Trees | Relational databases for general-purpose indexing | PostgreSQL, MySQL, SQL Server |
-| Geospatial Indexes | Mapping or location-based searches | PostGIS, MongoDB 2dsphere |
-| Inverted Indexes | Full-text search engines | Elasticsearch, PostgreSQL FTS |
-| Hash Indexes | In-memory stores or specific exact-match use cases | Redis, Memcached |
-| Bitmap Indexes | Data warehousing with low cardinality columns | Oracle, PostgreSQL |
-| GiST/GIN | Complex data types (arrays, JSON, ranges) | PostgreSQL |
+{% table %}
+- Index Type
+- Common Use Cases
+- Example Technologies
+---
+- B-Trees
+- Relational databases for general-purpose indexing
+- PostgreSQL, MySQL, SQL Server
+---
+- Geospatial Indexes
+- Mapping or location-based searches
+- PostGIS, MongoDB 2dsphere
+---
+- Inverted Indexes
+- Full-text search engines
+- Elasticsearch, PostgreSQL FTS
+---
+- Hash Indexes
+- In-memory stores or specific exact-match use cases
+- Redis, Memcached
+---
+- Bitmap Indexes
+- Data warehousing with low cardinality columns
+- Oracle, PostgreSQL
+---
+- GiST/GIN
+- Complex data types (arrays, JSON, ranges)
+- PostgreSQL
+{% /table %}
 
 ## Conclusion
 
@@ -374,9 +453,9 @@ Effective database indexing is essential for optimizing query performance and bu
 **Key Takeaways:**
 
 1. **Start with B-Tree indexes** - They handle 95% of use cases effectively
-2. **Index only what you query** - Every index adds write overhead
-3. **Monitor query performance** - Use EXPLAIN to verify index usage
-4. **Choose specialized indexes for specialized data** - Geospatial for locations, inverted for text
-5. **Keep indexes maintained** - Rebuild periodically to prevent bloat
+1. **Index only what you query** - Every index adds write overhead
+1. **Monitor query performance** - Use EXPLAIN to verify index usage
+1. **Choose specialized indexes for specialized data** - Geospatial for locations, inverted for text
+1. **Keep indexes maintained** - Rebuild periodically to prevent bloat
 
 Remember: The best index is the one that gets used by your query planner!
