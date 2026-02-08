@@ -1,5 +1,16 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import Markdoc, { type RenderableTreeNode } from '@markdoc/markdoc';
+
+// Dynamically import MermaidDiagram to avoid SSR issues
+const MermaidDiagram = dynamic(() => import('./MermaidDiagram'), {
+  ssr: false,
+  loading: () => (
+    <div className="my-8 p-6 rounded-xl bg-black/30 border border-white/[0.06] overflow-x-auto">
+      <div className="text-slate-500 font-mono text-sm">Loading diagram...</div>
+    </div>
+  ),
+});
 
 function Heading({
   level,
@@ -30,6 +41,11 @@ function CodeBlock({
   children: string;
   language?: string;
 }) {
+  // Handle mermaid diagrams
+  if (language === 'mermaid') {
+    return <MermaidDiagram chart={children} />;
+  }
+
   return (
     <pre className="my-4 p-4 rounded-lg bg-black/50 border border-white/10 overflow-x-auto font-mono text-sm leading-relaxed">
       <code className={language ? `language-${language}` : ''}>{children}</code>

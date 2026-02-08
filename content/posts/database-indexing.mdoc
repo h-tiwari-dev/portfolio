@@ -25,21 +25,23 @@ When a database query is executed without an index, the system loads pages seque
 
 **Without Index - Full Table Scan:**
 
-```
-Query: SELECT * FROM users WHERE email = 'john@example.com'
-
-Page 1    Page 2    Page 3    Page 4    Page 5    ...    Page N
-[=====]   [=====]   [=====]   [=====]   [=====]         [=====]
- User1     User6     User11    User16    User21          User5M
- User2     User7     User12    User17    User22          ...
- User3     User8     User13    User18    User23
- User4     User9     User14    User19    User24
- User5     User10    User15    User20    User25
-   │         │         │         │         │               │
-   └─────────┴─────────┴─────────┴─────────┴───────────────┘
-                        ▼
-              Check EVERY row (slow!)
-              O(n) complexity
+```mermaid
+flowchart LR
+    subgraph Query["Query: SELECT * FROM users WHERE email = 'john@example.com'"]
+        direction TB
+    end
+    
+    subgraph Pages["Sequential Page Scan"]
+        direction LR
+        P1["Page 1<br/>Users 1-5"] --> P2["Page 2<br/>Users 6-10"] --> P3["Page 3<br/>Users 11-15"] --> P4["..."] --> PN["Page N<br/>Users 5M+"]
+    end
+    
+    Query --> Pages
+    Pages --> Slow["⚠️ Check EVERY row<br/>O(n) complexity - SLOW!"]
+    
+    style Query fill:#1e1e2e,stroke:#89b4fa,color:#cdd6f4
+    style Pages fill:#1e1e2e,stroke:#45475a,color:#cdd6f4
+    style Slow fill:#1e1e2e,stroke:#f38ba8,color:#f38ba8
 ```
 
 ### How Indexes Solve the Problem
@@ -48,26 +50,30 @@ Indexes are specialized data structures stored on disk. They provide a pointer (
 
 **With Index - Direct Lookup:**
 
-```
-Query: SELECT * FROM users WHERE email = 'john@example.com'
-
-         ┌─────────────────────────────────────┐
-         │         B-Tree Index                │
-         │                                     │
-         │    john@example.com → Page 3        │
-         └──────────────┬──────────────────────┘
-                        │
-                        ▼
-                    [Page 3]
-                   ┌────────┐
-                   │ User11 │  ← Found!
-                   │ User12 │
-                   │ User13 │
-                   │ User14 │
-                   │ User15 │
-                   └────────┘
-
-O(log n) complexity - Much faster!
+```mermaid
+flowchart TB
+    Query["Query: SELECT * FROM users WHERE email = 'john@example.com'"]
+    
+    subgraph Index["B-Tree Index Lookup"]
+        direction TB
+        IDX["john@example.com → Page 3"]
+    end
+    
+    subgraph Target["Target Data Page"]
+        direction TB
+        P3["Page 3"]
+        Users["User 11 ✓<br/>User 12<br/>User 13<br/>User 14<br/>User 15"]
+        P3 --> Users
+    end
+    
+    Query --> Index
+    Index --> Target
+    Target --> Fast["⚡ O(log n) complexity - Much faster!"]
+    
+    style Query fill:#1e1e2e,stroke:#89b4fa,color:#cdd6f4
+    style Index fill:#1e1e2e,stroke:#a6e3a1,color:#a6e3a1
+    style Target fill:#1e1e2e,stroke:#f9e2af,color:#cdd6f4
+    style Fast fill:#1e1e2e,stroke:#a6e3a1,color:#a6e3a1
 ```
 
 ## Index Types and Visualizations
@@ -84,33 +90,72 @@ B-Tree indexes are the most common type. They maintain sorted order and support 
 
 **B-Tree Structure:**
 
-```
-                    ┌─────────────────┐
-                    │   Root Node     │
-                    │   [50, 100]     │
-                    └────────┬────────┘
-                             │
-            ┌────────────────┼────────────────┐
-            │                │                │
-            ▼                ▼                ▼
-    ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-    │  Internal    │ │  Internal    │ │  Internal    │
-    │  [25, 40]    │ │  [75, 90]    │ │  [120, 150]  │
-    └──────┬───────┘ └──────┬───────┘ └──────┬───────┘
-           │                │                │
-    ┌──────┼──────┐  ┌──────┼──────┐  ┌──────┼──────┐
-    │      │      │  │      │      │  │      │      │
-    ▼      ▼      ▼  ▼      ▼      ▼  ▼      ▼      ▼
-┌─────┐┌─────┐┌─────┐┌─────┐┌─────┐┌─────┐┌─────┐┌─────┐
-│Leaf ││Leaf ││Leaf ││Leaf ││Leaf ││Leaf ││Leaf ││Leaf │
-│1-25 ││26-40││41-50││51-75││76-90││91-10││101-1││121+ │
-└──┬──┘└──┬──┘└──┬──┘└──┬──┘└──┬──┘└──┬──┘└──┬──┘└──┬──┘
-   │      │      │      │      │      │      │      │
-   ▼      ▼      ▼      ▼      ▼      ▼      ▼      ▼
- Data  Data   Data   Data   Data   Data   Data   Data
- Pages Pages  Pages  Pages  Pages  Pages  Pages  Pages
-
-Height = log(n) → Only 3-4 levels for millions of rows!
+```mermaid
+flowchart TB
+    subgraph Root["Root Node"]
+        R["[50, 100]"]
+    end
+    
+    subgraph Level1["Internal Nodes"]
+        direction LR
+        I1["[25, 40]"]
+        I2["[75, 90]"]
+        I3["[120, 150]"]
+    end
+    
+    subgraph Leaves["Leaf Nodes (Data Pointers)"]
+        direction LR
+        L1["1-25"]
+        L2["26-40"]
+        L3["41-50"]
+        L4["51-75"]
+        L5["76-90"]
+        L6["91-100"]
+        L7["101-120"]
+        L8["121+"]
+    end
+    
+    subgraph Data["Data Pages"]
+        direction LR
+        D1["Data"]
+        D2["Data"]
+        D3["Data"]
+        D4["Data"]
+        D5["Data"]
+        D6["Data"]
+        D7["Data"]
+        D8["Data"]
+    end
+    
+    R --> I1
+    R --> I2
+    R --> I3
+    
+    I1 --> L1
+    I1 --> L2
+    I1 --> L3
+    I2 --> L4
+    I2 --> L5
+    I2 --> L6
+    I3 --> L7
+    I3 --> L8
+    
+    L1 --> D1
+    L2 --> D2
+    L3 --> D3
+    L4 --> D4
+    L5 --> D5
+    L6 --> D6
+    L7 --> D7
+    L8 --> D8
+    
+    Note["Height = log(n)<br/>Only 3-4 levels for millions of rows!"]
+    
+    style Root fill:#1e1e2e,stroke:#89b4fa,color:#cdd6f4
+    style Level1 fill:#1e1e2e,stroke:#fab387,color:#cdd6f4
+    style Leaves fill:#1e1e2e,stroke:#a6e3a1,color:#cdd6f4
+    style Data fill:#1e1e2e,stroke:#f9e2af,color:#cdd6f4
+    style Note fill:#1e1e2e,stroke:#89b4fa,color:#89b4fa
 ```
 
 ### Hash Index
@@ -119,30 +164,32 @@ Hash indexes use a hash function to convert a key into a hash value, which then 
 
 **Hash Index Flow:**
 
-```
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│  Input Key  │────▶│Hash Function│────▶│  Hash Map   │────▶│  Data Page  │
-│ john@example│     │  SHA-256    │     │ Bucket 42   │     │  Pointer    │
-└─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
-     │                                           │                    │
-     │         ┌─────────────────────────────────┘                    │
-     │         │                                                      │
-     ▼         ▼                                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           Hash Table (In Memory)                             │
-│  ┌──────────┬─────────────────────────────────────────────────────────┐     │
-│  │ Hash     │ Value                                                   │     │
-│  │ Value    │                                                         │     │
-│  ├──────────┼─────────────────────────────────────────────────────────┤     │
-│  │ 0x42A... │ → Page 5, Row 23                                        │     │
-│  │ 0x7F1... │ → Page 12, Row 7                                        │     │
-│  │ 0xD92... │ → Page 3, Row 41                                        │     │
-│  │   ...    │   ...                                                   │     │
-│  └──────────┴─────────────────────────────────────────────────────────┘     │
-└─────────────────────────────────────────────────────────────────────────────┘
-
-Lookup Time: O(1) - Constant time!
-Limitation: No range queries (WHERE age > 25)
+```mermaid
+flowchart LR
+    Input["Input Key<br/>john@example.com"] --> Hash["Hash Function<br/>SHA-256"]
+    Hash --> Bucket["Hash Map<br/>Bucket 42"]
+    Bucket --> Pointer["Data Page Pointer"]
+    
+    subgraph HashTable["Hash Table (In Memory)"]
+        direction TB
+        HT1["0x42A... → Page 5, Row 23"]
+        HT2["0x7F1... → Page 12, Row 7"]
+        HT3["0xD92... → Page 3, Row 41"]
+        HT4["..."]
+    end
+    
+    Bucket -.-> HashTable
+    
+    Note1["⚡ O(1) Lookup Time"]
+    Note2["❌ No range queries<br/>(WHERE age > 25)"]
+    
+    style Input fill:#1e1e2e,stroke:#89b4fa,color:#cdd6f4
+    style Hash fill:#1e1e2e,stroke:#fab387,color:#cdd6f4
+    style Bucket fill:#1e1e2e,stroke:#a6e3a1,color:#cdd6f4
+    style Pointer fill:#1e1e2e,stroke:#f9e2af,color:#cdd6f4
+    style HashTable fill:#1e1e2e,stroke:#45475a,color:#cdd6f4
+    style Note1 fill:#1e1e2e,stroke:#a6e3a1,color:#a6e3a1
+    style Note2 fill:#1e1e2e,stroke:#f38ba8,color:#f38ba8
 ```
 
 **Note:** Hash indexes are commonly used in in-memory data stores rather than on-disk databases.
@@ -157,42 +204,53 @@ Geospatial indexes are optimized for two-dimensional data (e.g., latitude and lo
 
 **Geospatial Indexing - Quad Tree Structure:**
 
-```
-                    ┌─────────────────┐
-                    │   World Map     │
-                    │   (Root)        │
-                    └────────┬────────┘
-                             │
-            ┌────────────────┼────────────────┐
-            │                │                │
-            ▼                ▼                ▼
-    ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-    │   NW Quad    │ │   NE Quad    │ │   Center     │
-    │  (High Res)  │ │  (High Res)  │ │  (Low Res)   │
-    └──────┬───────┘ └──────┬───────┘ └──────┬───────┘
-           │                │                │
-     ┌─────┴─────┐    ┌─────┴─────┐        │
-     │           │    │           │        │
-     ▼           ▼    ▼           ▼        │
-┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐│
-│ 1 NW   │ │ 1 NE   │ │ 2 NW   │ │ 2 NE   ││
-│Detail  │ │Detail  │ │Detail  │ │Detail  ││
-└────────┘ └────────┘ └────────┘ └────────┘│
-
-Example: Finding restaurants near you
-┌─────────────────────────────────────┐
-│  NW    │  NE    │      SE           │
-│        │        │                   │
-│   🍕   │   🍔   │        🌮         │
-│        │        │                   │
-├────────┼────────┼───────────────────┤
-│        │   👤   │                   │
-│   🍜   │  You   │        🍱         │
-│        │        │                   │
-│  SW    │        │                   │
-└─────────────────────────────────────┘
-
-Search radius → Only check relevant quadrants!
+```mermaid
+flowchart TB
+    subgraph Root["World Map (Root)"]
+        R["Root"]
+    end
+    
+    subgraph Level1["Level 1 - Quadrants"]
+        direction LR
+        NW["NW Quad<br/>(High Res)"]
+        NE["NE Quad<br/>(High Res)"]
+        C["Center<br/>(Low Res)"]
+    end
+    
+    subgraph Level2["Level 2 - Sub-quadrants"]
+        direction LR
+        NW1["NW Detail"]
+        NE1["NE Detail"]
+        NW2["NW Detail"]
+        NE2["NE Detail"]
+    end
+    
+    R --> NW
+    R --> NE
+    R --> C
+    
+    NW --> NW1
+    NW --> NE1
+    NE --> NW2
+    NE --> NE2
+    
+    subgraph Example["Example: Finding Restaurants Near You"]
+        direction TB
+        E1["🍕 Pizza - NW"]
+        E2["🍔 Burger - NE"]
+        E3["👤 You - Center"]
+        E4["🍜 Noodles - SW"]
+        E5["🌮 Tacos - SE"]
+        E6["🍱 Bento - SE"]
+    end
+    
+    Note["Search radius → Only check relevant quadrants! ⚡"]
+    
+    style Root fill:#1e1e2e,stroke:#89b4fa,color:#cdd6f4
+    style Level1 fill:#1e1e2e,stroke:#fab387,color:#cdd6f4
+    style Level2 fill:#1e1e2e,stroke:#a6e3a1,color:#cdd6f4
+    style Example fill:#1e1e2e,stroke:#f9e2af,color:#cdd6f4
+    style Note fill:#1e1e2e,stroke:#89b4fa,color:#89b4fa
 ```
 
 ### Inverted Index
@@ -201,120 +259,82 @@ Inverted indexes are designed for full-text search. They map each term (or token
 
 **Inverted Index Structure:**
 
-```
-Documents to Index:
-┌─────────────────────────────────┐  ┌──────────────────────────────────┐
-│ Document 1                      │  │ Document 2                       │
-│ "B-Trees are fast data          │  │ "Hash tables are limited but     │
-│  structures for databases"      │  │  useful for caching"             │
-└─────────────────────────────────┘  └──────────────────────────────────┘
-              │                                      │
-              └──────────────┬───────────────────────┘
-                             │
-                             ▼ Tokenization
-                    ┌──────────────────┐
-                    │  Text Processing │
-                    │  & Stemming      │
-                    └────────┬─────────┘
-                             │
-                             ▼
-┌──────────────────────────────────────────────────────────────────────────┐
-│                        INVERTED INDEX                                     │
-│  ┌──────────┬─────────────────────────────────────────────────────────┐  │
-│  │ Term     │ Document IDs + Positions                                │  │
-│  ├──────────┼─────────────────────────────────────────────────────────┤  │
-│  │ b-tree   │ → Doc1[0], Doc3[5], Doc7[2]                             │  │
-│  │ fast     │ → Doc1[3], Doc4[1], Doc8[0]                             │  │
-│  │ data     │ → Doc1[5], Doc2[7], Doc5[3], Doc9[1]                    │  │
-│  │ hash     │ → Doc2[0], Doc6[4], Doc10[2]                            │  │
-│  │ table    │ → Doc2[1], Doc5[0], Doc8[3]                             │  │
-│  │ cache    │ → Doc2[6], Doc4[4], Doc11[1]                            │  │
-│  └──────────┴─────────────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────────────────────────┘
-                             │
-                    Query: "fast hash"
-                             │
-                             ▼
-                    Intersection:
-                    "fast" → Doc1, Doc4, Doc8
-                    "hash" → Doc2, Doc6, Doc10
-                    Result: No exact match
-                    
-                    Query: "fast b-tree"
-                             │
-                             ▼
-                    "fast" → Doc1, Doc4, Doc8
-                    "b-tree" → Doc1, Doc3, Doc7
-                    Result: Doc1 ✓ (Both terms present!)
+```mermaid
+flowchart TB
+    subgraph Docs["Documents to Index"]
+        direction LR
+        Doc1["Document 1<br/>'B-Trees are fast...'"]
+        Doc2["Document 2<br/>'Hash tables are limited...'"]
+    end
+    
+    subgraph Process["Tokenization & Processing"]
+        Token["Text Processing<br/>& Stemming"]
+    end
+    
+    subgraph Inverted["Inverted Index"]
+        direction TB
+        T1["b-tree → Doc1, Doc3, Doc7"]
+        T2["fast → Doc1, Doc4, Doc8"]
+        T3["data → Doc1, Doc2, Doc5, Doc9"]
+        T4["hash → Doc2, Doc6, Doc10"]
+        T5["table → Doc2, Doc5, Doc8"]
+        T6["cache → Doc2, Doc4, Doc11"]
+    end
+    
+    subgraph Query1["Query: 'fast hash'"]
+        Q1["fast: Doc1, Doc4, Doc8<br/>hash: Doc2, Doc6, Doc10<br/>⚠️ No intersection"]
+    end
+    
+    subgraph Query2["Query: 'fast b-tree'"]
+        Q2["fast: Doc1, Doc4, Doc8<br/>b-tree: Doc1, Doc3, Doc7<br/>✓ Result: Doc1"]
+    end
+    
+    Docs --> Process
+    Process --> Inverted
+    Inverted -.-> Query1
+    Inverted -.-> Query2
+    
+    style Docs fill:#1e1e2e,stroke:#89b4fa,color:#cdd6f4
+    style Process fill:#1e1e2e,stroke:#fab387,color:#cdd6f4
+    style Inverted fill:#1e1e2e,stroke:#a6e3a1,color:#cdd6f4
+    style Query1 fill:#1e1e2e,stroke:#f38ba8,color:#f38ba8
+    style Query2 fill:#1e1e2e,stroke:#a6e3a1,color:#a6e3a1
 ```
 
 ## Indexing Decision Flowchart
 
 The following flowchart helps determine the appropriate indexing strategy based on the query characteristics and data type.
 
-```
-┌──────────────────────────────────────────────────────────────────────────┐
-│                    INDEX SELECTION DECISION TREE                          │
-└──────────────────────────────────────────────────────────────────────────┘
-
-     ┌─────────────────────────────┐
-     │  Need efficient data        │
-     │  access?                    │
-     └──────────────┬──────────────┘
-                    │
-        ┌───────────┴───────────┐
-        │                       │
-       NO                      YES
-        │                       │
-        ▼                       ▼
-┌───────────────┐      ┌─────────────────┐
-│ Full Table    │      │ Large number    │
-│ Scan (OK for  │      │ of rows?        │
-│ small tables) │      └────────┬────────┘
-└───────────────┘               │
-                      ┌─────────┴─────────┐
-                      │                   │
-                     NO                 YES
-                      │                   │
-                      ▼                   ▼
-            ┌───────────────┐    ┌─────────────────┐
-            │ Full Table    │    │ What type of    │
-            │ Scan          │    │ data?           │
-            └───────────────┘    └────────┬────────┘
-                                          │
-                    ┌─────────────────────┼─────────────────────┐
-                    │                     │                     │
-                    ▼                     ▼                     ▼
-            ┌──────────────┐      ┌──────────────┐      ┌──────────────┐
-            │  Text Data   │      │  Location    │      │  Numeric/    │
-            │              │      │  Data        │      │  Other       │
-            └──────┬───────┘      └──────┬───────┘      └──────┬───────┘
-                   │                     │                     │
-                   ▼                     ▼                     │
-         ┌─────────────────┐    ┌─────────────────┐            │
-         │ Inverted Index  │    │ Geospatial      │            │
-         │ (Elasticsearch, │    │ Index           │            │
-         │  PostgreSQL FTS)│    │ (PostGIS, etc.) │            │
-         └─────────────────┘    └─────────────────┘            │
-                                                                │
-                                              ┌─────────────────┴──────────┐
-                                              │                            │
-                                              ▼                            ▼
-                                    ┌─────────────────┐        ┌─────────────────┐
-                                    │ Exact Match     │        │ Range Queries   │
-                                    │ Only?           │        │ Needed?         │
-                                    └────────┬────────┘        └────────┬────────┘
-                                             │                          │
-                                   ┌─────────┴─────────┐      ┌─────────┴─────────┐
-                                   │                   │      │                   │
-                                  YES                 NO    YES                 NO
-                                   │                   │      │                   │
-                                   ▼                   ▼      ▼                   ▼
-                         ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-                         │ Hash Index or   │  │ B-Tree Index    │  │ B-Tree Index    │
-                         │ B-Tree          │  │ (Default choice │  │ (Default choice │
-                         └─────────────────┘  │ for most cases) │  │ for most cases) │
-                                              └─────────────────┘  └─────────────────┘
+```mermaid
+flowchart TD
+    Start["Need efficient<br/>data access?"] -->|No| FTS1["Full Table Scan<br/>(OK for small tables)"]
+    Start -->|Yes| Large["Large number<br/>of rows?"]
+    
+    Large -->|No| FTS2["Full Table Scan"]
+    Large -->|Yes| Type["What type<br/>of data?"]
+    
+    Type -->|Text| Inverted["Inverted Index<br/>Elasticsearch,<br/>PostgreSQL FTS"]
+    Type -->|Location| Geo["Geospatial Index<br/>PostGIS, etc."]
+    Type -->|Numeric/Other| QueryType
+    
+    subgraph QueryType["Query Type"]
+        direction TB
+        Exact["Exact Match<br/>Only?"] -->|Yes| Hash["Hash Index<br/>or B-Tree"]
+        Exact -->|No| Range["Range Queries<br/>Needed?"]
+        Range -->|Yes| BTree1["B-Tree Index<br/>Default choice"]
+        Range -->|No| BTree2["B-Tree Index<br/>Default choice"]
+    end
+    
+    style Start fill:#1e1e2e,stroke:#89b4fa,color:#cdd6f4
+    style FTS1 fill:#1e1e2e,stroke:#6c7086,color:#6c7086
+    style FTS2 fill:#1e1e2e,stroke:#6c7086,color:#6c7086
+    style Large fill:#1e1e2e,stroke:#fab387,color:#cdd6f4
+    style Type fill:#1e1e2e,stroke:#fab387,color:#cdd6f4
+    style Inverted fill:#1e1e2e,stroke:#a6e3a1,color:#a6e3a1
+    style Geo fill:#1e1e2e,stroke:#a6e3a1,color:#a6e3a1
+    style Hash fill:#1e1e2e,stroke:#f9e2af,color:#f9e2af
+    style BTree1 fill:#1e1e2e,stroke:#89b4fa,color:#89b4fa
+    style BTree2 fill:#1e1e2e,stroke:#89b4fa,color:#89b4fa
 ```
 
 **Quick Reference Table:**
