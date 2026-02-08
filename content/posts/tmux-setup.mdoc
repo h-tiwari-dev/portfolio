@@ -1,0 +1,527 @@
+---
+title: "My Tmux Setup: A Developer's Terminal Multiplexer Configuration"
+excerpt: >-
+  Tmux is central to how I work. It looks good and gets things done. Here is my
+  complete setup with configuration files, custom scripts, and why I made each
+  choice.
+publishedDate: 2026-01-21
+tags:
+  - tmux
+  - linux
+  - macos
+  - vim
+  - configuration
+coverImage: /content/posts/tmux-setup/coverImage.webp
+---
+Tmux is central to how I work. It looks good and gets things done. Here is my complete setup with configuration files, custom scripts, and why I made each choice.
+
+## Why Tmux?
+
+Here is what tmux gives you:
+
+- **Persistent sessions.** Your work survives terminal crashes and SSH disconnections.
+- **Multiple windows and panes.** Organize your workspace in one terminal window.
+- **Session management.** Jump between projects instantly.
+- **Remote pairing.** Share terminal sessions with teammates.
+- **Scriptable.** Automate your development environment setup.
+
+## Getting Started
+
+You need a foundation. Follow these steps.
+
+### Install Tmux
+
+MacOS users:
+
+```
+brew install tmux fzf
+```
+
+Linux users:
+
+```
+sudo apt install tmux fzf
+```
+
+### Install TPM
+
+The Tmux Plugin Manager handles plugins. Clone the repository.
+
+```
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+```
+
+### Create Directories
+
+Create the configuration and script directories.
+
+```
+mkdir -p ~/.config/tmux/scripts
+```
+
+### Install Fonts
+
+Status bar icons require a Nerd Font. Use JetBrains Mono Nerd Font. Install the font. Set the terminal font.
+
+### Configure Shell
+
+Add the scripts directory to your PATH. Add this line to ~/.zshrc.
+
+```
+export PATH="$HOME/.config/tmux/scripts:$PATH"
+```
+
+Reload the shell configuration.
+
+```
+source ~/.zshrc
+```
+
+### Apply Configuration
+
+Create ~/.config/tmux/tmux.conf. Paste the code from the sections below.
+
+### Install Plugins
+
+Start tmux. Press Ctrl+a then I. TPM installs the plugins.
+
+## The Configuration
+
+My configuration lives at ~/.config/tmux/tmux.conf. Let me break it down section by section.
+
+### Core Settings
+
+```
+# Set true color support
+set -g default-terminal "tmux-256color"
+set -ag terminal-overrides ",xterm-256color:RGB"
+
+# Enable mouse support
+set -g mouse on
+
+# Set prefix to Ctrl+a (more ergonomic than Ctrl+b)
+unbind C-b
+set -g prefix C-a
+bind C-a send-prefix
+
+# Start windows and panes at 1, not 0
+set -g base-index 1
+setw -g pane-base-index 1
+
+# Renumber windows when one is closed
+set -g renumber-windows on
+
+# Increase history limit
+set -g history-limit 50000
+
+# Reduce escape time (for vim)
+set -sg escape-time 0
+
+# Enable focus events
+set -g focus-events on
+
+# Refresh status more often
+set -g status-interval 5
+```
+
+**Why these choices:**
+
+- **Ctrl+a as prefix.** My pinky thanks me. The default Ctrl+b forces an awkward hand position.
+- **1-indexed windows.** The keyboard number row starts at 1. Tmux windows should too.
+- **Zero escape time.** Vim users need this. The default delay makes mode switching feel slow.
+- **Mouse support.** Good for scrolling and resizing panes. Keeps the keyboard-first workflow.
+
+### Key Bindings
+
+```
+# Reload config
+bind r source-file ~/.config/tmux/tmux.conf ; display-message "Config reloaded!"
+
+# Split panes using | and -
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
+unbind '"'
+unbind %
+
+# New window in current path
+bind c new-window -c "#{pane_current_path}"
+
+# Vim-style pane navigation
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+# Pane resizing with Shift + hjkl
+bind -r H resize-pane -L 5
+bind -r J resize-pane -D 5
+bind -r K resize-pane -U 5
+bind -r L resize-pane -R 5
+
+# Quick window navigation
+bind -r C-h previous-window
+bind -r C-l next-window
+
+# Swap windows
+bind -r "<" swap-window -d -t -1
+bind -r ">" swap-window -d -t +1
+
+# Toggle last window
+bind Space last-window
+```
+
+**The idea:** Make splits obvious. | for vertical. - for horizontal. Keep navigation vim-like. The -r flag enables key repeat. Hold the key to resize continuously.
+
+### Vim-like Copy Mode
+
+```
+setw -g mode-keys vi
+
+# Enter copy mode with prefix + [
+bind [ copy-mode
+
+# Vim-like selection
+bind -T copy-mode-vi v send -X begin-selection
+bind -T copy-mode-vi y send -X copy-selection-and-cancel
+bind -T copy-mode-vi Escape send -X cancel
+
+# Copy to system clipboard (macOS)
+bind -T copy-mode-vi y send -X copy-pipe-and-cancel "pbcopy"
+```
+
+Copying text feels natural if you use vim. Press prefix + [ to enter copy mode. Press v to start selection. Press y to yank to clipboard.
+
+### Status Bar (Catppuccin Theme)
+
+I spent the most time on the status bar. I wanted something informative without clutter. I used the Catppuccin color palette.
+
+```
+set -g status-position top
+set -g status-justify centre
+
+# Status bar colors (Catppuccin-inspired)
+set -g status-style "bg=#1e1e2e,fg=#cdd6f4"
+
+# Left status: session + directory + git branch
+set -g status-left-length 80
+set -g status-left "#[fg=#1e1e2e,bg=#89b4fa,bold] #S #[fg=#89b4fa,bg=#45475a]#[fg=#cdd6f4,bg=#45475a] #{b:pane_current_path} #[fg=#45475a,bg=#1e1e2e]#[fg=#a6e3a1] #{?#{!=:#(git -C #{pane_current_path} rev-parse --abbrev-ref HEAD 2>/dev/null),}, #(git -C #{pane_current_path} rev-parse --abbrev-ref HEAD 2>/dev/null),}"
+
+# Right status: battery + time + date
+set -g status-right-length 80
+set -g status-right "#(~/.config/tmux/scripts/battery.sh) #[fg=#45475a]#[fg=#cdd6f4,bg=#45475a] %H:%M #[fg=#89b4fa]#[fg=#1e1e2e,bg=#89b4fa,bold] %a %d %b "
+
+# Window status
+set -g window-status-format "#[fg=#6c7086] #I:#W "
+set -g window-status-current-format "#[fg=#f9e2af,bold] #I:#W "
+set -g window-status-separator ""
+
+# Pane borders
+set -g pane-border-style "fg=#45475a"
+set -g pane-active-border-style "fg=#89b4fa"
+
+# Message style
+set -g message-style "bg=#f9e2af,fg=#1e1e2e"
+```
+
+**What shows up:**
+
+- **Left side:** Session name, current directory, and git branch (with icon)
+- **Center:** Window list with the current window highlighted in yellow
+- **Right side:** Battery status, time, and date
+
+The powerline-style arrows create visual separation between segments.
+
+### Battery Script
+
+I wrote a custom script for the battery indicator. Save this file to ~/.config/tmux/scripts/battery.sh.
+
+It shows dynamic icons and color-coded status.
+
+```bash
+#!/bin/bash
+# ~/.config/tmux/scripts/battery.sh
+
+# Catppuccin colors
+GREEN="#a6e3a1"
+YELLOW="#f9e2af"
+PEACH="#fab387"
+RED="#f38ba8"
+
+# Get battery info
+battery_info=$(pmset -g batt)
+percentage=$(echo "$battery_info" | /usr/bin/grep -Eo '[0-9]+%' | head -1 | tr -d '%')
+
+# Exit if no battery found
+[[ -z "$percentage" ]] && exit 0
+
+# Determine color based on percentage
+if [[ $percentage -ge 50 ]]; then
+    color="$GREEN"
+elif [[ $percentage -ge 30 ]]; then
+    color="$YELLOW"
+elif [[ $percentage -ge 15 ]]; then
+    color="$PEACH"
+else
+    color="$RED"
+fi
+
+# Check if charging
+if echo "$battery_info" | /usr/bin/grep -q "AC Power"; then
+    if echo "$battery_info" | /usr/bin/grep -q "charged"; then
+        icon="󰁹"
+        color="$GREEN"
+    else
+        icon="󰂄"
+        color="$GREEN"
+    fi
+elif echo "$battery_info" | /usr/bin/grep -q "charged"; then
+    icon="󰁹"
+    color="$GREEN"
+else
+    # Discharging - choose icon based on level
+    if [[ $percentage -ge 90 ]]; then
+        icon="󰁹"
+    elif [[ $percentage -ge 80 ]]; then
+        icon="󰂂"
+    elif [[ $percentage -ge 70 ]]; then
+        icon="󰂁"
+    elif [[ $percentage -ge 60 ]]; then
+        icon="󰂀"
+    elif [[ $percentage -ge 50 ]]; then
+        icon="󰁿"
+    elif [[ $percentage -ge 40 ]]; then
+        icon="󰁾"
+    elif [[ $percentage -ge 30 ]]; then
+        icon="󰁽"
+    elif [[ $percentage -ge 20 ]]; then
+        icon="󰁼"
+    elif [[ $percentage -ge 10 ]]; then
+        icon="󰁻"
+    else
+        icon="󰁺"
+    fi
+fi
+
+echo "#[fg=$color]$icon $percentage%"
+```
+
+The battery icon changes based on charge level. Ten different states. The color shifts from green to red as the battery drains. When charging, a lightning bolt icon shows up.
+
+### Plugins
+
+I keep plugins minimal.
+
+```
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+
+# tmux-resurrect
+set -g @resurrect-capture-pane-contents 'on'
+set -g @resurrect-strategy-nvim 'session'
+
+# tmux-continuum (auto save/restore)
+set -g @continuum-restore 'on'
+set -g @continuum-save-interval '15'
+```
+
+| Plugin | Purpose |
+|--------|---------|
+| tmux-sensible | Sensible defaults everyone agrees on |
+| tmux-yank | Better clipboard integration |
+| tmux-resurrect | Save and restore sessions across restarts |
+| tmux-continuum | Automatic session saving every 15 minutes |
+
+The resurrect and continuum combo saves your entire tmux environment across system restarts. I use this every day.
+
+Press prefix + I to install plugins.
+
+### Custom Session Scripts
+
+I have three scripts to improve session management. These connect to tmux through keybindings in the config.
+
+Save these in ~/.config/tmux/scripts. Run chmod +x ~/.config/tmux/scripts/* to make them executable.
+
+```
+# ~/.config/tmux/tmux.conf
+
+# prefix + f: Open sessionizer (create/switch session from ~/Documents)
+bind-key -r f run-shell "tmux neww ~/.config/tmux/scripts/tmux-sessionizer"
+
+# prefix + s: Fuzzy session picker with pane preview (replaces default choose-tree)
+bind-key s run-shell "tmux neww ~/.config/tmux/scripts/tmux-list"
+
+# prefix + X: Fuzzy kill session(s) with pane preview
+bind-key X run-shell "tmux neww ~/.config/tmux/scripts/tmux-kill"
+```
+
+The run-shell "tmux neww ..." pattern opens a new window to run the script. This keeps the fzf interface clean and full-screen.
+
+#### Session Finder (prefix + f)
+
+```bash
+#!/usr/bin/env bash
+# ~/.config/tmux/scripts/tmux-sessionizer
+
+# Directories to search
+SEARCH_DIRS=(
+    ~/Documents
+    ~/Projects
+    ~/Code
+    ~/dev
+    ~/work
+    ~
+)
+
+# Build find command for existing directories only
+find_dirs() {
+    for dir in "${SEARCH_DIRS[@]}"; do
+        dir="${dir/#\~/$HOME}"
+        [[ -d "$dir" ]] && find "$dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
+    done | sort -u
+}
+
+# Get existing tmux sessions
+get_sessions() {
+    tmux ls -F "#{session_name}|#{session_path}" 2>/dev/null | while read -r line; do
+        name="${line%%|*}"
+        path="${line#*|}"
+        echo "[session] $name ($path)"
+    done
+}
+
+if [[ $# -eq 1 ]]; then
+    selected="$1"
+else
+    selected=$( (get_sessions; find_dirs) | fzf \
+        --height 80% \
+        --reverse \
+        --header "Select directory or session" \
+        --preview '...' \
+        --preview-window "right:50%:wrap")
+fi
+
+[[ -z "$selected" ]] && exit 0
+
+# Handle selection and create/switch session
+# ... (session creation logic)
+```
+
+This script combines fzf with tmux to create a project launcher. Press prefix + f and you get a fuzzy finder showing:
+
+- Existing tmux sessions
+- Project directories from your configured paths
+
+The preview pane shows directory contents (with git branch info) or session details (windows, panes, running commands).
+
+#### Session List (prefix + s)
+
+A cleaner replacement for the default choose-tree.
+
+```bash
+#!/usr/bin/env bash
+# ~/.config/tmux/scripts/tmux-list
+
+sessions=$(tmux ls -F "#{session_name}" 2>/dev/null)
+
+echo "$sessions" | fzf \
+    --height 80% \
+    --reverse \
+    --header "Sessions (Enter to attach)" \
+    --preview '
+        # Shows session info, windows, and panes
+        # with colors and formatting
+    ' \
+    --preview-window "right:50%:wrap" \
+    --bind 'enter:execute(tmux switch-client -t {})+abort'
+```
+
+Press prefix + s to see all sessions with a rich preview showing windows and panes.
+
+#### Session Killer (prefix + X)
+
+```bash
+#!/usr/bin/env bash
+# ~/.config/tmux/scripts/tmux-kill
+
+sessions=$(tmux ls -F "#{session_name}" 2>/dev/null)
+
+selected=$(echo "$sessions" | fzf \
+    --multi \
+    --header "Select session(s) to kill (TAB for multi-select)" \
+    --preview '...')
+
+echo "$selected" | while read -r session; do
+    tmux kill-session -t "$session"
+done
+```
+
+Multi-select support lets you clean up multiple sessions at once.
+
+### Shell Aliases
+
+These aliases make tmux faster to use from the command line. I keep them in ~/.config/zsh/aliases.zsh.
+
+```
+# Tmux
+alias t='tmux'
+alias ta='tmux attach -t'
+alias tn='tmux new -s'
+alias tl='tmux list-sessions'
+alias tk='tmux kill-session -t'
+```
+
+| Alias | Command | Usage |
+|-------|---------|-------|
+| t | tmux | Start tmux |
+| ta | tmux attach -t | Attach to session: ta myproject |
+| tn | tmux new -s | New named session: tn myproject |
+| tl | tmux list-sessions | List all sessions |
+| tk | tmux kill-session -t | Kill session: tk myproject |
+
+These single-letter aliases make common operations instant. Starting a new project session becomes tn projectname. Reattaching is ta projectname.
+
+## Quick Reference
+
+### Keybindings
+
+| Keybinding | Action |
+|------------|--------|
+| C-a | Prefix key |
+| prefix + | | Split vertically |
+| prefix + - | Split horizontally |
+| prefix + h/j/k/l | Navigate panes |
+| prefix + H/J/K/L | Resize panes |
+| prefix + C-h/C-l | Previous/next window |
+| prefix + </> | Swap windows |
+| prefix + Space | Toggle last window |
+| prefix + f | Session finder |
+| prefix + s | Session list |
+| prefix + X | Kill sessions |
+| prefix + r | Reload config |
+| prefix + [ | Enter copy mode |
+
+### Shell Aliases
+
+| Alias | Action |
+|-------|--------|
+| t | Start tmux |
+| ta <name> | Attach to session |
+| tn <name> | New named session |
+| tl | List sessions |
+| tk <name> | Kill session |
+
+## Final Thoughts
+
+This setup evolved over years of daily use. Here are the principles:
+
+- **Keep it keyboard-driven.** Mouse support is nice. Efficiency comes from muscle memory.
+- **Make common actions fast.** Session switching should be instant.
+- **Do not over-customize.** Plugins should solve real problems. They should not add complexity.
+- **Persist everything.** Never lose your work environment.
+
+Take what works and adapt it to your workflow. The best tmux config is one you will use.
+
+Configuration files available in my dotfiles repository.
