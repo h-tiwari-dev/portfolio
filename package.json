@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "npx wrangler pages dev out",
     "deploy": "npx wrangler pages deploy out --project-name=portfolio",
+    "deploy:worker": "cd worker && npx wrangler deploy",
     "lint": "next lint"
   },
   "engines": {
@@ -29,13 +30,13 @@
     "next": "^14.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "resend": "^6.6.0",
     "tailwind-merge": "^3.4.0",
     "taos": "^1.0.2",
     "three": "^0.160.0",
     "typescript": "4.9.5"
   },
   "devDependencies": {
+    "@cloudflare/wrangler": "^1.21.0",
     "@types/three": "^0.160.0",
     "autoprefixer": "^10.4.13",
     "eslint-config-prettier": "^8.6.0",

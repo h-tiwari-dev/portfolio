@@ -42,17 +42,19 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     setStatus('sending');
     setErrorMessage('');
 
-    // Simulated transmission progress for aesthetic feel
     const progressInterval = setInterval(() => {
       setProgress((prev) => Math.min(prev + Math.random() * 10, 95));
     }, 100);
 
     try {
-      const response = await fetch('/api/sendEmail', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        'https://portfolio-worker.h-tiwari-dev.workers.dev',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        }
+      );
       const result = await response.json();
 
       clearInterval(progressInterval);
