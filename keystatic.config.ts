@@ -1,7 +1,14 @@
 import { config, fields, collection } from '@keystatic/core';
 
+const isLocal = process.env.NODE_ENV === 'development';
+
 export default config({
-  storage: { kind: 'local' },
+  storage: isLocal
+    ? { kind: 'local' }
+    : {
+        kind: 'github',
+        repo: 'h-tiwari-dev/portfolio',
+      },
   collections: {
     posts: collection({
       label: 'Posts',
