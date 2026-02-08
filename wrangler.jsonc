@@ -1,0 +1,12 @@
+{
+  "name": "portfolio",
+  "compatibility_date": "2026-02-08",
+  "compatibility_flags": ["nodejs_compat"],
+  "pages": {
+    "wrangler_config_hash": "auto",
+    "enable_service_binding": true
+  },
+  "dev": {
+    "port": 3000
+  }
+}
