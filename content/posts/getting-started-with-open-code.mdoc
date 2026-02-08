@@ -81,10 +81,10 @@ The terminal interface opens. You see a prompt at the bottom where you type mess
 Initialize your project by running:
 
 ```
-`/init`
+/init
 ```
 
-OpenCode analyzes your codebase and creates an [AGENTS.md](http://AGENTS.md) file. This file helps the agent understand your project structure and coding patterns. Commit it to git.
+OpenCode analyzes your codebase and creates an AGENTS.md file. This file helps the agent understand your project structure and coding patterns. Commit it to git.
 
 ## Setting Up a Provider
 
@@ -94,30 +94,30 @@ You need API access to at least one model provider. Here are your options.
 
 This is the easiest option for beginners. OpenCode Zen provides tested and verified models with pay-as-you-go pricing. Two models are free: Big Pickle and GPT 5 Nano.
 
-1. Run `/connect` in the TUI
+1. Run /connect in the TUI
 1. Select opencode
 1. Go to [opencode.ai/auth](http://opencode.ai/auth) in your browser
 1. Sign in and copy your API key
 1. Paste the key in the terminal
 
-Run `/models` to see available models.
+Run /models to see available models.
 
 ### GitHub Copilot
 
 Use your existing GitHub Copilot subscription.
 
-1. Run `/connect` in the TUI
+1. Run /connect in the TUI
 1. Select GitHub Copilot
 1. Go to [github.com/login/device](http://github.com/login/device)
 1. Enter the code shown in your terminal
 
-Your Copilot models now appear when you run `/models`.
+Your Copilot models now appear when you run /models.
 
 ### ChatGPT Plus or Pro
 
 Use your existing OpenAI subscription.
 
-1. Run `/connect` in the TUI
+1. Run /connect in the TUI
 1. Select OpenAI
 1. Select ChatGPT Plus/Pro
 1. Your browser opens for authentication
@@ -128,17 +128,17 @@ All OpenAI models become available after authentication.
 
 Use Claude Pro/Max or an API key.
 
-1. Run `/connect` in the TUI
+1. Run /connect in the TUI
 1. Select Anthropic
 1. Select Claude Pro/Max for OAuth or Manually enter API Key for direct access
 
-Claude models appear in your `/models` list.
+Claude models appear in your /models list.
 
 ### Bring Your Own Key
 
 OpenCode works with any OpenAI-compatible provider. Popular options include OpenRouter, DeepSeek, Groq, Together AI, and Fireworks AI.
 
-1. Run `/connect` in the TUI
+1. Run /connect in the TUI
 1. Search for your provider
 1. Enter your API key
 
@@ -212,20 +212,20 @@ These commands work in the TUI.
 
 | Command | What it does |
 |---------|--------------|
-| **/models** | Switch to a different model |
-| **/connect** | Add credentials for a provider |
-| **/init** | Analyze project and create AGENTS.md |
-| **/undo** | Revert the last changes |
-| **/redo** | Restore reverted changes |
-| **/share** | Create a shareable link to the conversation |
+| /models | Switch to a different model |
+| /connect | Add credentials for a provider |
+| /init | Analyze project and create AGENTS.md |
+| /undo | Revert the last changes |
+| /redo | Restore reverted changes |
+| /share | Create a shareable link to the conversation |
 
-Run **/undo** multiple times to revert multiple changes.
+Run /undo multiple times to revert multiple changes.
 
 ## Configuration
 
 OpenCode uses a JSON config file.
 
-Global config lives at `~/.config/opencode/opencode.json`. Project config lives at `opencode.json` in your project root.
+Global config lives at ~/.config/opencode/opencode.json. Project config lives at opencode.json in your project root.
 
 A basic config:
 
@@ -253,7 +253,7 @@ Project configs override global configs. This lets you use different models for 
 Share any conversation with your team.
 
 ```
-`/share`
+/share
 ```
 
 This creates a link and copies it to your clipboard. The conversation is not shared by default. Only sessions you explicitly share become public.
@@ -262,7 +262,7 @@ Here is an example shared session: [opencode.ai/s/4XP1fce5](http://opencode.ai/s
 
 ## Next Steps
 
-You now have OpenCode running with a provider configured. Explore themes by setting the `theme` field in your config, customize keybinds, and add MCP servers for extended functionality.
+You now have OpenCode running with a provider configured. Explore themes by setting the theme field in your config, customize keybinds, and add MCP servers for extended functionality.
 
 The plugin system lets you extend OpenCode with npm packages. Add plugins to your config:
 
