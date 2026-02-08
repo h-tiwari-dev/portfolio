@@ -1,8 +1,7 @@
-const { setupDevPlatform } = require('@cloudflare/next-on-pages/next-dev');
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  output: 'export',
   images: { unoptimized: true },
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -21,7 +20,3 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
-
-if (process.env.NODE_ENV === 'development') {
-  await setupDevPlatform();
-}

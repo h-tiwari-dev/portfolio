@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npx @cloudflare/next-on-pages",
-    "start": "npx wrangler pages dev .vercel/output/static",
-    "deploy": "npx wrangler pages deploy .vercel/output/static --project-name=portfolio",
+    "build": "next build",
+    "start": "npx wrangler pages dev out",
+    "deploy": "npx wrangler pages deploy out --project-name=portfolio",
     "lint": "next lint"
   },
   "engines": {
@@ -36,7 +36,6 @@
     "typescript": "4.9.5"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.13.16",
     "@types/three": "^0.160.0",
     "autoprefixer": "^10.4.13",
     "eslint-config-prettier": "^8.6.0",
