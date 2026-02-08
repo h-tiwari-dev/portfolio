@@ -99,6 +99,8 @@ opencode
 
 The terminal interface opens. You see a prompt at the bottom where you type messages.
 
+![OpenCode TUI interface showing the chat interface with prompt at bottom](/content/posts/getting-started-with-open-code/tui-interface.webp)
+
 Initialize your project by running:
 
 ```
@@ -110,6 +112,8 @@ OpenCode analyzes your codebase and creates an [AGENTS.md](http://AGENTS.md) fil
 ## Setting Up a Provider
 
 You need API access to at least one model provider. Here are your options.
+
+![Provider selection screen showing various model options like OpenCode Zen, GitHub Copilot, OpenAI, and Anthropic](/content/posts/getting-started-with-open-code/provider-setup.webp)
 
 ### OpenCode Zen
 
@@ -203,6 +207,8 @@ How is authentication handled in this project?
 
 Use the @ key to fuzzy search for files:
 
+![Using @ symbol to reference files with fuzzy search showing file suggestions](/content/posts/getting-started-with-open-code/file-references.webp)
+
 ```
 Explain the logic in @src/api/auth.ts
 ```
@@ -212,6 +218,8 @@ Drag and drop images into the terminal to include them in your prompt.
 ## Plan Mode and Build Mode
 
 OpenCode has two modes.
+
+![Mode indicator showing "Plan Mode" in the lower right corner of the TUI](/content/posts/getting-started-with-open-code/plan-mode-indicator.webp)
 
 Plan Mode thinks through problems without changing files. Use this to discuss approaches and create plans.
 
@@ -230,6 +238,8 @@ A good workflow:
 ## Essential Commands
 
 These commands work in the TUI.
+
+![Essential slash commands being typed in the OpenCode interface showing /models, /connect, /init options](/content/posts/getting-started-with-open-code/essential-commands.webp)
 
 {% table %}
 - Command
@@ -259,6 +269,8 @@ Run `/undo` multiple times to revert multiple changes.
 ## Configuration
 
 OpenCode uses a JSON config file.
+
+![OpenCode configuration file showing opencode.json settings for theme and model selection](/content/posts/getting-started-with-open-code/configuration.webp)
 
 Global config lives at `~/.config/opencode/opencode.json`. Project config lives at `opencode.json` in your project root.
 
@@ -290,6 +302,8 @@ Share any conversation with your team.
 ```
 `/share`
 ```
+
+![Shared session link displayed in the terminal after running the /share command](/content/posts/getting-started-with-open-code/share-session.webp)
 
 This creates a link and copies it to your clipboard. The conversation is not shared by default. Only sessions you explicitly share become public.
 
