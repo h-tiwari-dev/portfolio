@@ -77,6 +77,45 @@
   }
 }
 
+/* Enhanced Table Styles */
+.prose-custom table {
+  @apply w-full border-collapse;
+}
+
+.prose-custom thead {
+  @apply bg-gradient-to-r from-white/10 to-white/5;
+}
+
+.prose-custom th {
+  @apply px-4 py-3 text-sm font-semibold text-white/95 tracking-wide border-b border-white/20;
+}
+
+.prose-custom td {
+  @apply px-4 py-3 text-sm text-slate-300 border-b border-white/5;
+}
+
+.prose-custom tr:last-child td {
+  @apply border-b-0;
+}
+
+.prose-custom tr:hover td {
+  @apply bg-white/[0.03];
+}
+
+/* Table Command Styling */
+.prose-custom td:first-child {
+  @apply font-mono text-rose-300/90;
+}
+
+/* Inline Code Enhancement */
+.prose-custom code {
+  @apply px-1.5 py-0.5 rounded bg-white/10 text-rose-300 font-mono text-[0.875em] border border-white/10;
+}
+
+.prose-custom pre code {
+  @apply p-0 bg-transparent border-0;
+}
+
 /* Glassmorphism Utilities */
 .glass {
   background: rgba(8, 8, 8, 0.7);

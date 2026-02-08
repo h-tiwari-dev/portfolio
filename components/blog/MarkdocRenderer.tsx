@@ -32,9 +32,7 @@ function CodeBlock({
 }) {
   return (
     <pre className="my-4 p-4 rounded-lg bg-black/50 border border-white/10 overflow-x-auto font-mono text-sm leading-relaxed">
-      <code className={language ? `language-${language}` : ''}>
-        {children}
-      </code>
+      <code className={language ? `language-${language}` : ''}>{children}</code>
     </pre>
   );
 }
@@ -48,18 +46,10 @@ function InlineCode({ children }: { children: React.ReactNode }) {
 }
 
 function Paragraph({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="my-4 text-slate-300 leading-relaxed">{children}</p>
-  );
+  return <p className="my-4 text-slate-300 leading-relaxed">{children}</p>;
 }
 
-function Link({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
+function Link({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <a
       href={href}
@@ -86,9 +76,7 @@ function ListItem({ children }: { children: React.ReactNode }) {
 
 function UnorderedList({ children }: { children: React.ReactNode }) {
   return (
-    <ul className="my-4 pl-6 list-disc marker:text-rose-500/60">
-      {children}
-    </ul>
+    <ul className="my-4 pl-6 list-disc marker:text-rose-500/60">{children}</ul>
   );
 }
 
@@ -115,6 +103,42 @@ function Image({ src, alt }: { src: string; alt?: string }) {
   );
 }
 
+function Table({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="my-6 overflow-x-auto rounded-lg border border-white/10">
+      <table className="w-full text-left border-collapse">{children}</table>
+    </div>
+  );
+}
+
+function TableHead({ children }: { children: React.ReactNode }) {
+  return (
+    <thead className="bg-white/5 border-b border-white/10">{children}</thead>
+  );
+}
+
+function TableBody({ children }: { children: React.ReactNode }) {
+  return <tbody className="divide-y divide-white/5">{children}</tbody>;
+}
+
+function TableRow({ children }: { children: React.ReactNode }) {
+  return (
+    <tr className="transition-colors hover:bg-white/[0.02]">{children}</tr>
+  );
+}
+
+function TableHeader({ children }: { children: React.ReactNode }) {
+  return (
+    <th className="px-4 py-3 text-sm font-semibold text-white/90 tracking-wide">
+      {children}
+    </th>
+  );
+}
+
+function TableCell({ children }: { children: React.ReactNode }) {
+  return <td className="px-4 py-3 text-sm text-slate-300">{children}</td>;
+}
+
 const components = {
   Heading,
   CodeBlock,
@@ -127,6 +151,12 @@ const components = {
   OrderedList,
   HorizontalRule,
   Image,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableHeader,
+  TableCell,
 };
 
 const markdocConfig = {
@@ -171,10 +201,20 @@ const markdocConfig = {
         alt: { type: String },
       },
     },
+    table: { render: 'Table' },
+    thead: { render: 'TableHead' },
+    tbody: { render: 'TableBody' },
+    tr: { render: 'TableRow' },
+    th: { render: 'TableHeader' },
+    td: { render: 'TableCell' },
   },
 };
 
-export default function MarkdocRenderer({ content }: { content: RenderableTreeNode }) {
+export default function MarkdocRenderer({
+  content,
+}: {
+  content: RenderableTreeNode;
+}) {
   return (
     <div className="prose-custom">
       {Markdoc.renderers.react(content, React, { components })}
@@ -184,6 +224,7 @@ export default function MarkdocRenderer({ content }: { content: RenderableTreeNo
 
 export function transformContent(content: any) {
   // Keystatic returns { node: <Markdoc AST> } from resolveLinkedFiles
-  const ast = content?.node ?? Markdoc.parse(typeof content === 'string' ? content : '');
+  const ast =
+    content?.node ?? Markdoc.parse(typeof content === 'string' ? content : '');
   return Markdoc.transform(ast, markdocConfig);
 }
