@@ -217,7 +217,7 @@ export default function ExperienceSectionContent({
                 key={exp.pid}
                 className="min-w-full h-full flex items-center justify-center px-3 sm:px-4 md:px-16 lg:px-24 pb-24 sm:pb-16 md:pb-0"
               >
-                <div className="w-full max-w-5xl grid lg:grid-cols-5 gap-4 sm:gap-6 md:gap-8 items-center">
+                <div className="w-full max-w-3xl">
                   {/* Content Card */}
                   <motion.div
                     initial={false}
@@ -227,7 +227,7 @@ export default function ExperienceSectionContent({
                       y: isActive ? 0 : 20,
                     }}
                     transition={{ duration: 0.4 }}
-                    className={`lg:col-span-3 relative p-4 sm:p-6 md:p-8 border ${
+                    className={`relative p-4 sm:p-6 md:p-8 border ${
                       colors.border
                     } bg-neutral-950 ${
                       isActive ? colors.glow : ''
@@ -340,29 +340,6 @@ export default function ExperienceSectionContent({
                     </div>
                   </motion.div>
 
-                  {/* Visual element */}
-                  <div className="hidden lg:flex lg:col-span-2 items-center justify-center">
-                    <motion.div
-                      initial={false}
-                      animate={{
-                        opacity: isActive ? 1 : 0.2,
-                        scale: isActive ? 1 : 0.8,
-                      }}
-                      transition={{ duration: 0.5 }}
-                      className="text-center"
-                    >
-                      <div
-                        className={`text-[120px] font-black ${colors.text} opacity-20 leading-none`}
-                      >
-                        {String(index + 1).padStart(2, '0')}
-                      </div>
-                      <div
-                        className={`text-sm font-mono ${colors.text} opacity-50 mt-2 uppercase tracking-widest`}
-                      >
-                        {exp.company}
-                      </div>
-                    </motion.div>
-                  </div>
                 </div>
               </div>
             );

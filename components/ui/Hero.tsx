@@ -14,7 +14,7 @@ import { motion } from 'framer-motion';
 
 export default function Hero() {
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full px-4 py-6 sm:p-6 md:p-8 text-center relative overflow-hidden group">
+    <div className="flex flex-col items-center justify-center h-full w-full px-4 py-6 sm:p-6 md:p-8 text-center relative overflow-hidden">
       {/* Profile Image with Enhanced Glow */}
       <div className="relative mb-4 sm:mb-6 md:mb-8 group shrink-0">
         <div className="absolute -inset-3 sm:-inset-4 bg-rose-500 rounded-full blur-2xl opacity-15 group-hover:opacity-40 transition-opacity duration-1000"></div>
@@ -77,34 +77,32 @@ export default function Hero() {
           {/* Resume Button */}
           <motion.button
             onClick={() => window.open('/harsh_resume_new.pdf', '_blank')}
-            className="group relative w-full sm:w-auto flex items-center justify-center gap-3 px-5 sm:px-6 py-3 sm:py-3 bg-rose-950/90 backdrop-blur-md border border-rose-900 hover:bg-rose-900 hover:border-rose-700 transition-all duration-300 cursor-pointer overflow-hidden"
+            className="w-full sm:w-auto flex items-center justify-center gap-3 px-5 sm:px-6 py-3 sm:py-3 bg-rose-950/90 border border-rose-900 hover:bg-rose-900 hover:border-rose-700 transition-all duration-300 cursor-pointer"
             whileTap={{ scale: 0.98 }}
           >
-            <div className="absolute inset-0 bg-rose-900 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-            <FileDown size={18} className="relative z-10 text-rose-400" />
-            <span className="relative z-10 text-sm font-medium text-white">
+            <FileDown size={18} className="text-rose-400" />
+            <span className="text-sm font-medium text-white">
               Download Resume
             </span>
             <ExternalLink
               size={14}
-              className="relative z-10 text-rose-700 group-hover:text-rose-400 transition-colors"
+              className="text-rose-700 hover:text-rose-400 transition-colors"
             />
           </motion.button>
 
           {/* Blog Button */}
           <Link href="/blog">
             <motion.div
-              className="group relative w-full sm:w-auto flex items-center justify-center gap-3 px-5 sm:px-6 py-3 sm:py-3 bg-yellow-950/90 backdrop-blur-md border border-yellow-900 hover:bg-yellow-900 hover:border-yellow-700 transition-all duration-300 cursor-pointer overflow-hidden"
+              className="w-full sm:w-auto flex items-center justify-center gap-3 px-5 sm:px-6 py-3 sm:py-3 bg-yellow-950/90 border border-yellow-900 hover:bg-yellow-900 hover:border-yellow-700 transition-all duration-300 cursor-pointer"
               whileTap={{ scale: 0.98 }}
             >
-              <div className="absolute inset-0 bg-yellow-900 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <BookOpen size={18} className="relative z-10 text-yellow-400" />
-              <span className="relative z-10 text-sm font-medium text-white">
+              <BookOpen size={18} className="text-yellow-400" />
+              <span className="text-sm font-medium text-white">
                 Read Blog
               </span>
               <ArrowRight
                 size={14}
-                className="relative z-10 text-yellow-700 group-hover:text-yellow-400 transition-colors"
+                className="text-yellow-700 hover:text-yellow-400 transition-colors"
               />
             </motion.div>
           </Link>
