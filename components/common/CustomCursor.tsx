@@ -62,9 +62,9 @@ export default function CustomCursor() {
       />
       {/* Outer Ring */}
       <div
-        className={`fixed top-0 left-0 w-8 h-8 border border-rose-500/30 rounded-full pointer-events-none z-[100009] transition-all duration-150 ease-out ${
+        className={`fixed top-0 left-0 w-8 h-8 border border-rose-800 rounded-full pointer-events-none z-[100009] transition-all duration-150 ease-out ${
           isMouseDown
-            ? 'scale-75 border-yellow-400/50 bg-yellow-400/5'
+            ? 'scale-75 border-yellow-700 bg-yellow-950'
             : 'scale-100'
         }`}
         style={{
@@ -73,23 +73,23 @@ export default function CustomCursor() {
       />
       {/* Crosshair Lines */}
       <div
-        className="fixed top-0 left-0 w-4 h-[1px] bg-rose-500/20 pointer-events-none z-[100008]"
+        className="fixed top-0 left-0 w-4 h-[1px] bg-rose-900 pointer-events-none z-[100008]"
         style={{
           transform: `translate(${position.x - 20}px, ${position.y}px)`,
         }}
       />
       <div
-        className="fixed top-0 left-0 w-4 h-[1px] bg-rose-500/20 pointer-events-none z-[100008]"
+        className="fixed top-0 left-0 w-4 h-[1px] bg-rose-900 pointer-events-none z-[100008]"
         style={{ transform: `translate(${position.x + 4}px, ${position.y}px)` }}
       />
       <div
-        className="fixed top-0 left-0 w-[1px] h-4 bg-rose-500/20 pointer-events-none z-[100008]"
+        className="fixed top-0 left-0 w-[1px] h-4 bg-rose-900 pointer-events-none z-[100008]"
         style={{
           transform: `translate(${position.x}px, ${position.y - 20}px)`,
         }}
       />
       <div
-        className="fixed top-0 left-0 w-[1px] h-4 bg-rose-500/20 pointer-events-none z-[100008]"
+        className="fixed top-0 left-0 w-[1px] h-4 bg-rose-900 pointer-events-none z-[100008]"
         style={{ transform: `translate(${position.x}px, ${position.y + 4}px)` }}
       />
     </>

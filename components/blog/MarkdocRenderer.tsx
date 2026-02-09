@@ -6,7 +6,7 @@ import Markdoc, { type RenderableTreeNode } from '@markdoc/markdoc';
 const MermaidDiagram = dynamic(() => import('./MermaidDiagram'), {
   ssr: false,
   loading: () => (
-    <div className="my-8 p-6 rounded-xl bg-black/30 border border-white/[0.06] overflow-x-auto">
+    <div className="my-8 p-6 bg-neutral-900 border border-neutral-800 overflow-x-auto">
       <div className="text-slate-500 font-mono text-sm">Loading diagram...</div>
     </div>
   ),
@@ -47,7 +47,7 @@ function CodeBlock({
   }
 
   return (
-    <pre className="my-4 p-4 rounded-lg bg-black/50 border border-white/10 overflow-x-auto font-mono text-sm leading-relaxed">
+    <pre className="my-4 p-4 bg-neutral-900 border border-neutral-800 overflow-x-auto font-mono text-sm leading-relaxed">
       <code className={language ? `language-${language}` : ''}>{children}</code>
     </pre>
   );
@@ -55,7 +55,7 @@ function CodeBlock({
 
 function InlineCode({ children }: { children: React.ReactNode }) {
   return (
-    <code className="px-1.5 py-0.5 rounded bg-white/10 text-rose-300 font-mono text-[0.875em]">
+    <code className="px-1.5 py-0.5 bg-neutral-800 text-rose-300 font-mono text-[0.875em]">
       {children}
     </code>
   );
@@ -80,7 +80,7 @@ function Link({ href, children }: { href: string; children: React.ReactNode }) {
 
 function BlockQuote({ children }: { children: React.ReactNode }) {
   return (
-    <blockquote className="my-4 pl-4 border-l-2 border-rose-500/50 text-slate-400 italic">
+    <blockquote className="my-4 pl-4 border-l-2 border-rose-700 text-slate-400 italic">
       {children}
     </blockquote>
   );
@@ -92,20 +92,20 @@ function ListItem({ children }: { children: React.ReactNode }) {
 
 function UnorderedList({ children }: { children: React.ReactNode }) {
   return (
-    <ul className="my-4 pl-6 list-disc marker:text-rose-500/60">{children}</ul>
+    <ul className="my-4 pl-6 list-disc marker:text-rose-700">{children}</ul>
   );
 }
 
 function OrderedList({ children }: { children: React.ReactNode }) {
   return (
-    <ol className="my-4 pl-6 list-decimal marker:text-rose-500/60">
+    <ol className="my-4 pl-6 list-decimal marker:text-rose-700">
       {children}
     </ol>
   );
 }
 
 function HorizontalRule() {
-  return <hr className="my-8 border-white/10" />;
+  return <hr className="my-8 border-neutral-800" />;
 }
 
 function Image({ src, alt }: { src: string; alt?: string }) {
@@ -114,14 +114,14 @@ function Image({ src, alt }: { src: string; alt?: string }) {
     <img
       src={src}
       alt={alt || ''}
-      className="my-6 rounded-lg border border-white/10 max-w-full"
+      className="my-6 border border-neutral-800 max-w-full"
     />
   );
 }
 
 function Table({ children }: { children: React.ReactNode }) {
   return (
-    <div className="my-6 overflow-x-auto rounded-lg border border-white/10">
+    <div className="my-6 overflow-x-auto border border-neutral-800">
       <table className="w-full text-left border-collapse">{children}</table>
     </div>
   );
@@ -129,23 +129,23 @@ function Table({ children }: { children: React.ReactNode }) {
 
 function TableHead({ children }: { children: React.ReactNode }) {
   return (
-    <thead className="bg-white/5 border-b border-white/10">{children}</thead>
+    <thead className="bg-neutral-900 border-b border-neutral-800">{children}</thead>
   );
 }
 
 function TableBody({ children }: { children: React.ReactNode }) {
-  return <tbody className="divide-y divide-white/5">{children}</tbody>;
+  return <tbody className="divide-y divide-neutral-800">{children}</tbody>;
 }
 
 function TableRow({ children }: { children: React.ReactNode }) {
   return (
-    <tr className="transition-colors hover:bg-white/[0.02]">{children}</tr>
+    <tr className="transition-colors hover:bg-neutral-900">{children}</tr>
   );
 }
 
 function TableHeader({ children }: { children: React.ReactNode }) {
   return (
-    <th className="px-4 py-3 text-sm font-semibold text-white/90 tracking-wide">
+    <th className="px-4 py-3 text-sm font-semibold text-white tracking-wide">
       {children}
     </th>
   );

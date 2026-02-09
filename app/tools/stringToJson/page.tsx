@@ -34,7 +34,7 @@ export default function Home() {
       <div className="flex flex-col items-center pt-10">
         {/* <CardWrapper heading="Heading"> */}
         <textarea
-          className="w-2/4 h-20 p-2 m-2 border rounded focus:outline-none focus:border-blue-500 bg-white overflow-y-scroll"
+          className="w-2/4 h-20 p-2 m-2 border focus:outline-none focus:border-blue-500 bg-white overflow-y-scroll"
           placeholder="Enter JSON here..."
           value={_jsonString}
           onChange={(e) => _setJsonString(e.target.value)}
@@ -45,7 +45,7 @@ export default function Home() {
           >Invalid JSON String</p>
         }
         <pre
-          className="w-2/4 h-fit p-2 m-2 border rounded focus:outline-none focus:border-blue-500 bg-white overflow-y-scroll"
+          className="w-2/4 h-fit p-2 m-2 border focus:outline-none focus:border-blue-500 bg-white overflow-y-scroll"
           ref={ref}>Json Object...</pre>
       </div>
     </div>

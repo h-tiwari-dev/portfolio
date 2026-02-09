@@ -63,29 +63,29 @@ const experiences = [
 const colorConfig = {
   amber: {
     bg: 'from-rose-500/20 via-rose-500/5 to-transparent',
-    border: 'border-rose-500/30',
+    border: 'border-rose-900',
     text: 'text-rose-400',
-    glow: 'shadow-[0_0_100px_-20px_rgba(255,51,102,0.4)]',
+    glow: '',
     dot: 'bg-rose-500',
-    tag: 'bg-rose-500/20 border-rose-500/30 text-rose-300',
+    tag: 'bg-rose-950 border-rose-900 text-rose-300',
     accent: '#ff3366',
   },
   cyan: {
     bg: 'from-yellow-400/20 via-yellow-400/5 to-transparent',
-    border: 'border-yellow-400/30',
+    border: 'border-yellow-900',
     text: 'text-yellow-400',
-    glow: 'shadow-[0_0_100px_-20px_rgba(255,204,0,0.4)]',
+    glow: '',
     dot: 'bg-yellow-400',
-    tag: 'bg-yellow-400/20 border-yellow-400/30 text-yellow-300',
+    tag: 'bg-yellow-950 border-yellow-900 text-yellow-300',
     accent: '#ffcc00',
   },
   purple: {
     bg: 'from-orange-500/20 via-orange-500/5 to-transparent',
-    border: 'border-orange-500/30',
+    border: 'border-orange-900',
     text: 'text-orange-400',
-    glow: 'shadow-[0_0_100px_-20px_rgba(255,85,0,0.4)]',
+    glow: '',
     dot: 'bg-orange-500',
-    tag: 'bg-orange-500/20 border-orange-500/30 text-orange-300',
+    tag: 'bg-orange-950 border-orange-900 text-orange-300',
     accent: '#ff5500',
   },
 };
@@ -134,7 +134,7 @@ export default function ExperienceSectionContent({
           className="flex items-center gap-2 sm:gap-3"
         >
           <div
-            className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-lg sm:rounded-xl bg-background/50 backdrop-blur-sm flex items-center justify-center border ${currentColors.border} transition-colors duration-500`}
+            className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-neutral-950 flex items-center justify-center border ${currentColors.border} transition-colors duration-500`}
           >
             <Activity
               size={16}
@@ -242,16 +242,16 @@ export default function ExperienceSectionContent({
                       y: isActive ? 0 : 20,
                     }}
                     transition={{ duration: 0.4 }}
-                    className={`lg:col-span-3 relative p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl border ${
+                    className={`lg:col-span-3 relative p-4 sm:p-6 md:p-8 border ${
                       colors.border
-                    } bg-background/70 backdrop-blur-xl ${
+                    } bg-neutral-950 ${
                       isActive ? colors.glow : ''
                     }`}
                   >
                     {/* Status badge - Simplified on mobile */}
                     <div className="flex items-center gap-2 mb-3 sm:mb-4 md:mb-6">
                       {exp.isActive && (
-                        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/30">
+                        <div className="flex items-center gap-1.5 px-2 py-0.5 bg-green-950 border border-green-900">
                           <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                           <span className="text-[9px] sm:text-[10px] font-mono text-green-400">
                             Current
@@ -338,7 +338,7 @@ export default function ExperienceSectionContent({
                       {exp.tech.slice(0, 4).map((t) => (
                         <span
                           key={t}
-                          className={`text-[8px] sm:text-[9px] md:text-[10px] font-mono px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 md:py-1.5 rounded-md sm:rounded-lg border ${colors.tag}`}
+                          className={`text-[8px] sm:text-[9px] md:text-[10px] font-mono px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 md:py-1.5 border ${colors.tag}`}
                         >
                           {t}
                         </span>
@@ -347,7 +347,7 @@ export default function ExperienceSectionContent({
                       {exp.tech.slice(4).map((t) => (
                         <span
                           key={t}
-                          className={`hidden sm:inline text-[9px] md:text-[10px] font-mono px-2 md:px-3 py-1 md:py-1.5 rounded-lg border ${colors.tag}`}
+                          className={`hidden sm:inline text-[9px] md:text-[10px] font-mono px-2 md:px-3 py-1 md:py-1.5 border ${colors.tag}`}
                         >
                           {t}
                         </span>
@@ -401,10 +401,10 @@ export default function ExperienceSectionContent({
           <motion.div
             animate={{ y: [0, 6, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
-            className={`w-5 h-8 md:w-6 md:h-10 rounded-full border-2 ${currentColors.border} flex items-start justify-center p-1.5 md:p-2 transition-colors duration-500`}
+            className={`w-5 h-8 md:w-6 md:h-10 border-2 ${currentColors.border} flex items-start justify-center p-1.5 md:p-2 transition-colors duration-500`}
           >
             <motion.div
-              className={`w-1 h-1 md:w-1.5 md:h-1.5 rounded-full ${currentColors.dot} transition-colors duration-500`}
+              className={`w-1 h-1 md:w-1.5 md:h-1.5 ${currentColors.dot} transition-colors duration-500`}
               animate={{ y: [0, 10, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
             />

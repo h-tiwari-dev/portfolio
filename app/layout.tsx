@@ -1,7 +1,6 @@
 import { Space_Grotesk, JetBrains_Mono } from 'next/font/google';
 import Link from 'next/link';
 import { navItems } from '@/constants/navItems';
-import GameOfLife from '@/components/common/gameOfLife';
 import { SectionProvider } from '@/contexts/SectionContext';
 
 import './globals.css';

@@ -52,7 +52,7 @@ export default function MermaidDiagram({ chart }: MermaidDiagramProps) {
   return (
     <div
       ref={ref}
-      className="my-8 p-6 rounded-xl bg-black/30 border border-white/[0.06] overflow-x-auto"
+      className="my-8 p-6 bg-neutral-900 border border-neutral-800 overflow-x-auto"
       dangerouslySetInnerHTML={{ __html: svg }}
     />
   );

@@ -35,7 +35,7 @@ export default function Home() {
       <div className="flex flex-col items-center pt-10">
         {/* <CardWrapper heading="Heading"> */}
         <textarea
-          className="w-2/4 h-56 p-2 m-2 border rounded focus:outline-none focus:border-blue-500 bg-white overflow-y-scroll"
+          className="w-2/4 h-56 p-2 m-2 border focus:outline-none focus:border-blue-500 bg-white overflow-y-scroll"
           placeholder="Enter JSON here..."
           value={_json}
           onChange={(e) => _setJson(e.target.value)}
@@ -46,7 +46,7 @@ export default function Home() {
           >Invalid JSON</p>
         }
         <p
-          className="w-2/4 h-fit p-2 m-2 border rounded focus:outline-none focus:border-blue-500 bg-white overflow-y-scroll"
+          className="w-2/4 h-fit p-2 m-2 border focus:outline-none focus:border-blue-500 bg-white overflow-y-scroll"
           ref={ref}>Stringified Json...</p>
       </div>
     </div>

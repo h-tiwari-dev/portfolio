@@ -104,10 +104,10 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: 'spring', duration: 0.5 }}
-            className="relative w-full max-w-lg bg-[#0c0b0a] border border-rose-500/30 rounded-xl overflow-hidden shadow-[0_0_50px_rgba(255,51,102,0.2)]"
+            className="relative w-full max-w-lg bg-[#0c0b0a] border border-rose-900 overflow-hidden"
           >
             {/* Terminal Header */}
-            <div className="bg-rose-500/10 px-4 py-2 border-b border-rose-500/20 flex items-center justify-between">
+            <div className="bg-rose-950 px-4 py-2 border-b border-rose-900 flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <Terminal size={14} className="text-rose-400" />
                 <span className="text-[10px] font-mono text-rose-400 font-bold uppercase tracking-widest">
@@ -123,13 +123,13 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
             </div>
 
             {/* Status Bar */}
-            <div className="bg-black/40 px-4 py-1.5 border-b border-white/5 flex items-center space-x-4">
+            <div className="bg-neutral-950 px-4 py-1.5 border-b border-neutral-800 flex items-center space-x-4">
               <div className="flex items-center text-[9px] text-slate-500">
                 <ShieldCheck size={10} className="mr-1 text-green-500" />
                 <span className="uppercase tracking-tighter">Encrypted</span>
               </div>
               <div className="flex items-center text-[9px] text-slate-500">
-                <Cpu size={10} className="mr-1 text-rose-500/50" />
+                <Cpu size={10} className="mr-1 text-rose-800" />
                 <span className="uppercase tracking-tighter">
                   Host: local_node
                 </span>
@@ -149,7 +149,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       <input
                         required
                         placeholder="JOHN_DOE"
-                        className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-[12px] font-mono text-white placeholder:text-slate-700 focus:outline-none focus:border-rose-500/50 focus:bg-rose-500/[0.03] transition-all"
+                        className="w-full bg-neutral-950 border border-neutral-800 p-3 text-[12px] font-mono text-white placeholder:text-slate-700 focus:outline-none focus:border-rose-700 focus:bg-rose-950 transition-all"
                         value={formData.name}
                         onChange={(e) =>
                           setFormData({ ...formData, name: e.target.value })
@@ -167,7 +167,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                         required
                         type="email"
                         placeholder="SOURCE@PROVIDER.COM"
-                        className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-[12px] font-mono text-white placeholder:text-slate-700 focus:outline-none focus:border-rose-500/50 focus:bg-rose-500/[0.03] transition-all"
+                        className="w-full bg-neutral-950 border border-neutral-800 p-3 text-[12px] font-mono text-white placeholder:text-slate-700 focus:outline-none focus:border-rose-700 focus:bg-rose-950 transition-all"
                         value={formData.email}
                         onChange={(e) =>
                           setFormData({ ...formData, email: e.target.value })
@@ -186,7 +186,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       required
                       rows={4}
                       placeholder="INITIATING_MESSAGE_BUFFER..."
-                      className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-[12px] font-mono text-white placeholder:text-slate-700 focus:outline-none focus:border-rose-500/50 focus:bg-rose-500/[0.03] transition-all resize-none"
+                      className="w-full bg-neutral-950 border border-neutral-800 p-3 text-[12px] font-mono text-white placeholder:text-slate-700 focus:outline-none focus:border-rose-700 focus:bg-rose-950 transition-all resize-none"
                       value={formData.message}
                       onChange={(e) =>
                         setFormData({ ...formData, message: e.target.value })
@@ -197,7 +197,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   {/* Transmission Trigger */}
                   <button
                     type="submit"
-                    className="w-full group/btn relative overflow-hidden bg-rose-500 text-black font-bold py-3 rounded-lg flex items-center justify-center space-x-2 hover:bg-rose-400 transition-all active:scale-[0.98]"
+                    className="w-full group/btn relative overflow-hidden bg-rose-500 text-black font-bold py-3 flex items-center justify-center space-x-2 hover:bg-rose-400 transition-all active:scale-[0.98]"
                   >
                     <Send
                       size={16}
@@ -208,7 +208,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                     </span>
 
                     {/* Scanline effect on button */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:animate-[shimmer_1.5s_infinite]"></div>
+                    <div className="absolute inset-0 bg-rose-400 opacity-0 group-hover/btn:opacity-20 transition-opacity"></div>
                   </button>
                 </form>
               ) : (
@@ -216,7 +216,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   {status === 'sending' ? (
                     <>
                       <div className="relative mb-6">
-                        <div className="absolute inset-0 bg-rose-500/20 blur-xl animate-pulse rounded-full"></div>
+                        <div className="absolute inset-0 bg-rose-900 blur-xl animate-pulse rounded-full"></div>
                         <Cpu
                           size={48}
                           className="text-rose-500 animate-[spin_3s_linear_infinite]"
@@ -225,7 +225,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       <div className="text-rose-400 font-mono text-[11px] uppercase tracking-[0.3em] mb-4">
                         Transmitting_Packets...
                       </div>
-                      <div className="w-full max-w-xs h-1 bg-white/5 rounded-full overflow-hidden">
+                      <div className="w-full max-w-xs h-1 bg-neutral-800 overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${progress}%` }}
@@ -239,7 +239,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       animate={{ opacity: 1, scale: 1 }}
                       className="flex flex-col items-center"
                     >
-                      <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-6 border border-green-500/50">
+                      <div className="w-16 h-16 bg-green-950 rounded-full flex items-center justify-center mb-6 border border-green-800">
                         <CheckCircle2 size={32} className="text-green-500" />
                       </div>
                       <h4 className="text-xl font-bold text-white mb-2 uppercase tracking-tighter">
@@ -250,7 +250,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       </p>
                       <button
                         onClick={onClose}
-                        className="mt-8 text-[10px] text-rose-400 font-mono border border-rose-400/30 px-6 py-2 rounded-full hover:bg-rose-400/10 transition-all uppercase tracking-widest"
+                        className="mt-8 text-[10px] text-rose-400 font-mono border border-rose-900 px-6 py-2 hover:bg-rose-950 transition-all uppercase tracking-widest"
                       >
                         Return_to_Dashboard
                       </button>
@@ -261,18 +261,18 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       animate={{ opacity: 1, scale: 1 }}
                       className="flex flex-col items-center"
                     >
-                      <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mb-6 border border-red-500/50">
+                      <div className="w-16 h-16 bg-red-950 rounded-full flex items-center justify-center mb-6 border border-red-800">
                         <X size={32} className="text-red-500" />
                       </div>
                       <h4 className="text-xl font-bold text-white mb-2 uppercase tracking-tighter">
                         Transmission_Failed
                       </h4>
-                      <p className="text-[12px] text-red-400/80 font-mono">
+                      <p className="text-[12px] text-red-400 font-mono">
                         {errorMessage}
                       </p>
                       <button
                         onClick={() => setStatus('idle')}
-                        className="mt-8 text-[10px] text-rose-400 font-mono border border-rose-400/30 px-6 py-2 rounded-full hover:bg-rose-400/10 transition-all uppercase tracking-widest"
+                        className="mt-8 text-[10px] text-rose-400 font-mono border border-rose-900 px-6 py-2 hover:bg-rose-950 transition-all uppercase tracking-widest"
                       >
                         Retry_Transmission
                       </button>
@@ -283,7 +283,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
             </div>
 
             {/* Terminal Footer */}
-            <div className="bg-black/60 p-3 border-t border-white/5 text-center shrink-0">
+            <div className="bg-neutral-950 p-3 border-t border-neutral-800 text-center shrink-0">
               <span className="text-[8px] font-mono text-slate-600 uppercase tracking-[0.3em]">
                 Secure_Link_V3.8 // End_to_End_Encryption_Active
               </span>

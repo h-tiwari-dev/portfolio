@@ -28,10 +28,10 @@ export const BentoItem = ({
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay }}
             className={`
-        bg-slate-900/60 backdrop-blur-md 
-        border border-slate-700/50 
-        rounded-2xl overflow-hidden 
-        shadow-lg hover:shadow-indigo-500/20 hover:border-indigo-500/30 transition-all duration-300
+        bg-slate-900
+        border border-slate-700
+        overflow-hidden
+        shadow-lg hover:border-indigo-700 transition-all duration-300
         ${className}
       `}
         >

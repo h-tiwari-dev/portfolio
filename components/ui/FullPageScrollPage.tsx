@@ -249,7 +249,6 @@ export default function FullPageScrollPage() {
 
         {/* Background Decorative Elements */}
         <div className="fixed inset-0 bg-grid opacity-10 pointer-events-none z-[1]"></div>
-        <div className="fixed inset-0 scanlines pointer-events-none z-[1] hidden sm:block"></div>
 
         {/* Sections container */}
         <motion.div
@@ -302,7 +301,7 @@ export default function FullPageScrollPage() {
             className="w-full flex items-center justify-center p-2 sm:p-4 md:p-8"
             style={{ height: 'calc(var(--vh, 1vh) * 100)' }}
           >
-            <div className="w-full max-w-4xl mx-auto bg-background/60 backdrop-blur-md rounded-2xl border border-white/10 p-3 sm:p-4 md:p-6 shadow-[0_0_30px_-12px_rgba(6,182,212,0.15)] pointer-events-auto">
+            <div className="w-full max-w-4xl mx-auto bg-neutral-950 border border-neutral-800 p-3 sm:p-4 md:p-6 pointer-events-auto">
               <Socials />
             </div>
           </section>
@@ -373,17 +372,17 @@ function ScrollNavDesktop({
       onMouseLeave={() => setIsHovered(false)}
     >
       <motion.div
-        className="absolute inset-y-0 -inset-x-3 bg-background/60 backdrop-blur-md rounded-full border border-white/10 -z-10"
+        className="absolute inset-y-0 -inset-x-3 bg-neutral-950 border border-neutral-800 -z-10"
         animate={{
           borderColor: isInExperience
-            ? `${currentColor}30`
-            : 'rgba(255,255,255,0.1)',
+            ? currentColor
+            : '#262626',
         }}
         transition={{ duration: 0.3 }}
       />
 
       <div className="flex flex-col items-center gap-4 py-4 px-2">
-        <div className="absolute left-1/2 -translate-x-1/2 top-4 bottom-4 w-px bg-white/10">
+        <div className="absolute left-1/2 -translate-x-1/2 top-4 bottom-4 w-px bg-neutral-800">
           <motion.div
             className="absolute top-0 left-0 w-full"
             style={{ backgroundColor: currentColor }}
@@ -437,7 +436,7 @@ function ScrollNavDesktop({
                     <motion.div
                       layoutId="activeRing"
                       className="absolute -inset-1.5 rounded-full border"
-                      style={{ borderColor: `${currentColor}50` }}
+                      style={{ borderColor: currentColor }}
                       initial={false}
                       transition={{
                         type: 'spring',
@@ -450,7 +449,7 @@ function ScrollNavDesktop({
                   {isActive && (
                     <motion.div
                       className="absolute -inset-2 rounded-full blur-md"
-                      style={{ backgroundColor: `${currentColor}30` }}
+                      style={{ backgroundColor: currentColor }}
                       animate={{ opacity: [0.5, 1, 0.5] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     />
@@ -481,7 +480,7 @@ function ScrollNavDesktop({
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden"
                   >
-                    <div className="flex flex-col items-center gap-2 mt-3 pt-3 border-t border-white/10">
+                    <div className="flex flex-col items-center gap-2 mt-3 pt-3 border-t border-neutral-800">
                       {experienceItems.map((exp, i) => (
                         <motion.button
                           key={exp.company}
@@ -575,7 +574,7 @@ function ScrollNavMobile({
       className="fixed bottom-0 left-0 right-0 z-50 pb-safe"
     >
       {/* Background blur */}
-      <div className="absolute inset-0 bg-background/80 backdrop-blur-lg border-t border-white/10" />
+      <div className="absolute inset-0 bg-neutral-950 border-t border-neutral-800" />
 
       {/* Navigation items */}
       <div className="relative flex items-center justify-around px-2 py-3">
@@ -592,8 +591,8 @@ function ScrollNavMobile({
               {isActive && (
                 <motion.div
                   layoutId="mobileActiveTab"
-                  className="absolute inset-0 rounded-xl"
-                  style={{ backgroundColor: `${currentColor}15` }}
+                  className="absolute inset-0"
+                  style={{ backgroundColor: `${currentColor}30` }}
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 />
               )}

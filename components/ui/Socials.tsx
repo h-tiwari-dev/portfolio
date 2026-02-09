@@ -74,7 +74,7 @@ export default function Socials() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="bg-white/[0.03] border border-white/10 rounded-lg p-2.5 sm:p-3 md:p-4 text-center"
+                className="bg-neutral-900 border border-neutral-800 p-2.5 sm:p-3 md:p-4 text-center"
               >
                 <MapPin size={14} className="text-cyan-400 mx-auto mb-1 sm:w-4 sm:h-4 md:w-5 md:h-5" />
                 <span className="text-[10px] sm:text-xs text-slate-400 block">Location</span>
@@ -84,7 +84,7 @@ export default function Socials() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="bg-white/[0.03] border border-white/10 rounded-lg p-2.5 sm:p-3 md:p-4 text-center"
+                className="bg-neutral-900 border border-neutral-800 p-2.5 sm:p-3 md:p-4 text-center"
               >
                 <Clock size={14} className="text-yellow-400 mx-auto mb-1 sm:w-4 sm:h-4 md:w-5 md:h-5" />
                 <span className="text-[10px] sm:text-xs text-slate-400 block">Timezone</span>
@@ -94,7 +94,7 @@ export default function Socials() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="bg-white/[0.03] border border-white/10 rounded-lg p-2.5 sm:p-3 md:p-4 text-center"
+                className="bg-neutral-900 border border-neutral-800 p-2.5 sm:p-3 md:p-4 text-center"
               >
                 <Zap size={14} className="text-green-400 mx-auto mb-1 sm:w-4 sm:h-4 md:w-5 md:h-5" />
                 <span className="text-[10px] sm:text-xs text-slate-400 block">Response</span>
@@ -108,11 +108,11 @@ export default function Socials() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
               onClick={() => window.open('/harsh_resume_new.pdf', '_blank')}
-              className="group w-full mb-4 sm:mb-5 md:mb-0 p-3 sm:p-4 md:p-5 rounded-xl bg-gradient-to-r from-rose-500/10 to-orange-500/10 border border-rose-500/20 hover:border-rose-500/40 transition-all duration-300 cursor-pointer"
+              className="group w-full mb-4 sm:mb-5 md:mb-0 p-3 sm:p-4 md:p-5 bg-rose-950 border border-rose-900 hover:border-rose-700 transition-all duration-300 cursor-pointer"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 md:gap-4">
-                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <div className="w-10 h-10 md:w-12 md:h-12 bg-rose-500 flex items-center justify-center group-hover:scale-105 transition-transform">
                     <FileDown size={18} className="text-white md:w-6 md:h-6" />
                   </div>
                   <div className="text-left">
@@ -124,7 +124,7 @@ export default function Socials() {
                     </span>
                   </div>
                 </div>
-                <ArrowRight size={18} className="text-rose-400/60 group-hover:text-rose-400 group-hover:translate-x-1 transition-all md:w-5 md:h-5" />
+                <ArrowRight size={18} className="text-rose-700 group-hover:text-rose-400 group-hover:translate-x-1 transition-all md:w-5 md:h-5" />
               </div>
             </motion.button>
           </div>
@@ -137,15 +137,15 @@ export default function Socials() {
                 <button
                   key={i}
                   onClick={item.onClick || (() => window.open(item.url, '_blank'))}
-                  className="group relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white/[0.03] border border-white/10 hover:border-white/30 transition-all duration-300 flex items-center justify-center"
+                  className="group relative w-12 h-12 sm:w-14 sm:h-14 bg-neutral-900 border border-neutral-800 hover:border-neutral-600 transition-all duration-300 flex items-center justify-center"
                 >
                   <item.icon
                     size={20}
                     className="text-slate-400 group-hover:text-white transition-colors sm:w-6 sm:h-6"
                   />
                   <div
-                    className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
-                    style={{ boxShadow: `0 0 20px -5px ${item.color}50` }}
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
+                    style={{ boxShadow: `0 0 20px -5px ${item.color}` }}
                   />
                   <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[9px] sm:text-[10px] text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                     {item.label}
@@ -163,16 +163,16 @@ export default function Socials() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 + i * 0.1 }}
                   onClick={item.onClick || (() => window.open(item.url, '_blank'))}
-                  className="group flex items-center gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/10 hover:border-white/20 transition-all duration-300 text-left"
+                  className="group flex items-center gap-3 p-4 bg-neutral-900 border border-neutral-800 hover:border-neutral-700 transition-all duration-300 text-left"
                   style={{
                     ['--hover-color' as string]: item.color,
                   }}
                 >
                   <div
-                    className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                    className="w-10 h-10 flex items-center justify-center transition-all duration-300 group-hover:scale-110"
                     style={{
-                      backgroundColor: `${item.color}15`,
-                      border: `1px solid ${item.color}30`,
+                      backgroundColor: `${item.color}30`,
+                      border: `1px solid ${item.color}60`,
                     }}
                   >
                     <item.icon
@@ -181,7 +181,7 @@ export default function Socials() {
                     />
                   </div>
                   <div className="flex-1">
-                    <span className="text-sm font-medium text-white block group-hover:text-white/90">
+                    <span className="text-sm font-medium text-white block">
                       {item.label}
                     </span>
                     <span className="text-xs text-slate-500">
@@ -207,7 +207,7 @@ export default function Socials() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="mt-4 sm:mt-5 md:mt-8 pt-3 sm:pt-4 border-t border-white/5 flex justify-center"
+          className="mt-4 sm:mt-5 md:mt-8 pt-3 sm:pt-4 border-t border-neutral-800 flex justify-center"
         >
           <div className="flex items-center gap-1.5 text-[10px] sm:text-xs md:text-sm text-slate-500">
             <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-green-500 animate-pulse" />

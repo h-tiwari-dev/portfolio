@@ -83,23 +83,23 @@ export default function Skills() {
               >
                 <button
                   onClick={() => toggleExpand(idx)}
-                  className={`w-full bg-black/40 backdrop-blur-md border rounded-xl transition-all duration-300 overflow-hidden text-left ${
-                    isExpanded ? '' : 'border-white/10'
+                  className={`w-full bg-neutral-950 border transition-all duration-300 overflow-hidden text-left ${
+                    isExpanded ? '' : 'border-neutral-800'
                   }`}
                   style={{
                     borderColor: isExpanded ? category.color : undefined,
                     boxShadow: isExpanded
-                      ? `0 0 20px -5px ${category.color}40`
+                      ? `0 0 20px -5px ${category.color}`
                       : undefined,
                   }}
                 >
                   <div className="flex items-center justify-between p-3 sm:p-4">
                     <div className="flex items-center gap-3">
                       <div
-                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center"
+                        className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center"
                         style={{
-                          backgroundColor: `${category.color}15`,
-                          border: `1px solid ${category.color}30`,
+                          backgroundColor: `${category.color}60`,
+                          border: `1px solid ${category.color}60`,
                         }}
                       >
                         <Icon
@@ -142,7 +142,7 @@ export default function Skills() {
                         transition={{ duration: 0.3, ease: 'easeInOut' }}
                       >
                         <div className="px-3 pb-3 sm:px-4 sm:pb-4 pt-0">
-                          <div className="border-t border-white/5 pt-3">
+                          <div className="border-t border-neutral-800 pt-3">
                             <div className="flex flex-wrap gap-1.5 sm:gap-2">
                               {category.skills.map((skill, skillIdx) => (
                                 <motion.span
@@ -153,10 +153,10 @@ export default function Skills() {
                                     delay: skillIdx * 0.05,
                                     duration: 0.2,
                                   }}
-                                  className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-medium border"
+                                  className="px-2.5 py-1 sm:px-3 sm:py-1.5 text-[11px] sm:text-xs font-medium border"
                                   style={{
-                                    backgroundColor: `${category.color}10`,
-                                    borderColor: `${category.color}30`,
+                                    backgroundColor: `${category.color}25`,
+                                    borderColor: `${category.color}60`,
                                     color: category.color,
                                   }}
                                 >
@@ -186,15 +186,15 @@ export default function Skills() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1 }}
-                className="bg-black/40 backdrop-blur-md border border-white/10 rounded-xl p-4 hover:border-white/20 transition-all duration-300"
+                className="bg-neutral-950 border border-neutral-800 p-4 hover:border-neutral-700 transition-all duration-300"
               >
                 {/* Icon badge with category name and skill count */}
                 <div className="flex items-center gap-3 mb-3">
                   <div
-                    className="w-10 h-10 rounded-lg flex items-center justify-center"
+                    className="w-10 h-10 flex items-center justify-center"
                     style={{
-                      backgroundColor: `${category.color}15`,
-                      border: `1px solid ${category.color}30`,
+                      backgroundColor: `${category.color}60`,
+                      border: `1px solid ${category.color}60`,
                     }}
                   >
                     <Icon size={20} style={{ color: category.color }} />
@@ -214,10 +214,10 @@ export default function Skills() {
                   {category.skills.map((skill) => (
                     <span
                       key={skill}
-                      className="px-3 py-1.5 rounded-lg text-xs font-medium border transition-transform hover:scale-105"
+                      className="px-3 py-1.5 text-xs font-medium border transition-transform hover:scale-105"
                       style={{
-                        backgroundColor: `${category.color}10`,
-                        borderColor: `${category.color}30`,
+                        backgroundColor: `${category.color}25`,
+                        borderColor: `${category.color}60`,
                         color: category.color,
                       }}
                     >
