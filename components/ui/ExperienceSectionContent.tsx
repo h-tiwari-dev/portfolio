@@ -1,10 +1,8 @@
 'use client';
 
-import React, { Suspense } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { Activity, Zap, Building2, Calendar, ChevronRight } from 'lucide-react';
-import ExperienceScene from '@/components/three/ExperienceScene';
+import { Activity, Building2, Calendar, ChevronRight } from 'lucide-react';
 
 const experiences = [
   {
@@ -106,19 +104,6 @@ export default function ExperienceSectionContent({
 
   return (
     <div className="relative h-full w-full overflow-hidden">
-      {/* Three.js Background */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <Canvas
-          camera={{ position: [0, 0, 5], fov: 50 }}
-          dpr={[1, 1.5]}
-          gl={{ antialias: true, alpha: true }}
-          style={{ background: 'transparent' }}
-        >
-          <Suspense fallback={null}>
-            <ExperienceScene activeIndex={activeIndex} progress={progress} />
-          </Suspense>
-        </Canvas>
-      </div>
 
       {/* Gradient overlay */}
       <div
