@@ -1,10 +1,249 @@
 {
+  "node_modules/@mermaid-js/parser/dist/mermaid-parser.core.mjs -> ./chunks/mermaid-parser.core/architecture-U656AL7Q.mjs": {
+    "id": 26406,
+    "files": [
+      "static/chunks/6406.9653f0d41ab85059.js"
+    ]
+  },
+  "node_modules/@mermaid-js/parser/dist/mermaid-parser.core.mjs -> ./chunks/mermaid-parser.core/gitGraph-F6HP7TQM.mjs": {
+    "id": 41098,
+    "files": [
+      "static/chunks/1098.49268c9fe1b028fa.js"
+    ]
+  },
+  "node_modules/@mermaid-js/parser/dist/mermaid-parser.core.mjs -> ./chunks/mermaid-parser.core/info-NVLQJR56.mjs": {
+    "id": 24721,
+    "files": [
+      "static/chunks/4721.40615a5f4f32b5fb.js"
+    ]
+  },
+  "node_modules/@mermaid-js/parser/dist/mermaid-parser.core.mjs -> ./chunks/mermaid-parser.core/packet-BFZMPI3H.mjs": {
+    "id": 88885,
+    "files": [
+      "static/chunks/8885.f8d9912b40d74811.js"
+    ]
+  },
+  "node_modules/@mermaid-js/parser/dist/mermaid-parser.core.mjs -> ./chunks/mermaid-parser.core/pie-7BOR55EZ.mjs": {
+    "id": 24362,
+    "files": [
+      "static/chunks/4362.7bd6f0282e49d79b.js"
+    ]
+  },
+  "node_modules/@mermaid-js/parser/dist/mermaid-parser.core.mjs -> ./chunks/mermaid-parser.core/radar-NHE76QYJ.mjs": {
+    "id": 25112,
+    "files": [
+      "static/chunks/5112.17318d1c6b28044b.js"
+    ]
+  },
+  "node_modules/@mermaid-js/parser/dist/mermaid-parser.core.mjs -> ./chunks/mermaid-parser.core/treemap-KMMF4GRG.mjs": {
+    "id": 18125,
+    "files": [
+      "static/chunks/8125.245a9df052d274fb.js"
+    ]
+  },
   "node_modules/@react-three/drei/core/VideoTexture.js -> hls.js": {
-    "id": "node_modules/@react-three/drei/core/VideoTexture.js -> hls.js",
+    "id": null,
     "files": []
   },
   "node_modules/@react-three/drei/web/FaceLandmarker.js -> @mediapipe/tasks-vision": {
-    "id": "node_modules/@react-three/drei/web/FaceLandmarker.js -> @mediapipe/tasks-vision",
+    "id": null,
     "files": []
+  },
+  "node_modules/mermaid/dist/chunks/mermaid.core/chunk-ABZYJK2D.mjs -> katex": {
+    "id": 58455,
+    "files": [
+      "static/chunks/d3ac728e.6c9c508274d4d2d5.js"
+    ]
+  },
+  "node_modules/mermaid/dist/chunks/mermaid.core/chunk-N4CR4FBY.mjs -> ./cose-bilkent-S5V4N54A.mjs": {
+    "id": 63852,
+    "files": [
+      "static/chunks/90542734.c1553d0fe7fc14fc.js",
+      "static/chunks/3852.822389f445c9b427.js"
+    ]
+  },
+  "node_modules/mermaid/dist/chunks/mermaid.core/chunk-N4CR4FBY.mjs -> ./dagre-6UL2VRFP.mjs": {
+    "id": 3559,
+    "files": [
+      "static/chunks/6792.3c01ac4dda4b5c6d.js",
+      "static/chunks/8522.1607e96011c66877.js",
+      "static/chunks/3843.3fdda732987f7bb8.js",
+      "static/chunks/3559.f073f72c4466ce0e.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/architectureDiagram-VXUJARFQ.mjs": {
+    "id": 66143,
+    "files": [
+      "static/chunks/90542734.c1553d0fe7fc14fc.js",
+      "static/chunks/6792.3c01ac4dda4b5c6d.js",
+      "static/chunks/4327.740cc7fe2d0b5049.js",
+      "static/chunks/6143.1450875bd03a2366.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/blockDiagram-VD42YOAC.mjs": {
+    "id": 54212,
+    "files": [
+      "static/chunks/6792.3c01ac4dda4b5c6d.js",
+      "static/chunks/8522.1607e96011c66877.js",
+      "static/chunks/4212.52c1bb34fc97d0d0.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/c4Diagram-YG6GDRKO.mjs": {
+    "id": 65387,
+    "files": [
+      "static/chunks/5387.d9ec43ddc1ee228d.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/classDiagram-2ON5EDUG.mjs": {
+    "id": 45813,
+    "files": [
+      "static/chunks/2689.720a4874b02d4211.js",
+      "static/chunks/5813.4483664ba482beb1.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/classDiagram-v2-WZHVMYZB.mjs": {
+    "id": 97290,
+    "files": [
+      "static/chunks/2689.720a4874b02d4211.js",
+      "static/chunks/7290.09ef84cf94f90c4d.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/diagram-PSM6KHXK.mjs": {
+    "id": 9834,
+    "files": [
+      "static/chunks/6792.3c01ac4dda4b5c6d.js",
+      "static/chunks/4327.740cc7fe2d0b5049.js",
+      "static/chunks/9834.295b45635ce04f5e.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/diagram-QEK2KX5R.mjs": {
+    "id": 2526,
+    "files": [
+      "static/chunks/6792.3c01ac4dda4b5c6d.js",
+      "static/chunks/4327.740cc7fe2d0b5049.js",
+      "static/chunks/2526.8ac62b527c9ab703.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/diagram-S2PKOQOG.mjs": {
+    "id": 78288,
+    "files": [
+      "static/chunks/6792.3c01ac4dda4b5c6d.js",
+      "static/chunks/4327.740cc7fe2d0b5049.js",
+      "static/chunks/8288.4883743fa40672e2.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/erDiagram-Q2GNP2WA.mjs": {
+    "id": 51582,
+    "files": [
+      "static/chunks/1582.9f8590f71ff798ca.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/flowDiagram-NV44I4VS.mjs": {
+    "id": 77753,
+    "files": [
+      "static/chunks/7753.6bdce86b7fde3d10.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/ganttDiagram-JELNMOA3.mjs": {
+    "id": 31817,
+    "files": [
+      "static/chunks/1817.ee53d85a62616f40.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/gitGraphDiagram-NY62KEGX.mjs": {
+    "id": 43574,
+    "files": [
+      "static/chunks/6792.3c01ac4dda4b5c6d.js",
+      "static/chunks/4327.740cc7fe2d0b5049.js",
+      "static/chunks/3574.7a94c27e6a496a56.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/infoDiagram-WHAUD3N6.mjs": {
+    "id": 78841,
+    "files": [
+      "static/chunks/6792.3c01ac4dda4b5c6d.js",
+      "static/chunks/4327.740cc7fe2d0b5049.js",
+      "static/chunks/8841.dadeb1ece8e46004.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/journeyDiagram-XKPGCS4Q.mjs": {
+    "id": 77415,
+    "files": [
+      "static/chunks/7415.f66075e2ce30161d.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/kanban-definition-3W4ZIXB7.mjs": {
+    "id": 72398,
+    "files": [
+      "static/chunks/2398.0b21e4eb7006a230.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/mindmap-definition-VGOIOE7T.mjs": {
+    "id": 76512,
+    "files": [
+      "static/chunks/6512.2b02bd72fedf9f0f.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/pieDiagram-ADFJNKIX.mjs": {
+    "id": 62626,
+    "files": [
+      "static/chunks/6792.3c01ac4dda4b5c6d.js",
+      "static/chunks/4327.740cc7fe2d0b5049.js",
+      "static/chunks/2626.2125083a1ff3b80a.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/quadrantDiagram-AYHSOK5B.mjs": {
+    "id": 58772,
+    "files": [
+      "static/chunks/8772.863c564498d88487.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/requirementDiagram-UZGBJVZJ.mjs": {
+    "id": 71015,
+    "files": [
+      "static/chunks/1015.0eaa4da7f61149bc.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/sankeyDiagram-TZEHDZUN.mjs": {
+    "id": 383,
+    "files": [
+      "static/chunks/383.20683891c9a5f2c4.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/sequenceDiagram-WL72ISMW.mjs": {
+    "id": 70872,
+    "files": [
+      "static/chunks/2cdb6380.e1f64e4f24211413.js",
+      "static/chunks/1423.a3b36486ce426e4f.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/stateDiagram-FKZM4ZOC.mjs": {
+    "id": 49552,
+    "files": [
+      "static/chunks/6792.3c01ac4dda4b5c6d.js",
+      "static/chunks/8522.1607e96011c66877.js",
+      "static/chunks/3843.3fdda732987f7bb8.js",
+      "static/chunks/7665.47fccad04449a8f9.js",
+      "static/chunks/9552.b7dfb7903ead934b.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/stateDiagram-v2-4FDKWEC3.mjs": {
+    "id": 47004,
+    "files": [
+      "static/chunks/7665.47fccad04449a8f9.js",
+      "static/chunks/7004.808cbf327ef5955e.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/timeline-definition-IT6M3QCI.mjs": {
+    "id": 95126,
+    "files": [
+      "static/chunks/5126.93fa4e797d609286.js"
+    ]
+  },
+  "node_modules/mermaid/dist/mermaid.core.mjs -> ./chunks/mermaid.core/xychartDiagram-PRI3JC2R.mjs": {
+    "id": 53991,
+    "files": [
+      "static/chunks/3991.4bc063cb5be3a86c.js"
+    ]
   }
 }
