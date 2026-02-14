@@ -50,10 +50,14 @@ export default function Hero() {
           </span>
         </div>
 
+        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-slate-200 mb-1 sm:mb-2 tracking-wide">
+          Harsh Tiwari
+        </h2>
+
         <div className="relative mb-3 sm:mb-4">
           {/* Main Title Layer */}
           <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-black tracking-tight sm:tracking-tighter text-white leading-tight relative z-10">
-            <span className="block sm:inline">SOFTWARE</span>{' '}
+            <span className="block sm:inline">SR. SOFTWARE</span>{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-yellow-300 to-orange-400 bg-[length:200%_100%] animate-[text-shimmer_3s_infinite_linear]">
               ENGINEER
             </span>
