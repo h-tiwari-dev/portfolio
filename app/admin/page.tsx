@@ -686,7 +686,7 @@ export default function AdminPage() {
           </div>
         </header>
 
-        <div className="grid grid-cols-1 gap-4 2xl:grid-cols-[360px_1fr_420px]">
+        <div className="grid grid-cols-1 gap-4 2xl:grid-cols-[260px_1fr_320px]">
           <section className="rounded-xl border border-slate-800 bg-slate-950 p-4 space-y-4">
             <div className="space-y-2">
               <h2 className="text-sm font-semibold">Connection</h2>
@@ -735,19 +735,12 @@ export default function AdminPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              <input value={form.slug} onChange={(e) => setForm({ ...form, slug: normalizeSlug(e.target.value) })} placeholder="slug" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_220px]">
+              <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="title" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
               <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as PostStatus })} className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm">
                 <option value="draft">draft</option><option value="in_review">in_review</option><option value="scheduled">scheduled</option><option value="published">published</option><option value="archived">archived</option>
               </select>
-              <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="title" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm md:col-span-2" />
-              <input value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} placeholder="tags comma-separated" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
-              <input value={form.categories} onChange={(e) => setForm({ ...form, categories: e.target.value })} placeholder="categories comma-separated" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
-              <input value={form.publishedDate} onChange={(e) => setForm({ ...form, publishedDate: e.target.value })} placeholder="published YYYY-MM-DD" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
-              <input value={form.scheduledDate} onChange={(e) => setForm({ ...form, scheduledDate: e.target.value })} placeholder="scheduled YYYY-MM-DD" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
             </div>
-
-            <textarea value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} placeholder="excerpt" className="h-24 w-full rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
 
             <div className="rounded-xl border border-slate-800 bg-slate-900/25 p-3">
               <div className="mb-2 flex flex-wrap gap-1.5">
@@ -757,10 +750,10 @@ export default function AdminPage() {
               </div>
               <div className="grid gap-3" style={{ gridTemplateColumns: previewMode === 'split' ? '1fr 1fr' : '1fr' }}>
                 {previewMode !== 'preview' && (
-                  <textarea ref={textareaRef} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} onKeyDown={onEditorKeyDown} onKeyUp={updateCursorInfo} onClick={updateCursorInfo} onSelect={updateCursorInfo} onPaste={(e) => void handleEditorPaste(e)} placeholder="Markdown / Markdoc content" className="h-[560px] w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 font-mono text-sm leading-relaxed" />
+                  <textarea ref={textareaRef} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} onKeyDown={onEditorKeyDown} onKeyUp={updateCursorInfo} onClick={updateCursorInfo} onSelect={updateCursorInfo} onPaste={(e) => void handleEditorPaste(e)} placeholder="Markdown / Markdoc content" className="h-[72vh] min-h-[560px] w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 font-mono text-sm leading-relaxed" />
                 )}
                 {previewMode !== 'edit' && (
-                  <div className="h-[560px] overflow-auto rounded-xl border border-slate-800 bg-slate-950 p-4">
+                  <div className="h-[72vh] min-h-[560px] overflow-auto rounded-xl border border-slate-800 bg-slate-950 p-4">
                     {previewContent ? <article className="prose-custom max-w-none"><MarkdocRenderer content={previewContent} /></article> : <p className="text-xs text-slate-500">Preview unavailable for current content.</p>}
                   </div>
                 )}
@@ -768,17 +761,26 @@ export default function AdminPage() {
               <div className="mt-2 text-[11px] text-slate-500">{wordCount} words · ~{readMinutes} min read · Ln {cursorInfo.line}, Col {cursorInfo.column} · Cmd/Ctrl+B I K S</div>
             </div>
 
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              <input value={form.coverImage} onChange={(e) => setForm({ ...form, coverImage: e.target.value })} placeholder="cover image URL" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
-              <input value={form.coverImageAlt} onChange={(e) => setForm({ ...form, coverImageAlt: e.target.value })} placeholder="cover image alt" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
-              <input value={form.seoMetaTitle} onChange={(e) => setForm({ ...form, seoMetaTitle: e.target.value })} placeholder="SEO meta title" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
-              <input value={form.seoCanonicalUrl} onChange={(e) => setForm({ ...form, seoCanonicalUrl: e.target.value })} placeholder="SEO canonical URL" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
-              <input value={form.seoOgImage} onChange={(e) => setForm({ ...form, seoOgImage: e.target.value })} placeholder="SEO OG image URL" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
-              <select value={form.seoTwitterCard} onChange={(e) => setForm({ ...form, seoTwitterCard: e.target.value })} className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm">
-                <option value="summary_large_image">summary_large_image</option><option value="summary">summary</option>
-              </select>
-              <textarea value={form.seoMetaDescription} onChange={(e) => setForm({ ...form, seoMetaDescription: e.target.value })} placeholder="SEO meta description" className="h-24 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm md:col-span-2" />
-            </div>
+            <details className="rounded-xl border border-slate-800 p-3">
+              <summary className="cursor-pointer text-sm font-semibold">Post Metadata & SEO</summary>
+              <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
+                <input value={form.slug} onChange={(e) => setForm({ ...form, slug: normalizeSlug(e.target.value) })} placeholder="slug" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+                <input value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} placeholder="tags comma-separated" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+                <input value={form.categories} onChange={(e) => setForm({ ...form, categories: e.target.value })} placeholder="categories comma-separated" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+                <input value={form.publishedDate} onChange={(e) => setForm({ ...form, publishedDate: e.target.value })} placeholder="published YYYY-MM-DD" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+                <input value={form.scheduledDate} onChange={(e) => setForm({ ...form, scheduledDate: e.target.value })} placeholder="scheduled YYYY-MM-DD" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+                <input value={form.coverImage} onChange={(e) => setForm({ ...form, coverImage: e.target.value })} placeholder="cover image URL" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+                <input value={form.coverImageAlt} onChange={(e) => setForm({ ...form, coverImageAlt: e.target.value })} placeholder="cover image alt" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+                <input value={form.seoMetaTitle} onChange={(e) => setForm({ ...form, seoMetaTitle: e.target.value })} placeholder="SEO meta title" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+                <input value={form.seoCanonicalUrl} onChange={(e) => setForm({ ...form, seoCanonicalUrl: e.target.value })} placeholder="SEO canonical URL" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+                <input value={form.seoOgImage} onChange={(e) => setForm({ ...form, seoOgImage: e.target.value })} placeholder="SEO OG image URL" className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+                <select value={form.seoTwitterCard} onChange={(e) => setForm({ ...form, seoTwitterCard: e.target.value })} className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm">
+                  <option value="summary_large_image">summary_large_image</option><option value="summary">summary</option>
+                </select>
+                <textarea value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} placeholder="excerpt" className="h-20 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm md:col-span-2" />
+                <textarea value={form.seoMetaDescription} onChange={(e) => setForm({ ...form, seoMetaDescription: e.target.value })} placeholder="SEO meta description" className="h-24 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm md:col-span-2" />
+              </div>
+            </details>
 
             <div className="rounded-xl border border-slate-800 p-3">
               <div className="mb-2 text-sm font-semibold">Editorial comments</div>
