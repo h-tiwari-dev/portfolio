@@ -133,7 +133,7 @@ export default function AdminPage() {
   const [mediaSearch, setMediaSearch] = useState('');
   const [cursorInfo, setCursorInfo] = useState({ line: 1, column: 1 });
   const [rightTab, setRightTab] = useState<'meta' | 'media' | 'outline' | 'schedule' | 'history'>('meta');
-  const [showExplorer, setShowExplorer] = useState(true);
+  const [showExplorer, setShowExplorer] = useState(false);
   const [showInspector, setShowInspector] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -668,7 +668,7 @@ export default function AdminPage() {
   return (
     <main className="min-h-screen bg-[#0f111a] text-[#d4d4d4] p-3">
       <div className="mx-auto max-w-[1950px]">
-        <header className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-md border border-[#2a2d2e] bg-[#181a1f] px-3 py-2 text-xs">
+        <header className="mb-2 flex flex-wrap items-center justify-between gap-2 rounded-md border border-[#2a2d2e] bg-[#181a1f] px-3 py-1.5 text-xs">
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-semibold text-[#9cdcfe]">EDITORIAL STUDIO</span>
             <span className="text-[#808080]">Draft {stats.draft}</span>
@@ -688,16 +688,21 @@ export default function AdminPage() {
             <button onClick={() => setShowInspector((v) => !v)} className={`h-9 rounded ${showInspector ? 'bg-[#2a2d2e]' : 'hover:bg-[#24262b]'}`} title="Inspector">I</button>
           </aside>
 
-          <div className={`grid gap-2 ${showExplorer && showInspector ? 'xl:grid-cols-[220px_1fr_300px]' : showExplorer ? 'xl:grid-cols-[220px_1fr]' : showInspector ? 'xl:grid-cols-[1fr_300px]' : 'xl:grid-cols-[1fr]'}`}>
+          <div className={`grid gap-2 ${showExplorer && showInspector ? 'xl:grid-cols-[180px_1fr_260px]' : showExplorer ? 'xl:grid-cols-[180px_1fr]' : showInspector ? 'xl:grid-cols-[1fr_260px]' : 'xl:grid-cols-[1fr]'}`}>
             {showExplorer && (
-              <section className="rounded-md border border-[#2a2d2e] bg-[#181a1f] p-3 space-y-2">
-                <div className="space-y-2">
-                  <input value={workerBase} onChange={(e) => setWorkerBase(e.target.value)} className="w-full rounded border border-[#3c3c3c] bg-[#1e1e1e] px-2 py-1.5 text-xs" placeholder="worker url" />
-                  <input type="password" value={workflowToken} onChange={(e) => setWorkflowToken(e.target.value)} className="w-full rounded border border-[#3c3c3c] bg-[#1e1e1e] px-2 py-1.5 text-xs" placeholder="token" />
-                  <div className="grid grid-cols-2 gap-1">
-                    <button onClick={loadPosts} disabled={loading || !workflowToken} className="rounded border border-[#3c3c3c] px-2 py-1.5 text-[11px] hover:bg-[#2a2d2e]">Load</button>
-                    <button onClick={loadMedia} disabled={mediaLoading || !workflowToken} className="rounded border border-[#3c3c3c] px-2 py-1.5 text-[11px] hover:bg-[#2a2d2e]">Media</button>
+              <section className="rounded-md border border-[#2a2d2e] bg-[#181a1f] p-2 space-y-2">
+                <details>
+                  <summary className="cursor-pointer text-[11px] text-[#9aa0a6]">Connection</summary>
+                  <div className="mt-2 space-y-2">
+                    <input value={workerBase} onChange={(e) => setWorkerBase(e.target.value)} className="w-full rounded border border-[#3c3c3c] bg-[#1e1e1e] px-2 py-1.5 text-xs" placeholder="worker url" />
+                    <input type="password" value={workflowToken} onChange={(e) => setWorkflowToken(e.target.value)} className="w-full rounded border border-[#3c3c3c] bg-[#1e1e1e] px-2 py-1.5 text-xs" placeholder="token" />
+                    <div className="grid grid-cols-2 gap-1">
+                      <button onClick={loadPosts} disabled={loading || !workflowToken} className="rounded border border-[#3c3c3c] px-2 py-1.5 text-[11px] hover:bg-[#2a2d2e]">Load</button>
+                      <button onClick={loadMedia} disabled={mediaLoading || !workflowToken} className="rounded border border-[#3c3c3c] px-2 py-1.5 text-[11px] hover:bg-[#2a2d2e]">Media</button>
+                    </div>
                   </div>
+                </details>
+                <div className="space-y-2">
                   <p className="text-[10px] text-[#808080]">{message}</p>
                 </div>
                 <div className="flex gap-1">
@@ -737,7 +742,7 @@ export default function AdminPage() {
                 ))}
               </div>
 
-              <div className="grid gap-0" style={{ gridTemplateColumns: previewMode === 'split' ? '1.25fr 1fr' : '1fr' }}>
+              <div className="grid gap-0" style={{ gridTemplateColumns: previewMode === 'split' ? '1fr 1fr' : '1fr' }}>
                 {previewMode !== 'preview' && (
                   <textarea ref={textareaRef} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} onKeyDown={onEditorKeyDown} onKeyUp={updateCursorInfo} onClick={updateCursorInfo} onSelect={updateCursorInfo} onPaste={(e) => void handleEditorPaste(e)} placeholder="Write markdown here..." className="h-[78vh] min-h-[620px] w-full resize-none border-r border-[#2a2d2e] bg-[#1e1e1e] px-4 py-3 font-mono text-sm leading-relaxed outline-none" />
                 )}
