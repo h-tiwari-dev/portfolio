@@ -1,8 +1,10 @@
 ---
 title: Getting Started with OpenCode
+status: published
 excerpt: >-
   OpenCode is an open source AI coding agent. It runs in your terminal. You
   choose the model. You own your workflow.
+categories: []
 publishedDate: 2026-02-08
 tags:
   - opencode
@@ -10,6 +12,9 @@ tags:
   - llm
   - agents
 coverImage: /content/posts/getting-started-with-open-code/coverImage.webp
+seo:
+  twitterCard: summary_large_image
+editorialComments: []
 ---
 OpenCode is an open source AI coding agent. It runs in your terminal. You choose the model. You own your workflow.
 
@@ -19,14 +24,35 @@ Claude Code is optimized for Anthropic models. OpenCode is model-agnostic from t
 
 Here is how they compare:-
 
-| Feature | OpenCode | Claude Code |
-|---------|----------|-------------|
-| Open source | Yes, MIT license | Source available, proprietary license |
-| Model choice | 75+ providers, native multi-provider support | Anthropic models primary, third-party models via API compatibility |
-| Use existing subscriptions | GitHub Copilot, ChatGPT Plus/Pro, Claude Pro/Max | Claude Pro/Max or API credits |
-| Local models | Ollama, LM Studio, llama.cpp | Ollama, LM Studio, llama.cpp (via Anthropic API compatibility) |
-| Plugin system | Yes, npm packages | Yes, plugins with slash commands, subagents, MCP servers, and hooks |
-| Free models | Big Pickle, GPT 5 Nano | None built-in (free local models via Ollama) |
+{% table %}
+- Feature
+- OpenCode
+- Claude Code
+---
+- Open source
+- Yes, MIT license
+- Source available, proprietary license
+---
+- Model choice
+- 75+ providers, native multi-provider support
+- Anthropic models primary, third-party models via API compatibility
+---
+- Use existing subscriptions
+- GitHub Copilot, ChatGPT Plus/Pro, Claude Pro/Max
+- Claude Pro/Max or API credits
+---
+- Local models
+- Ollama, LM Studio, llama.cpp
+- Ollama, LM Studio, llama.cpp (via Anthropic API compatibility)
+---
+- Plugin system
+- Yes, npm packages
+- Yes, plugins with slash commands, subagents, MCP servers, and hooks
+---
+- Free models
+- Big Pickle, GPT 5 Nano
+- None built-in (free local models via Ollama)
+{% /table %}
 
 Where OpenCode stands out is breadth of provider support. You bring your own API keys or use subscriptions you already pay for. Your GitHub Copilot subscription works. Your ChatGPT Plus works. Your Claude Pro works. Switching between providers is seamless and native, not a workaround.
 
@@ -210,14 +236,28 @@ A good workflow:
 
 These commands work in the TUI.
 
-| Command | What it does |
-|---------|--------------|
-| /models | Switch to a different model |
-| /connect | Add credentials for a provider |
-| /init | Analyze project and create AGENTS.md |
-| /undo | Revert the last changes |
-| /redo | Restore reverted changes |
-| /share | Create a shareable link to the conversation |
+{% table %}
+- Command
+- What it does
+---
+- /models
+- Switch to a different model
+---
+- /connect
+- Add credentials for a provider
+---
+- /init
+- Analyze project and create AGENTS.md
+---
+- /undo
+- Revert the last changes
+---
+- /redo
+- Restore reverted changes
+---
+- /share
+- Create a shareable link to the conversation
+{% /table %}
 
 Run /undo multiple times to revert multiple changes.
 
