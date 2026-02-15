@@ -663,15 +663,16 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_#172033,_#0a0d14_55%)] text-white p-4 sm:p-6">
-      <div className="max-w-[1700px] mx-auto space-y-4">
-        <header className="border border-slate-800/80 bg-slate-950/80 backdrop-blur p-4 rounded-xl">
-          <div className="flex flex-wrap items-center justify-between gap-4">
+    <main className="min-h-screen bg-[linear-gradient(180deg,#0b1017_0%,#08121d_45%,#07090f_100%)] text-white p-4 md:p-6">
+      <div className="mx-auto max-w-[1800px] space-y-4">
+        <header className="rounded-2xl border border-cyan-900/40 bg-[linear-gradient(120deg,rgba(12,20,35,.95),rgba(7,12,20,.9))] p-4 md:p-5">
+          <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight">Blog Admin Control Room</h1>
-              <p className="text-xs text-slate-400 mt-1">Markdown editor, workflow automation, media upload, and revision control.</p>
+              <p className="text-[11px] uppercase tracking-[0.18em] text-cyan-300/70">CMS Workspace</p>
+              <h1 className="mt-1 text-2xl font-semibold tracking-tight">Admin Editorial Studio</h1>
+              <p className="mt-1 text-xs text-slate-400">Write, preview, publish, schedule, manage media, and recover revisions.</p>
             </div>
-            <div className="text-xs text-slate-300">
+            <div className="rounded-lg border border-slate-800 bg-slate-900/70 px-3 py-2 text-xs text-slate-300">
               {autoSaving ? 'Autosaving...' : hasUnsavedChanges ? 'Unsaved changes' : 'Saved'}
               {lastSavedAt ? ` · ${new Date(lastSavedAt).toLocaleTimeString()}` : ''}
             </div>
@@ -680,57 +681,30 @@ export default function AdminPage() {
 
         <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr_360px] gap-4">
           <aside className="space-y-4">
-            <section className="border border-slate-800 bg-slate-950/90 rounded-xl p-4 space-y-3">
+            <section className="rounded-xl border border-slate-800 bg-slate-950/90 p-4 space-y-3">
               <h2 className="text-sm font-semibold">Connection</h2>
-              <input
-                value={workerBase}
-                onChange={(e) => setWorkerBase(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm"
-                placeholder="https://<worker>.workers.dev"
-              />
-              <input
-                type="password"
-                value={workflowToken}
-                onChange={(e) => setWorkflowToken(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm"
-                placeholder="BLOG_WORKFLOW_TOKEN"
-              />
+              <input value={workerBase} onChange={(e) => setWorkerBase(e.target.value)} className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" placeholder="https://<worker>.workers.dev" />
+              <input type="password" value={workflowToken} onChange={(e) => setWorkflowToken(e.target.value)} className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" placeholder="BLOG_WORKFLOW_TOKEN" />
               <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={loadPosts}
-                  disabled={loading || !workflowToken}
-                  className="border border-cyan-800 rounded-md px-3 py-2 text-xs hover:bg-cyan-950"
-                >
-                  Load posts
-                </button>
-                <button
-                  onClick={loadMedia}
-                  disabled={mediaLoading || !workflowToken}
-                  className="border border-cyan-800 rounded-md px-3 py-2 text-xs hover:bg-cyan-950"
-                >
-                  Load media
-                </button>
+                <button onClick={loadPosts} disabled={loading || !workflowToken} className="rounded-md border border-cyan-800 px-3 py-2 text-xs hover:bg-cyan-950">Load posts</button>
+                <button onClick={loadMedia} disabled={mediaLoading || !workflowToken} className="rounded-md border border-cyan-800 px-3 py-2 text-xs hover:bg-cyan-950">Load media</button>
               </div>
               <p className="text-[11px] text-slate-400">{message}</p>
             </section>
 
-            <section className="border border-slate-800 bg-slate-950/90 rounded-xl p-4">
-              <h3 className="text-sm font-semibold mb-2">Post Stats</h3>
+            <section className="rounded-xl border border-slate-800 bg-slate-950/90 p-4">
+              <h3 className="mb-2 text-sm font-semibold">Pipeline</h3>
               <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="border border-slate-800 rounded p-2">Draft: {stats.draft}</div>
-                <div className="border border-slate-800 rounded p-2">Review: {stats.in_review}</div>
-                <div className="border border-slate-800 rounded p-2">Scheduled: {stats.scheduled}</div>
-                <div className="border border-slate-800 rounded p-2">Published: {stats.published}</div>
+                <div className="rounded-md border border-slate-800 p-2">Draft: {stats.draft}</div>
+                <div className="rounded-md border border-slate-800 p-2">Review: {stats.in_review}</div>
+                <div className="rounded-md border border-slate-800 p-2">Scheduled: {stats.scheduled}</div>
+                <div className="rounded-md border border-slate-800 p-2">Published: {stats.published}</div>
               </div>
             </section>
 
-            <section className="border border-slate-800 bg-slate-950/90 rounded-xl p-4 space-y-2">
+            <section className="rounded-xl border border-slate-800 bg-slate-950/90 p-4 space-y-2">
               <div className="flex gap-2">
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value as 'all' | PostStatus)}
-                  className="bg-slate-900 border border-slate-700 rounded-md px-2 py-2 text-xs"
-                >
+                <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value as 'all' | PostStatus)} className="rounded-md border border-slate-700 bg-slate-900 px-2 py-2 text-xs">
                   <option value="all">all</option>
                   <option value="draft">draft</option>
                   <option value="in_review">in_review</option>
@@ -738,36 +712,13 @@ export default function AdminPage() {
                   <option value="published">published</option>
                   <option value="archived">archived</option>
                 </select>
-                <input
-                  value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
-                  className="flex-1 bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-xs"
-                  placeholder="search"
-                />
+                <input value={searchText} onChange={(e) => setSearchText(e.target.value)} className="flex-1 rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-xs" placeholder="search posts" />
               </div>
-              <button
-                onClick={() => {
-                  setSelectedSlug('');
-                  setHistory([]);
-                  setForm(emptyForm);
-                  setLastSavedSnapshot(JSON.stringify(emptyForm));
-                }}
-                className="w-full border border-slate-700 rounded-md px-3 py-2 text-xs hover:bg-slate-900"
-              >
-                New post
-              </button>
-              <div className="space-y-1 max-h-[45vh] overflow-auto">
+              <button onClick={() => { setSelectedSlug(''); setHistory([]); setForm(emptyForm); setLastSavedSnapshot(JSON.stringify(emptyForm)); }} className="w-full rounded-md border border-slate-700 px-3 py-2 text-xs hover:bg-slate-900">New post</button>
+              <div className="max-h-[48vh] space-y-1 overflow-auto">
                 {filteredPosts.map((post) => (
-                  <button
-                    key={post.slug}
-                    onClick={() => setSelectedSlug(post.slug)}
-                    className={`w-full text-left border rounded-md p-2 text-xs ${
-                      selectedSlug === post.slug
-                        ? 'border-cyan-700 bg-cyan-950/40'
-                        : 'border-slate-800 hover:border-slate-700'
-                    }`}
-                  >
-                    <div className="font-mono truncate">{post.slug}</div>
+                  <button key={post.slug} onClick={() => setSelectedSlug(post.slug)} className={`w-full rounded-md border p-2 text-left text-xs ${selectedSlug === post.slug ? 'border-cyan-700 bg-cyan-950/40' : 'border-slate-800 hover:border-slate-700'}`}>
+                    <div className="truncate font-mono">{post.slug}</div>
                     <div className="text-[10px] uppercase text-slate-500">{post.status}</div>
                   </button>
                 ))}
@@ -775,49 +726,39 @@ export default function AdminPage() {
             </section>
           </aside>
 
-          <section className="border border-slate-800 bg-slate-950/90 rounded-xl p-4 space-y-3">
+          <section className="rounded-xl border border-slate-800 bg-slate-950/90 p-4 space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-sm font-semibold">Editor</h2>
+              <h2 className="text-sm font-semibold">Writing Desk</h2>
               <div className="flex items-center gap-2 text-xs">
                 <label className="flex items-center gap-1 text-slate-400">
                   <input type="checkbox" checked={autoSaveEnabled} onChange={(e) => setAutoSaveEnabled(e.target.checked)} />
                   Autosave
                 </label>
-                <button onClick={() => setPreviewMode('edit')} className="border border-slate-700 rounded px-2 py-1">Edit</button>
-                <button onClick={() => setPreviewMode('split')} className="border border-slate-700 rounded px-2 py-1">Split</button>
-                <button onClick={() => setPreviewMode('preview')} className="border border-slate-700 rounded px-2 py-1">Preview</button>
-                {form.slug && (
-                  <Link href={`/blog/${form.slug}`} target="_blank" className="border border-slate-700 rounded px-2 py-1 hover:bg-slate-900">
-                    Public URL
-                  </Link>
-                )}
+                <button onClick={() => setPreviewMode('edit')} className="rounded border border-slate-700 px-2 py-1 hover:bg-slate-900">Edit</button>
+                <button onClick={() => setPreviewMode('split')} className="rounded border border-slate-700 px-2 py-1 hover:bg-slate-900">Split</button>
+                <button onClick={() => setPreviewMode('preview')} className="rounded border border-slate-700 px-2 py-1 hover:bg-slate-900">Preview</button>
+                {form.slug && <Link href={`/blog/${form.slug}`} target="_blank" className="rounded border border-slate-700 px-2 py-1 hover:bg-slate-900">Public URL</Link>}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <input value={form.slug} onChange={(e) => setForm({ ...form, slug: normalizeSlug(e.target.value) })} placeholder="slug" className="bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm" />
-              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as PostStatus })} className="bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm">
-                <option value="draft">draft</option>
-                <option value="in_review">in_review</option>
-                <option value="scheduled">scheduled</option>
-                <option value="published">published</option>
-                <option value="archived">archived</option>
+            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+              <input value={form.slug} onChange={(e) => setForm({ ...form, slug: normalizeSlug(e.target.value) })} placeholder="slug" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as PostStatus })} className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm">
+                <option value="draft">draft</option><option value="in_review">in_review</option><option value="scheduled">scheduled</option><option value="published">published</option><option value="archived">archived</option>
               </select>
-              <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="title" className="bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm md:col-span-2" />
-              <input value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} placeholder="tags comma-separated" className="bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm" />
-              <input value={form.categories} onChange={(e) => setForm({ ...form, categories: e.target.value })} placeholder="categories comma-separated" className="bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm" />
-              <input value={form.publishedDate} onChange={(e) => setForm({ ...form, publishedDate: e.target.value })} placeholder="published YYYY-MM-DD" className="bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm" />
-              <input value={form.scheduledDate} onChange={(e) => setForm({ ...form, scheduledDate: e.target.value })} placeholder="scheduled YYYY-MM-DD" className="bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm" />
+              <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="title" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm md:col-span-2" />
+              <input value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} placeholder="tags comma-separated" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+              <input value={form.categories} onChange={(e) => setForm({ ...form, categories: e.target.value })} placeholder="categories comma-separated" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+              <input value={form.publishedDate} onChange={(e) => setForm({ ...form, publishedDate: e.target.value })} placeholder="published YYYY-MM-DD" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+              <input value={form.scheduledDate} onChange={(e) => setForm({ ...form, scheduledDate: e.target.value })} placeholder="scheduled YYYY-MM-DD" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
             </div>
 
-            <textarea value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} placeholder="excerpt" className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm h-20" />
+            <textarea value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} placeholder="excerpt" className="h-20 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
 
-            <div className="border border-slate-800 rounded-lg p-2 bg-slate-950/70">
-              <div className="flex flex-wrap gap-1 mb-2">
+            <div className="rounded-lg border border-slate-800 bg-slate-950/70 p-2">
+              <div className="mb-2 flex flex-wrap gap-1">
                 {markdownActions.map((action) => (
-                  <button key={action.label} onClick={action.run} className="text-[11px] border border-slate-700 rounded px-2 py-1 hover:bg-slate-900">
-                    {action.label}
-                  </button>
+                  <button key={action.label} onClick={action.run} className="rounded border border-slate-700 px-2 py-1 text-[11px] hover:bg-slate-900">{action.label}</button>
                 ))}
               </div>
 
@@ -828,169 +769,128 @@ export default function AdminPage() {
                     value={form.content}
                     onChange={(e) => setForm({ ...form, content: e.target.value })}
                     onKeyDown={onEditorKeyDown}
+                    onKeyUp={updateCursorInfo}
+                    onClick={updateCursorInfo}
+                    onSelect={updateCursorInfo}
+                    onPaste={(e) => void handleEditorPaste(e)}
                     placeholder="Markdown / Markdoc content"
-                    className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm h-[420px] font-mono"
+                    className="h-[470px] w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 font-mono text-sm"
                   />
                 )}
                 {previewMode !== 'edit' && (
-                  <div className="border border-slate-800 rounded-md bg-slate-950 p-3 h-[420px] overflow-auto">
-                    {previewContent ? (
-                      <article className="prose-custom max-w-none">
-                        <MarkdocRenderer content={previewContent} />
-                      </article>
-                    ) : (
-                      <p className="text-xs text-slate-500">Preview unavailable for current content.</p>
-                    )}
+                  <div className="h-[470px] overflow-auto rounded-md border border-slate-800 bg-slate-950 p-3">
+                    {previewContent ? <article className="prose-custom max-w-none"><MarkdocRenderer content={previewContent} /></article> : <p className="text-xs text-slate-500">Preview unavailable for current content.</p>}
                   </div>
                 )}
               </div>
 
-              <div className="text-[11px] text-slate-500 mt-2">{wordCount} words · ~{readMinutes} min read · Ctrl/Cmd+B/I/K/S shortcuts</div>
+              <div className="mt-2 text-[11px] text-slate-500">
+                {wordCount} words · ~{readMinutes} min read · Ln {cursorInfo.line}, Col {cursorInfo.column} · Tab indents · Ctrl/Cmd+B/I/K/S
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <input value={form.coverImage} onChange={(e) => setForm({ ...form, coverImage: e.target.value })} placeholder="cover image URL" className="bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm" />
-              <input value={form.coverImageAlt} onChange={(e) => setForm({ ...form, coverImageAlt: e.target.value })} placeholder="cover image alt" className="bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm" />
-              <input value={form.seoMetaTitle} onChange={(e) => setForm({ ...form, seoMetaTitle: e.target.value })} placeholder="SEO meta title" className="bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm" />
-              <input value={form.seoCanonicalUrl} onChange={(e) => setForm({ ...form, seoCanonicalUrl: e.target.value })} placeholder="SEO canonical URL" className="bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm" />
-              <input value={form.seoOgImage} onChange={(e) => setForm({ ...form, seoOgImage: e.target.value })} placeholder="SEO OG image URL" className="bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm" />
-              <select value={form.seoTwitterCard} onChange={(e) => setForm({ ...form, seoTwitterCard: e.target.value })} className="bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm">
+            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+              <input value={form.coverImage} onChange={(e) => setForm({ ...form, coverImage: e.target.value })} placeholder="cover image URL" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+              <input value={form.coverImageAlt} onChange={(e) => setForm({ ...form, coverImageAlt: e.target.value })} placeholder="cover image alt" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+              <input value={form.seoMetaTitle} onChange={(e) => setForm({ ...form, seoMetaTitle: e.target.value })} placeholder="SEO meta title" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+              <input value={form.seoCanonicalUrl} onChange={(e) => setForm({ ...form, seoCanonicalUrl: e.target.value })} placeholder="SEO canonical URL" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+              <input value={form.seoOgImage} onChange={(e) => setForm({ ...form, seoOgImage: e.target.value })} placeholder="SEO OG image URL" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+              <select value={form.seoTwitterCard} onChange={(e) => setForm({ ...form, seoTwitterCard: e.target.value })} className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm">
                 <option value="summary_large_image">summary_large_image</option>
                 <option value="summary">summary</option>
               </select>
             </div>
-            <textarea value={form.seoMetaDescription} onChange={(e) => setForm({ ...form, seoMetaDescription: e.target.value })} placeholder="SEO meta description" className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm h-20" />
+            <textarea value={form.seoMetaDescription} onChange={(e) => setForm({ ...form, seoMetaDescription: e.target.value })} placeholder="SEO meta description" className="h-20 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
 
-            <div className="border border-slate-800 rounded-md p-2">
-              <div className="text-xs font-semibold mb-2">Editorial comments</div>
-              <div className="space-y-1 mb-2 max-h-28 overflow-auto">
+            <div className="rounded-md border border-slate-800 p-2">
+              <div className="mb-2 text-xs font-semibold">Editorial comments</div>
+              <div className="mb-2 max-h-24 space-y-1 overflow-auto">
                 {form.editorialComments.map((comment, idx) => (
-                  <div key={`${comment}-${idx}`} className="flex items-start justify-between gap-2 border border-slate-800 rounded p-2">
-                    <p className="text-xs text-slate-300 whitespace-pre-wrap">{comment}</p>
-                    <button
-                      onClick={() =>
-                        setForm({
-                          ...form,
-                          editorialComments: form.editorialComments.filter((_, i) => i !== idx),
-                        })
-                      }
-                      className="text-[11px] border border-slate-700 rounded px-1.5 py-0.5 hover:bg-slate-900"
-                    >
-                      Remove
-                    </button>
+                  <div key={`${comment}-${idx}`} className="flex items-start justify-between gap-2 rounded border border-slate-800 p-2">
+                    <p className="whitespace-pre-wrap text-xs text-slate-300">{comment}</p>
+                    <button onClick={() => setForm({ ...form, editorialComments: form.editorialComments.filter((_, i) => i !== idx) })} className="rounded border border-slate-700 px-1.5 py-0.5 text-[11px] hover:bg-slate-900">Remove</button>
                   </div>
                 ))}
               </div>
               <div className="flex gap-2">
-                <input value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="add comment" className="flex-1 bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-xs" />
-                <button
-                  onClick={() => {
-                    const next = newComment.trim();
-                    if (!next) return;
-                    setForm({ ...form, editorialComments: [...form.editorialComments, next] });
-                    setNewComment('');
-                  }}
-                  className="px-3 py-2 text-xs border border-slate-700 rounded-md hover:bg-slate-900"
-                >
-                  Add
-                </button>
+                <input value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="add comment" className="flex-1 rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-xs" />
+                <button onClick={() => { const next = newComment.trim(); if (!next) return; setForm({ ...form, editorialComments: [...form.editorialComments, next] }); setNewComment(''); }} className="rounded-md border border-slate-700 px-3 py-2 text-xs hover:bg-slate-900">Add</button>
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-2 items-center">
-              <button onClick={() => savePost()} disabled={loading || !workflowToken || !form.slug} className="px-3 py-2 text-xs border border-cyan-700 rounded-md hover:bg-cyan-950">Save</button>
-              <button onClick={() => runWorkflow('publish')} disabled={loading || !form.slug} className="px-3 py-2 text-xs border border-slate-700 rounded-md hover:bg-slate-900">Publish</button>
-              <button onClick={() => runWorkflow('archive')} disabled={loading || !form.slug} className="px-3 py-2 text-xs border border-slate-700 rounded-md hover:bg-slate-900">Archive</button>
-              <button onClick={() => runWorkflow('unpublish')} disabled={loading || !form.slug} className="px-3 py-2 text-xs border border-slate-700 rounded-md hover:bg-slate-900">Unpublish</button>
-              <input value={scheduleDate} onChange={(e) => setScheduleDate(e.target.value)} placeholder="YYYY-MM-DD" className="px-3 py-2 text-xs border border-slate-700 bg-slate-900 rounded-md" />
-              <button onClick={() => runWorkflow('schedule')} disabled={loading || !form.slug || !scheduleDate} className="px-3 py-2 text-xs border border-slate-700 rounded-md hover:bg-slate-900">Schedule</button>
-              <button onClick={deletePost} disabled={loading || !form.slug} className="px-3 py-2 text-xs border border-red-900 text-red-300 rounded-md hover:bg-red-950">Delete</button>
+            <div className="flex flex-wrap items-center gap-2">
+              <button onClick={() => savePost()} disabled={loading || !workflowToken || !form.slug} className="rounded-md border border-cyan-700 px-3 py-2 text-xs hover:bg-cyan-950">Save</button>
+              <button onClick={() => runWorkflow('publish')} disabled={loading || !form.slug} className="rounded-md border border-slate-700 px-3 py-2 text-xs hover:bg-slate-900">Publish</button>
+              <button onClick={() => runWorkflow('archive')} disabled={loading || !form.slug} className="rounded-md border border-slate-700 px-3 py-2 text-xs hover:bg-slate-900">Archive</button>
+              <button onClick={() => runWorkflow('unpublish')} disabled={loading || !form.slug} className="rounded-md border border-slate-700 px-3 py-2 text-xs hover:bg-slate-900">Unpublish</button>
+              <input value={scheduleDate} onChange={(e) => setScheduleDate(e.target.value)} placeholder="YYYY-MM-DD" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-xs" />
+              <button onClick={() => runWorkflow('schedule')} disabled={loading || !form.slug || !scheduleDate} className="rounded-md border border-slate-700 px-3 py-2 text-xs hover:bg-slate-900">Schedule</button>
+              <button onClick={deletePost} disabled={loading || !form.slug} className="rounded-md border border-red-900 px-3 py-2 text-xs text-red-300 hover:bg-red-950">Delete</button>
             </div>
           </section>
 
           <aside className="space-y-4">
-            <section className="border border-slate-800 bg-slate-950/90 rounded-xl p-4">
-              <div className="flex items-center justify-between mb-2">
+            <section className="rounded-xl border border-slate-800 bg-slate-950/90 p-4">
+              <div className="mb-2 flex items-center justify-between">
                 <h3 className="text-sm font-semibold">Media Library</h3>
-                <button onClick={loadMedia} className="text-[11px] border border-slate-700 rounded px-2 py-1 hover:bg-slate-900">Refresh</button>
+                <button onClick={loadMedia} className="rounded border border-slate-700 px-2 py-1 text-[11px] hover:bg-slate-900">Refresh</button>
               </div>
-              <label className="block border border-dashed border-slate-700 rounded-md p-3 text-xs text-slate-400 cursor-pointer hover:border-slate-500 mb-2">
+              <input value={mediaSearch} onChange={(e) => setMediaSearch(e.target.value)} placeholder="search media..." className="mb-2 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-xs" />
+              <label className="mb-2 block cursor-pointer rounded-md border border-dashed border-slate-700 p-3 text-xs text-slate-400 hover:border-slate-500">
                 {uploadingMedia ? 'Uploading...' : 'Drop/click to upload images'}
-                <input
-                  type="file"
-                  className="hidden"
-                  multiple
-                  accept="image/*"
-                  onChange={(e) => {
-                    if (!e.target.files) return;
-                    void uploadMedia(e.target.files);
-                    e.currentTarget.value = '';
-                  }}
-                />
+                <input type="file" className="hidden" multiple accept="image/*" onChange={(e) => { if (!e.target.files) return; void uploadMedia(e.target.files); e.currentTarget.value = ''; }} />
               </label>
-              <div
-                onDragOver={(e) => e.preventDefault()}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  void uploadMedia(e.dataTransfer.files);
-                }}
-                className="text-[11px] text-slate-500 mb-2"
-              >
-                Drag images here to upload.
-              </div>
-              <div className="space-y-2 max-h-[34vh] overflow-auto">
+              <div onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); void uploadMedia(e.dataTransfer.files, true); }} className="mb-2 text-[11px] text-slate-500">Drop images here to upload + insert in editor.</div>
+              <div className="max-h-[30vh] space-y-2 overflow-auto">
                 {mediaLoading && <p className="text-xs text-slate-500">Loading media...</p>}
-                {mediaFiles.map((file) => (
-                  <div key={file.key} className="border border-slate-800 rounded-md p-2 text-xs">
-                    <div className="font-mono truncate">{file.key}</div>
-                    <div className="text-[11px] text-slate-500 mb-2">{formatBytes(file.size)}</div>
-                    <div className="flex gap-1 flex-wrap">
-                      <button
-                        onClick={() => insertAtCursor(`![${file.key}](${file.url})`)}
-                        className="text-[11px] border border-slate-700 rounded px-1.5 py-0.5 hover:bg-slate-900"
-                      >
-                        Insert Markdown
-                      </button>
-                      <button
-                        onClick={() => navigator.clipboard.writeText(file.url)}
-                        className="text-[11px] border border-slate-700 rounded px-1.5 py-0.5 hover:bg-slate-900"
-                      >
-                        Copy URL
-                      </button>
-                      <button
-                        onClick={() => void deleteMedia(file.key)}
-                        className="text-[11px] border border-red-900 text-red-300 rounded px-1.5 py-0.5 hover:bg-red-950"
-                      >
-                        Delete
-                      </button>
+                {filteredMediaFiles.map((file) => (
+                  <div key={file.key} className="rounded-md border border-slate-800 p-2 text-xs">
+                    <div className="truncate font-mono">{file.key}</div>
+                    <div className="mb-2 text-[11px] text-slate-500">{formatBytes(file.size)}</div>
+                    <div className="flex flex-wrap gap-1">
+                      <button onClick={() => insertAtCursor(`![${file.key}](${file.url})`)} className="rounded border border-slate-700 px-1.5 py-0.5 text-[11px] hover:bg-slate-900">Insert</button>
+                      <button onClick={() => navigator.clipboard.writeText(file.url)} className="rounded border border-slate-700 px-1.5 py-0.5 text-[11px] hover:bg-slate-900">Copy URL</button>
+                      <button onClick={() => void deleteMedia(file.key)} className="rounded border border-red-900 px-1.5 py-0.5 text-[11px] text-red-300 hover:bg-red-950">Delete</button>
                     </div>
                   </div>
                 ))}
               </div>
             </section>
 
-            <section className="border border-slate-800 bg-slate-950/90 rounded-xl p-4">
-              <h3 className="text-sm font-semibold mb-2">Scheduled Queue</h3>
-              <div className="space-y-2 max-h-40 overflow-auto">
+            <section className="rounded-xl border border-slate-800 bg-slate-950/90 p-4">
+              <h3 className="mb-2 text-sm font-semibold">Document Outline</h3>
+              <div className="max-h-40 space-y-1 overflow-auto">
+                {headingOutline.map((h, idx) => (
+                  <button key={`${h.text}-${idx}`} onClick={() => jumpToLine(h.line)} className="block w-full truncate rounded border border-slate-800 px-2 py-1 text-left text-xs hover:border-slate-700" style={{ paddingLeft: `${0.5 + (h.level - 1) * 0.5}rem` }}>
+                    {h.text}
+                  </button>
+                ))}
+                {headingOutline.length === 0 && <p className="text-xs text-slate-500">No headings yet.</p>}
+              </div>
+            </section>
+
+            <section className="rounded-xl border border-slate-800 bg-slate-950/90 p-4">
+              <h3 className="mb-2 text-sm font-semibold">Scheduled Queue</h3>
+              <div className="max-h-40 space-y-2 overflow-auto">
                 {scheduledPosts.map((post) => (
-                  <div key={post.slug} className="text-xs border border-slate-800 rounded-md p-2">
-                    <div className="font-mono truncate">{post.slug}</div>
+                  <div key={post.slug} className="rounded-md border border-slate-800 p-2 text-xs">
+                    <div className="truncate font-mono">{post.slug}</div>
                     <div className="text-[11px] text-slate-500">{post.scheduled_date}</div>
-                    <button onClick={() => runWorkflow('publish', post.slug)} className="mt-1 text-[11px] border border-slate-700 rounded px-2 py-1 hover:bg-slate-900">Publish now</button>
+                    <button onClick={() => runWorkflow('publish', post.slug)} className="mt-1 rounded border border-slate-700 px-2 py-1 text-[11px] hover:bg-slate-900">Publish now</button>
                   </div>
                 ))}
                 {scheduledPosts.length === 0 && <p className="text-xs text-slate-500">No scheduled posts.</p>}
               </div>
             </section>
 
-            <section className="border border-slate-800 bg-slate-950/90 rounded-xl p-4">
-              <h3 className="text-sm font-semibold mb-2">Revision History</h3>
-              <div className="space-y-2 max-h-[34vh] overflow-auto">
+            <section className="rounded-xl border border-slate-800 bg-slate-950/90 p-4">
+              <h3 className="mb-2 text-sm font-semibold">Revision History</h3>
+              <div className="max-h-[30vh] space-y-2 overflow-auto">
                 {history.map((item) => (
-                  <div key={item.id} className="border border-slate-800 rounded-md p-2">
+                  <div key={item.id} className="rounded-md border border-slate-800 p-2">
                     <div className="text-xs font-mono text-slate-300">#{item.id} {item.revision_type}</div>
                     <div className="text-[11px] text-slate-500">{item.actor} · {new Date(item.created_at).toLocaleString()}</div>
-                    <button onClick={() => void restoreRevision(item.id)} className="mt-2 text-[11px] border border-cyan-800 rounded px-2 py-1 hover:bg-cyan-950">Restore</button>
+                    <button onClick={() => void restoreRevision(item.id)} className="mt-2 rounded border border-cyan-800 px-2 py-1 text-[11px] hover:bg-cyan-950">Restore</button>
                   </div>
                 ))}
                 {history.length === 0 && <p className="text-xs text-slate-500">No revisions loaded.</p>}
