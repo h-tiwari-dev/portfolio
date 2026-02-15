@@ -13,6 +13,14 @@ export default config({
       format: { contentField: 'content' },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
+        status: fields.select({
+          label: 'Status',
+          options: [
+            { label: 'Draft', value: 'draft' },
+            { label: 'Published', value: 'published' },
+          ],
+          defaultValue: 'draft',
+        }),
         excerpt: fields.text({ label: 'Excerpt', multiline: true }),
         publishedDate: fields.date({ label: 'Published Date' }),
         tags: fields.array(fields.text({ label: 'Tag' }), {

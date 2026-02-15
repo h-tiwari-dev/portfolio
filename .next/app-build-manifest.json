@@ -23,16 +23,12 @@
       "static/chunks/8978-c61d655f8f495300.js",
       "static/chunks/app/blog/page-671dac935931148b.js"
     ],
-    "/page": [
+    "/tools/page": [
       "static/chunks/webpack-02b4922aca1c91c2.js",
       "static/chunks/fd9d1056-aae3c195ffa3f415.js",
       "static/chunks/2117-b445df53904d31cf.js",
       "static/chunks/main-app-a77b84e5cd330d58.js",
-      "static/chunks/b536a0f1-120c643076e26144.js",
-      "static/chunks/0f8af13e-955fc863628d8a96.js",
-      "static/chunks/8978-c61d655f8f495300.js",
-      "static/chunks/2151-3edea314053bc930.js",
-      "static/chunks/app/page-39325f68490b432d.js"
+      "static/chunks/app/tools/page-ae960bf25014890e.js"
     ],
     "/tools/jsonToString/page": [
       "static/chunks/webpack-02b4922aca1c91c2.js",
@@ -41,12 +37,12 @@
       "static/chunks/main-app-a77b84e5cd330d58.js",
       "static/chunks/app/tools/jsonToString/page-1615ea3742c8c184.js"
     ],
-    "/tools/page": [
+    "/tools/stringToJson/page": [
       "static/chunks/webpack-02b4922aca1c91c2.js",
       "static/chunks/fd9d1056-aae3c195ffa3f415.js",
       "static/chunks/2117-b445df53904d31cf.js",
       "static/chunks/main-app-a77b84e5cd330d58.js",
-      "static/chunks/app/tools/page-ae960bf25014890e.js"
+      "static/chunks/app/tools/stringToJson/page-22adfc0306466046.js"
     ],
     "/tools/jsonToTypescript/page": [
       "static/chunks/webpack-02b4922aca1c91c2.js",
@@ -58,12 +54,16 @@
       "static/chunks/1654-f0ada291da7adb9e.js",
       "static/chunks/app/tools/jsonToTypescript/page-e0f4fece8bb6bbcf.js"
     ],
-    "/tools/stringToJson/page": [
+    "/page": [
       "static/chunks/webpack-02b4922aca1c91c2.js",
       "static/chunks/fd9d1056-aae3c195ffa3f415.js",
       "static/chunks/2117-b445df53904d31cf.js",
       "static/chunks/main-app-a77b84e5cd330d58.js",
-      "static/chunks/app/tools/stringToJson/page-22adfc0306466046.js"
+      "static/chunks/b536a0f1-120c643076e26144.js",
+      "static/chunks/0f8af13e-955fc863628d8a96.js",
+      "static/chunks/8978-c61d655f8f495300.js",
+      "static/chunks/2151-3edea314053bc930.js",
+      "static/chunks/app/page-3194b8e919350b2a.js"
     ],
     "/blog/[slug]/page": [
       "static/chunks/webpack-02b4922aca1c91c2.js",

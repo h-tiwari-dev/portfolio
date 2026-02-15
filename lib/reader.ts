@@ -7,6 +7,7 @@ const reader = createReader(process.cwd(), cfg);
 
 export type Post = {
   title: string;
+  status?: 'draft' | 'published';
   excerpt: string;
   publishedDate: string | null;
   tags: string[];
@@ -14,7 +15,17 @@ export type Post = {
   content: any;
 };
 
-export async function getAllPosts() {
+type GetAllPostsOptions = {
+  includeDrafts?: boolean;
+};
+
+function isPublished(post: Post) {
+  // Backward compatibility for older posts without a status field.
+  return !post.status || post.status === 'published';
+}
+
+export async function getAllPosts(options: GetAllPostsOptions = {}) {
+  const { includeDrafts = false } = options;
   const slugs = await reader.collections.posts.list();
   const posts = await Promise.all(
     slugs.map(async (slug: string) => {
@@ -22,16 +33,30 @@ export async function getAllPosts() {
       return { slug, ...post! };
     })
   );
-  return posts.sort((a, b) => {
+  const filteredPosts = includeDrafts
+    ? posts
+    : posts.filter((post) => isPublished(post));
+
+  return filteredPosts.sort((a, b) => {
     if (!a.publishedDate || !b.publishedDate) return 0;
     return new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime();
   });
 }
 
-export async function getPost(slug: string) {
-  return (await reader.collections.posts.read(slug, {
+type GetPostOptions = {
+  includeDrafts?: boolean;
+};
+
+export async function getPost(slug: string, options: GetPostOptions = {}) {
+  const { includeDrafts = false } = options;
+
+  const post = (await reader.collections.posts.read(slug, {
     resolveLinkedFiles: true,
   })) as Post | null;
+
+  if (!post) return null;
+  if (!includeDrafts && !isPublished(post)) return null;
+  return post;
 }
 
 export { reader };
