@@ -1,6 +1,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import Markdoc, { type RenderableTreeNode } from '@markdoc/markdoc';
+import InteractiveDemo from './InteractiveDemo';
 
 // Dynamically import MermaidDiagram to avoid SSR issues
 const MermaidDiagram = dynamic(() => import('./MermaidDiagram'), {
@@ -109,8 +110,8 @@ function HorizontalRule() {
 }
 
 function Image({ src, alt }: { src: string; alt?: string }) {
-  // eslint-disable-next-line @next/next/no-img-element
   return (
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={src}
       alt={alt || ''}
@@ -173,9 +174,18 @@ const components = {
   TableRow,
   TableHeader,
   TableCell,
+  InteractiveDemo,
 };
 
 const markdocConfig = {
+  tags: {
+    interactiveDemo: {
+      render: 'InteractiveDemo',
+      attributes: {
+        preset: { type: String },
+      },
+    },
+  },
   nodes: {
     heading: {
       render: 'Heading',

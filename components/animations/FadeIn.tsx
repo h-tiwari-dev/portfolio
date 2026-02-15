@@ -1,7 +1,8 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ReactNode } from 'react';
+import { motionDurations, motionEasings, motionStaggers } from './tokens';
 
 interface AnimatedContainerProps {
   children: ReactNode;
@@ -14,11 +15,16 @@ export function FadeIn({
   className = '',
   delay = 0,
 }: AnimatedContainerProps) {
+  const reduced = useReducedMotion();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay }}
+      initial={reduced ? { opacity: 0 } : { opacity: 0, y: 20 }}
+      animate={reduced ? { opacity: 1 } : { opacity: 1, y: 0 }}
+      transition={{
+        duration: reduced ? motionDurations.fast : motionDurations.slow,
+        delay,
+        ease: motionEasings.standard,
+      }}
       className={className}
     >
       {children}
@@ -31,11 +37,16 @@ export function FadeInUp({
   className = '',
   delay = 0,
 }: AnimatedContainerProps) {
+  const reduced = useReducedMotion();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay, ease: [0.25, 0.1, 0.25, 1] }}
+      initial={reduced ? { opacity: 0 } : { opacity: 0, y: 30 }}
+      animate={reduced ? { opacity: 1 } : { opacity: 1, y: 0 }}
+      transition={{
+        duration: reduced ? motionDurations.fast : motionDurations.page,
+        delay,
+        ease: motionEasings.standard,
+      }}
       className={className}
     >
       {children}
@@ -43,13 +54,16 @@ export function FadeInUp({
   );
 }
 
-export function StaggerContainer({
+export function StaggerGroup({
   children,
   className = '',
+  stagger = motionStaggers.normal,
 }: {
   children: ReactNode;
   className?: string;
+  stagger?: number;
 }) {
+  const reduced = useReducedMotion();
   return (
     <motion.div
       initial="hidden"
@@ -59,7 +73,7 @@ export function StaggerContainer({
         visible: {
           opacity: 1,
           transition: {
-            staggerChildren: 0.1,
+            staggerChildren: reduced ? 0 : stagger,
           },
         },
       }}
@@ -83,7 +97,39 @@ export function StaggerItem({
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 },
       }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: motionDurations.slow, ease: motionEasings.standard }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export function SlideIn({
+  children,
+  className = '',
+  delay = 0,
+  from = 'left',
+}: AnimatedContainerProps & { from?: 'left' | 'right' | 'up' | 'down' }) {
+  const reduced = useReducedMotion();
+  const axis =
+    from === 'left'
+      ? { x: -24, y: 0 }
+      : from === 'right'
+      ? { x: 24, y: 0 }
+      : from === 'up'
+      ? { x: 0, y: -24 }
+      : { x: 0, y: 24 };
+
+  return (
+    <motion.div
+      initial={reduced ? { opacity: 0 } : { opacity: 0, ...axis }}
+      animate={reduced ? { opacity: 1 } : { opacity: 1, x: 0, y: 0 }}
+      transition={{
+        duration: reduced ? motionDurations.fast : motionDurations.normal,
+        delay,
+        ease: motionEasings.emphasized,
+      }}
       className={className}
     >
       {children}
@@ -96,14 +142,22 @@ export function ScaleIn({
   className = '',
   delay = 0,
 }: AnimatedContainerProps) {
+  const reduced = useReducedMotion();
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5, delay }}
+      initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
+      animate={reduced ? { opacity: 1 } : { opacity: 1, scale: 1 }}
+      transition={{
+        duration: reduced ? motionDurations.fast : motionDurations.normal,
+        delay,
+        ease: motionEasings.emphasized,
+      }}
       className={className}
     >
       {children}
     </motion.div>
   );
 }
+
+// Backward-compatible alias
+export const StaggerContainer = StaggerGroup;

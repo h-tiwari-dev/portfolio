@@ -8,16 +8,16 @@
     "start": "npx wrangler pages dev out",
     "deploy": "npm run build && npx wrangler pages deploy out --project-name=portfolio",
     "deploy:worker": "cd worker && npx wrangler deploy",
-    "dev:cms": "cd cms && bun run dev",
-    "deploy:cms": "cd cms && bun run deploy",
     "lint": "next lint",
-    "enrich": "tsx scripts/enrich-post.ts"
+    "migrate:posts:d1": "tsx scripts/migrate-posts-to-worker-db.ts",
+    "qa:demos": "tsx scripts/qa-interactive-demos.ts",
+    "qa:motion": "tsx scripts/qa-motion-accessibility.ts",
+    "qa:all": "npm run qa:demos && npm run qa:motion"
   },
   "engines": {
     "node": "22.x"
   },
   "dependencies": {
-    "@keystatic/core": "^0.5.48",
     "@markdoc/markdoc": "^0.5.4",
     "@react-three/drei": "^9.56.27",
     "@react-three/fiber": "^8.11.5",

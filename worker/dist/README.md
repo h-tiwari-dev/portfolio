@@ -1,0 +1,1 @@
+This folder contains the built output assets for the worker "portfolio-worker" generated at 2026-02-15T14:39:46.361Z.

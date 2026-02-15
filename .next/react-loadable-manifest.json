@@ -1,4 +1,12 @@
 {
+  "components/blog/MarkdocRenderer.tsx -> ./MermaidDiagram": {
+    "id": 15596,
+    "files": [
+      "static/chunks/0dbeb660-0966d92f18f781d4.js",
+      "static/chunks/7921-be8b3dbd525e779a.js",
+      "static/chunks/5596.5834583612551ae2.js"
+    ]
+  },
   "node_modules/@mermaid-js/parser/dist/mermaid-parser.core.mjs -> ./chunks/mermaid-parser.core/architecture-U656AL7Q.mjs": {
     "id": 26406,
     "files": [

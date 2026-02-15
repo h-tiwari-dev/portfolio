@@ -1,4 +1,7 @@
 import Link from 'next/link';
+import Image from 'next/image';
+import { readdir } from 'node:fs/promises';
+import path from 'node:path';
 import { getAllPosts, getPost } from '@/lib/reader';
 import { ArrowLeft } from 'lucide-react';
 import { FadeIn } from '@/components/animations/FadeIn';
@@ -8,6 +11,20 @@ import MarkdocRenderer, {
 } from '@/components/blog/MarkdocRenderer';
 
 export const dynamicParams = false;
+export const dynamic = 'force-static';
+
+async function getLocalPostSlugs(): Promise<string[]> {
+  try {
+    const postsDir = path.join(process.cwd(), 'content', 'posts');
+    const entries = await readdir(postsDir, { withFileTypes: true });
+    return entries
+      .filter((entry) => entry.isFile() && entry.name.endsWith('.mdoc'))
+      .map((entry) => entry.name.replace(/\.mdoc$/, ''))
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+}
 
 function calculateReadingTime(content: any): number {
   if (!content) return 0;
@@ -17,10 +34,13 @@ function calculateReadingTime(content: any): number {
   return Math.max(1, Math.ceil(words / wordsPerMinute));
 }
 
-export async function generateStaticParams() {
+export const generateStaticParams = async () => {
   const posts = await getAllPosts();
-  return posts.map((post) => ({ slug: post.slug }));
-}
+  const remoteSlugs = posts.map((post) => post.slug);
+  const localSlugs = await getLocalPostSlugs();
+  const slugs = Array.from(new Set([...remoteSlugs, ...localSlugs]));
+  return slugs.map((slug) => ({ slug }));
+};
 
 export async function generateMetadata({
   params,
@@ -28,6 +48,7 @@ export async function generateMetadata({
   params: { slug: string };
 }) {
   const post = await getPost(params.slug);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tiwariharsh.com';
 
   if (!post) {
     return {
@@ -35,9 +56,36 @@ export async function generateMetadata({
     };
   }
 
+  const canonical = post.seo?.canonicalUrl || `${siteUrl}/blog/${params.slug}`;
+  const metaTitle = post.seo?.metaTitle || `${post.title} | Harsh Tiwari`;
+  const metaDescription = post.seo?.metaDescription || post.excerpt;
+  const ogImage = post.seo?.ogImage || post.coverImage || undefined;
+  const ogImageUrl = ogImage
+    ? ogImage.startsWith('http')
+      ? ogImage
+      : `${siteUrl}${ogImage}`
+    : undefined;
+  const twitterCard = post.seo?.twitterCard || 'summary_large_image';
+
   return {
-    title: `${post.title} | Harsh Tiwari`,
-    description: post.excerpt,
+    title: metaTitle,
+    description: metaDescription,
+    alternates: {
+      canonical,
+    },
+    openGraph: {
+      title: metaTitle,
+      description: metaDescription,
+      type: 'article',
+      url: canonical,
+      images: ogImageUrl ? [{ url: ogImageUrl }] : undefined,
+    },
+    twitter: {
+      card: twitterCard,
+      title: metaTitle,
+      description: metaDescription,
+      images: ogImageUrl ? [ogImageUrl] : undefined,
+    },
   };
 }
 
@@ -47,6 +95,7 @@ export default async function PostPage({
   params: { slug: string };
 }) {
   const post = await getPost(params.slug);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tiwariharsh.com';
 
   if (!post) {
     return (
@@ -68,10 +117,38 @@ export default async function PostPage({
 
   const content = transformContent(post.content);
   const readingTime = calculateReadingTime(post.content);
+  const ldImage = post.seo?.ogImage || post.coverImage || undefined;
+  const ldImageUrl = ldImage
+    ? ldImage.startsWith('http')
+      ? ldImage
+      : `${siteUrl}${ldImage}`
+    : undefined;
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.seo?.metaDescription || post.excerpt,
+    datePublished: post.publishedDate || post.scheduledDate || undefined,
+    dateModified: post.publishedDate || post.scheduledDate || undefined,
+    image: ldImageUrl,
+    mainEntityOfPage: `${siteUrl}/blog/${params.slug}`,
+    author: {
+      '@type': 'Person',
+      name: 'Harsh Tiwari',
+    },
+    publisher: {
+      '@type': 'Person',
+      name: 'Harsh Tiwari',
+    },
+  };
 
   return (
     <div className="min-h-screen bg-[hsl(var(--background))]">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        />
         {/* Navigation */}
         <FadeIn className="mb-10">
           <Link
@@ -114,12 +191,14 @@ export default async function PostPage({
         {/* Cover Image */}
         {post.coverImage && (
           <FadeIn delay={0.15} className="mb-10">
-            <div className="overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+            <div className="overflow-hidden relative w-full aspect-[16/9] max-h-[400px]">
+              <Image
                 src={post.coverImage}
-                alt={post.title}
-                className="w-full h-auto object-cover max-h-[400px]"
+                alt={post.coverImageAlt || post.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 768px"
+                className="object-cover"
+                priority
               />
             </div>
           </FadeIn>

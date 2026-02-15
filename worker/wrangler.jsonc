@@ -1,21 +1,57 @@
 {
-  "name": "portfolio-worker",
-  "main": "index.ts",
-  "compatibility_date": "2026-02-08",
-  "compatibility_flags": ["nodejs_compat"],
-  "observability": {
-    "enabled": false,
-    "head_sampling_rate": 1,
-    "logs": {
-      "enabled": true,
-      "head_sampling_rate": 1,
-      "persist": true,
-      "invocation_logs": true
-    },
-    "traces": {
-      "enabled": false,
-      "persist": true,
-      "head_sampling_rate": 1
-    }
-  }
+	"name": "portfolio-worker",
+	"main": "index.ts",
+	"compatibility_date": "2026-02-08",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	// Add D1 binding after creating the database:
+	// "d1_databases": [
+	//   {
+	//     "binding": "BLOG_DB",
+	//     "database_name": "portfolio-blog",
+	//     "database_id": "<your-database-id>"
+	//   }
+	// ],
+	"observability": {
+		"enabled": false,
+		"head_sampling_rate": 1,
+		"logs": {
+			"enabled": true,
+			"head_sampling_rate": 1,
+			"persist": true,
+			"invocation_logs": true
+		},
+		"traces": {
+			"enabled": false,
+			"persist": true,
+			"head_sampling_rate": 1
+		}
+	},
+	"d1_databases": [
+		{
+			"binding": "BLOG_DB",
+			"database_name": "portfolio-blog",
+			"database_id": "90abf87f-2042-4b3d-ba67-5c9d034db65f",
+			"remote": true
+		}
+	],
+	"r2_buckets": [
+		{
+			"bucket_name": "portfolio-blog-media",
+			"binding": "BLOG_MEDIA",
+			"remote": true
+		}
+	],
+	// Optional media storage for admin image uploads:
+	// "r2_buckets": [
+	// 	{
+	// 		"binding": "BLOG_MEDIA",
+	// 		"bucket_name": "portfolio-blog-media"
+	// 	}
+	// ],
+	// Optional: public base URL for uploaded media links returned by API:
+	// "vars": {
+	// 	"BLOG_MEDIA_PUBLIC_BASE": "https://cdn.your-domain.com"
+	// }
 }

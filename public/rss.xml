@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Harsh Tiwari Blog</title>
+    <link>https://tiwariharsh.com/blog</link>
+    <description>Articles and notes by Harsh Tiwari</description>
+    <item>
+      <title>Anthropic Take Home Kernel Optimization Problem</title>
+      <link>https://tiwariharsh.com/blog/anthropic-kernel-optimization-problem</link>
+      <guid>https://tiwariharsh.com/blog/anthropic-kernel-optimization-problem</guid>
+      <pubDate>Sun, 15 Feb 2026 00:00:00 GMT</pubDate>
+      <description>My walkthrough of Anthropic&apos;s kernel optimization take-home challenge, how I approached learning the codebase, and what I tried while debugging.</description>
+    </item>
+    <item>
+      <title>Getting Started with OpenCode</title>
+      <link>https://tiwariharsh.com/blog/getting-started-with-open-code</link>
+      <guid>https://tiwariharsh.com/blog/getting-started-with-open-code</guid>
+      <pubDate>Sun, 08 Feb 2026 00:00:00 GMT</pubDate>
+      <description>OpenCode is an open source AI coding agent. It runs in your terminal. You choose the model. You own your workflow.</description>
+    </item>
+    <item>
+      <title>My Tmux Setup: A Developer&apos;&apos;s Terminal Multiplexer Configuration</title>
+      <link>https://tiwariharsh.com/blog/tmux-setup</link>
+      <guid>https://tiwariharsh.com/blog/tmux-setup</guid>
+      <pubDate>Wed, 21 Jan 2026 00:00:00 GMT</pubDate>
+      <description>Tmux is central to how I work. It looks good and gets things done. Here is my complete setup with configuration files, custom scripts, and why I made each choice.</description>
+    </item>
+    <item>
+      <title>Database Indexing Overview</title>
+      <link>https://tiwariharsh.com/blog/database-indexing</link>
+      <guid>https://tiwariharsh.com/blog/database-indexing</guid>
+      <pubDate>Sat, 15 Feb 2025 00:00:00 GMT</pubDate>
+      <description>Databases store data in pages (commonly 8 KB each) containing multiple rows. Without indexes, finding a specific record can require scanning many pages sequentially, which is inefficient and slow. Indexes act as maps, guiding the query engine directly to the required data, dramatically reducing lookup times.</description>
+    </item>
+  </channel>
+</rss>
