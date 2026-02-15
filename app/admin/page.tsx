@@ -132,6 +132,7 @@ export default function AdminPage() {
   const [previewMode, setPreviewMode] = useState<'split' | 'edit' | 'preview'>('split');
   const [mediaSearch, setMediaSearch] = useState('');
   const [cursorInfo, setCursorInfo] = useState({ line: 1, column: 1 });
+  const [rightTab, setRightTab] = useState<'media' | 'outline' | 'schedule' | 'history'>('media');
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -663,48 +664,44 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[linear-gradient(180deg,#0b1017_0%,#08121d_45%,#07090f_100%)] text-white p-4 md:p-6">
-      <div className="mx-auto max-w-[1800px] space-y-4">
-        <header className="rounded-2xl border border-cyan-900/40 bg-[linear-gradient(120deg,rgba(12,20,35,.95),rgba(7,12,20,.9))] p-4 md:p-5">
+    <main className="min-h-screen bg-[linear-gradient(180deg,#080c12_0%,#0f1a2a_55%,#0a111c_100%)] text-white p-4 md:p-6">
+      <div className="mx-auto max-w-[1850px] space-y-4">
+        <header className="rounded-2xl border border-cyan-800/30 bg-slate-950/90 p-5">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p className="text-[11px] uppercase tracking-[0.18em] text-cyan-300/70">CMS Workspace</p>
-              <h1 className="mt-1 text-2xl font-semibold tracking-tight">Admin Editorial Studio</h1>
-              <p className="mt-1 text-xs text-slate-400">Write, preview, publish, schedule, manage media, and recover revisions.</p>
+              <p className="text-[11px] uppercase tracking-[0.18em] text-cyan-300/80">Blog CMS</p>
+              <h1 className="mt-1 text-3xl font-semibold tracking-tight">Admin Panel</h1>
+              <p className="mt-1 text-sm text-slate-400">Editor-first workspace for content, media, scheduling, and publishing.</p>
             </div>
-            <div className="rounded-lg border border-slate-800 bg-slate-900/70 px-3 py-2 text-xs text-slate-300">
-              {autoSaving ? 'Autosaving...' : hasUnsavedChanges ? 'Unsaved changes' : 'Saved'}
-              {lastSavedAt ? ` · ${new Date(lastSavedAt).toLocaleTimeString()}` : ''}
+            <div className="flex flex-wrap gap-2">
+              <span className="rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-300">Draft {stats.draft}</span>
+              <span className="rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-300">Review {stats.in_review}</span>
+              <span className="rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-300">Scheduled {stats.scheduled}</span>
+              <span className="rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-300">Published {stats.published}</span>
+              <span className="rounded-full border border-cyan-800 px-3 py-1 text-xs text-cyan-200">
+                {autoSaving ? 'Autosaving...' : hasUnsavedChanges ? 'Unsaved' : 'Saved'}
+                {lastSavedAt ? ` · ${new Date(lastSavedAt).toLocaleTimeString()}` : ''}
+              </span>
             </div>
           </div>
         </header>
 
-        <div className="grid grid-cols-1 xl:grid-cols-[320px_1fr_360px] gap-4">
-          <aside className="space-y-4">
-            <section className="rounded-xl border border-slate-800 bg-slate-950/90 p-4 space-y-3">
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[340px_1fr_380px]">
+          <aside className="space-y-4 xl:sticky xl:top-4 xl:self-start">
+            <section className="rounded-xl border border-slate-800 bg-slate-950 p-4 space-y-3">
               <h2 className="text-sm font-semibold">Connection</h2>
-              <input value={workerBase} onChange={(e) => setWorkerBase(e.target.value)} className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" placeholder="https://<worker>.workers.dev" />
-              <input type="password" value={workflowToken} onChange={(e) => setWorkflowToken(e.target.value)} className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" placeholder="BLOG_WORKFLOW_TOKEN" />
+              <input value={workerBase} onChange={(e) => setWorkerBase(e.target.value)} className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm" placeholder="https://<worker>.workers.dev" />
+              <input type="password" value={workflowToken} onChange={(e) => setWorkflowToken(e.target.value)} className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm" placeholder="BLOG_WORKFLOW_TOKEN" />
               <div className="grid grid-cols-2 gap-2">
-                <button onClick={loadPosts} disabled={loading || !workflowToken} className="rounded-md border border-cyan-800 px-3 py-2 text-xs hover:bg-cyan-950">Load posts</button>
-                <button onClick={loadMedia} disabled={mediaLoading || !workflowToken} className="rounded-md border border-cyan-800 px-3 py-2 text-xs hover:bg-cyan-950">Load media</button>
+                <button onClick={loadPosts} disabled={loading || !workflowToken} className="rounded-lg border border-cyan-800 px-3 py-2 text-xs hover:bg-cyan-950">Load posts</button>
+                <button onClick={loadMedia} disabled={mediaLoading || !workflowToken} className="rounded-lg border border-cyan-800 px-3 py-2 text-xs hover:bg-cyan-950">Load media</button>
               </div>
               <p className="text-[11px] text-slate-400">{message}</p>
             </section>
 
-            <section className="rounded-xl border border-slate-800 bg-slate-950/90 p-4">
-              <h3 className="mb-2 text-sm font-semibold">Pipeline</h3>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="rounded-md border border-slate-800 p-2">Draft: {stats.draft}</div>
-                <div className="rounded-md border border-slate-800 p-2">Review: {stats.in_review}</div>
-                <div className="rounded-md border border-slate-800 p-2">Scheduled: {stats.scheduled}</div>
-                <div className="rounded-md border border-slate-800 p-2">Published: {stats.published}</div>
-              </div>
-            </section>
-
-            <section className="rounded-xl border border-slate-800 bg-slate-950/90 p-4 space-y-2">
+            <section className="rounded-xl border border-slate-800 bg-slate-950 p-4 space-y-2">
               <div className="flex gap-2">
-                <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value as 'all' | PostStatus)} className="rounded-md border border-slate-700 bg-slate-900 px-2 py-2 text-xs">
+                <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value as 'all' | PostStatus)} className="rounded-lg border border-slate-700 bg-slate-900 px-2 py-2 text-xs">
                   <option value="all">all</option>
                   <option value="draft">draft</option>
                   <option value="in_review">in_review</option>
@@ -712,189 +709,193 @@ export default function AdminPage() {
                   <option value="published">published</option>
                   <option value="archived">archived</option>
                 </select>
-                <input value={searchText} onChange={(e) => setSearchText(e.target.value)} className="flex-1 rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-xs" placeholder="search posts" />
+                <input value={searchText} onChange={(e) => setSearchText(e.target.value)} className="flex-1 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs" placeholder="search posts" />
               </div>
-              <button onClick={() => { setSelectedSlug(''); setHistory([]); setForm(emptyForm); setLastSavedSnapshot(JSON.stringify(emptyForm)); }} className="w-full rounded-md border border-slate-700 px-3 py-2 text-xs hover:bg-slate-900">New post</button>
-              <div className="max-h-[48vh] space-y-1 overflow-auto">
+              <button onClick={() => { setSelectedSlug(''); setHistory([]); setForm(emptyForm); setLastSavedSnapshot(JSON.stringify(emptyForm)); }} className="w-full rounded-lg border border-slate-700 px-3 py-2 text-xs hover:bg-slate-900">New post</button>
+              <div className="max-h-[56vh] space-y-2 overflow-auto">
                 {filteredPosts.map((post) => (
-                  <button key={post.slug} onClick={() => setSelectedSlug(post.slug)} className={`w-full rounded-md border p-2 text-left text-xs ${selectedSlug === post.slug ? 'border-cyan-700 bg-cyan-950/40' : 'border-slate-800 hover:border-slate-700'}`}>
-                    <div className="truncate font-mono">{post.slug}</div>
-                    <div className="text-[10px] uppercase text-slate-500">{post.status}</div>
+                  <button key={post.slug} onClick={() => setSelectedSlug(post.slug)} className={`w-full rounded-lg border p-3 text-left ${selectedSlug === post.slug ? 'border-cyan-600 bg-cyan-950/30' : 'border-slate-800 hover:border-slate-600'}`}>
+                    <div className="truncate text-sm font-medium">{post.title || post.slug}</div>
+                    <div className="mt-1 truncate font-mono text-[11px] text-slate-400">{post.slug}</div>
+                    <div className="mt-1 text-[10px] uppercase tracking-wide text-slate-500">{post.status}</div>
                   </button>
                 ))}
               </div>
             </section>
           </aside>
 
-          <section className="rounded-xl border border-slate-800 bg-slate-950/90 p-4 space-y-3">
+          <section className="rounded-xl border border-slate-800 bg-slate-950 p-4 space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-sm font-semibold">Writing Desk</h2>
+              <h2 className="text-base font-semibold">Editor</h2>
               <div className="flex items-center gap-2 text-xs">
                 <label className="flex items-center gap-1 text-slate-400">
                   <input type="checkbox" checked={autoSaveEnabled} onChange={(e) => setAutoSaveEnabled(e.target.checked)} />
                   Autosave
                 </label>
-                <button onClick={() => setPreviewMode('edit')} className="rounded border border-slate-700 px-2 py-1 hover:bg-slate-900">Edit</button>
-                <button onClick={() => setPreviewMode('split')} className="rounded border border-slate-700 px-2 py-1 hover:bg-slate-900">Split</button>
-                <button onClick={() => setPreviewMode('preview')} className="rounded border border-slate-700 px-2 py-1 hover:bg-slate-900">Preview</button>
-                {form.slug && <Link href={`/blog/${form.slug}`} target="_blank" className="rounded border border-slate-700 px-2 py-1 hover:bg-slate-900">Public URL</Link>}
+                <button onClick={() => setPreviewMode('edit')} className={`rounded-md border px-2 py-1 ${previewMode === 'edit' ? 'border-cyan-700 bg-cyan-950/40' : 'border-slate-700 hover:bg-slate-900'}`}>Edit</button>
+                <button onClick={() => setPreviewMode('split')} className={`rounded-md border px-2 py-1 ${previewMode === 'split' ? 'border-cyan-700 bg-cyan-950/40' : 'border-slate-700 hover:bg-slate-900'}`}>Split</button>
+                <button onClick={() => setPreviewMode('preview')} className={`rounded-md border px-2 py-1 ${previewMode === 'preview' ? 'border-cyan-700 bg-cyan-950/40' : 'border-slate-700 hover:bg-slate-900'}`}>Preview</button>
+                {form.slug && <Link href={`/blog/${form.slug}`} target="_blank" className="rounded-md border border-slate-700 px-2 py-1 hover:bg-slate-900">Public URL</Link>}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-              <input value={form.slug} onChange={(e) => setForm({ ...form, slug: normalizeSlug(e.target.value) })} placeholder="slug" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
-              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as PostStatus })} className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              <input value={form.slug} onChange={(e) => setForm({ ...form, slug: normalizeSlug(e.target.value) })} placeholder="slug" className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as PostStatus })} className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm">
                 <option value="draft">draft</option><option value="in_review">in_review</option><option value="scheduled">scheduled</option><option value="published">published</option><option value="archived">archived</option>
               </select>
-              <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="title" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm md:col-span-2" />
-              <input value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} placeholder="tags comma-separated" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
-              <input value={form.categories} onChange={(e) => setForm({ ...form, categories: e.target.value })} placeholder="categories comma-separated" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
-              <input value={form.publishedDate} onChange={(e) => setForm({ ...form, publishedDate: e.target.value })} placeholder="published YYYY-MM-DD" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
-              <input value={form.scheduledDate} onChange={(e) => setForm({ ...form, scheduledDate: e.target.value })} placeholder="scheduled YYYY-MM-DD" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+              <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="title" className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm md:col-span-2" />
+              <input value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} placeholder="tags comma-separated" className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+              <input value={form.categories} onChange={(e) => setForm({ ...form, categories: e.target.value })} placeholder="categories comma-separated" className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+              <input value={form.publishedDate} onChange={(e) => setForm({ ...form, publishedDate: e.target.value })} placeholder="published YYYY-MM-DD" className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+              <input value={form.scheduledDate} onChange={(e) => setForm({ ...form, scheduledDate: e.target.value })} placeholder="scheduled YYYY-MM-DD" className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
             </div>
 
-            <textarea value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} placeholder="excerpt" className="h-20 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+            <textarea value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} placeholder="excerpt" className="h-24 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
 
-            <div className="rounded-lg border border-slate-800 bg-slate-950/70 p-2">
-              <div className="mb-2 flex flex-wrap gap-1">
+            <div className="rounded-lg border border-slate-800 bg-slate-900/30 p-3">
+              <div className="mb-2 flex flex-wrap gap-1.5">
                 {markdownActions.map((action) => (
-                  <button key={action.label} onClick={action.run} className="rounded border border-slate-700 px-2 py-1 text-[11px] hover:bg-slate-900">{action.label}</button>
+                  <button key={action.label} onClick={action.run} className="rounded-md border border-slate-700 px-2 py-1 text-[11px] hover:bg-slate-800">{action.label}</button>
                 ))}
               </div>
-
-              <div className="grid gap-2" style={{ gridTemplateColumns: previewMode === 'split' ? '1fr 1fr' : '1fr' }}>
+              <div className="grid gap-3" style={{ gridTemplateColumns: previewMode === 'split' ? '1fr 1fr' : '1fr' }}>
                 {previewMode !== 'preview' && (
-                  <textarea
-                    ref={textareaRef}
-                    value={form.content}
-                    onChange={(e) => setForm({ ...form, content: e.target.value })}
-                    onKeyDown={onEditorKeyDown}
-                    onKeyUp={updateCursorInfo}
-                    onClick={updateCursorInfo}
-                    onSelect={updateCursorInfo}
-                    onPaste={(e) => void handleEditorPaste(e)}
-                    placeholder="Markdown / Markdoc content"
-                    className="h-[470px] w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 font-mono text-sm"
-                  />
+                  <textarea ref={textareaRef} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} onKeyDown={onEditorKeyDown} onKeyUp={updateCursorInfo} onClick={updateCursorInfo} onSelect={updateCursorInfo} onPaste={(e) => void handleEditorPaste(e)} placeholder="Markdown / Markdoc content" className="h-[520px] w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 font-mono text-sm leading-relaxed" />
                 )}
                 {previewMode !== 'edit' && (
-                  <div className="h-[470px] overflow-auto rounded-md border border-slate-800 bg-slate-950 p-3">
+                  <div className="h-[520px] overflow-auto rounded-lg border border-slate-800 bg-slate-950 p-4">
                     {previewContent ? <article className="prose-custom max-w-none"><MarkdocRenderer content={previewContent} /></article> : <p className="text-xs text-slate-500">Preview unavailable for current content.</p>}
                   </div>
                 )}
               </div>
-
-              <div className="mt-2 text-[11px] text-slate-500">
-                {wordCount} words · ~{readMinutes} min read · Ln {cursorInfo.line}, Col {cursorInfo.column} · Tab indents · Ctrl/Cmd+B/I/K/S
-              </div>
+              <div className="mt-2 text-[11px] text-slate-500">{wordCount} words · ~{readMinutes} min read · Ln {cursorInfo.line}, Col {cursorInfo.column}</div>
             </div>
 
-            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-              <input value={form.coverImage} onChange={(e) => setForm({ ...form, coverImage: e.target.value })} placeholder="cover image URL" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
-              <input value={form.coverImageAlt} onChange={(e) => setForm({ ...form, coverImageAlt: e.target.value })} placeholder="cover image alt" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
-              <input value={form.seoMetaTitle} onChange={(e) => setForm({ ...form, seoMetaTitle: e.target.value })} placeholder="SEO meta title" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
-              <input value={form.seoCanonicalUrl} onChange={(e) => setForm({ ...form, seoCanonicalUrl: e.target.value })} placeholder="SEO canonical URL" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
-              <input value={form.seoOgImage} onChange={(e) => setForm({ ...form, seoOgImage: e.target.value })} placeholder="SEO OG image URL" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
-              <select value={form.seoTwitterCard} onChange={(e) => setForm({ ...form, seoTwitterCard: e.target.value })} className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm">
-                <option value="summary_large_image">summary_large_image</option>
-                <option value="summary">summary</option>
-              </select>
-            </div>
-            <textarea value={form.seoMetaDescription} onChange={(e) => setForm({ ...form, seoMetaDescription: e.target.value })} placeholder="SEO meta description" className="h-20 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
-
-            <div className="rounded-md border border-slate-800 p-2">
-              <div className="mb-2 text-xs font-semibold">Editorial comments</div>
-              <div className="mb-2 max-h-24 space-y-1 overflow-auto">
-                {form.editorialComments.map((comment, idx) => (
-                  <div key={`${comment}-${idx}`} className="flex items-start justify-between gap-2 rounded border border-slate-800 p-2">
-                    <p className="whitespace-pre-wrap text-xs text-slate-300">{comment}</p>
-                    <button onClick={() => setForm({ ...form, editorialComments: form.editorialComments.filter((_, i) => i !== idx) })} className="rounded border border-slate-700 px-1.5 py-0.5 text-[11px] hover:bg-slate-900">Remove</button>
-                  </div>
-                ))}
+            <details className="rounded-lg border border-slate-800 p-3" open>
+              <summary className="cursor-pointer text-sm font-semibold">SEO & Cover</summary>
+              <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
+                <input value={form.coverImage} onChange={(e) => setForm({ ...form, coverImage: e.target.value })} placeholder="cover image URL" className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+                <input value={form.coverImageAlt} onChange={(e) => setForm({ ...form, coverImageAlt: e.target.value })} placeholder="cover image alt" className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+                <input value={form.seoMetaTitle} onChange={(e) => setForm({ ...form, seoMetaTitle: e.target.value })} placeholder="SEO meta title" className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+                <input value={form.seoCanonicalUrl} onChange={(e) => setForm({ ...form, seoCanonicalUrl: e.target.value })} placeholder="SEO canonical URL" className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+                <input value={form.seoOgImage} onChange={(e) => setForm({ ...form, seoOgImage: e.target.value })} placeholder="SEO OG image URL" className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm" />
+                <select value={form.seoTwitterCard} onChange={(e) => setForm({ ...form, seoTwitterCard: e.target.value })} className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm">
+                  <option value="summary_large_image">summary_large_image</option><option value="summary">summary</option>
+                </select>
+                <textarea value={form.seoMetaDescription} onChange={(e) => setForm({ ...form, seoMetaDescription: e.target.value })} placeholder="SEO meta description" className="h-24 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm md:col-span-2" />
               </div>
-              <div className="flex gap-2">
-                <input value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="add comment" className="flex-1 rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-xs" />
-                <button onClick={() => { const next = newComment.trim(); if (!next) return; setForm({ ...form, editorialComments: [...form.editorialComments, next] }); setNewComment(''); }} className="rounded-md border border-slate-700 px-3 py-2 text-xs hover:bg-slate-900">Add</button>
-              </div>
-            </div>
+            </details>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <button onClick={() => savePost()} disabled={loading || !workflowToken || !form.slug} className="rounded-md border border-cyan-700 px-3 py-2 text-xs hover:bg-cyan-950">Save</button>
-              <button onClick={() => runWorkflow('publish')} disabled={loading || !form.slug} className="rounded-md border border-slate-700 px-3 py-2 text-xs hover:bg-slate-900">Publish</button>
-              <button onClick={() => runWorkflow('archive')} disabled={loading || !form.slug} className="rounded-md border border-slate-700 px-3 py-2 text-xs hover:bg-slate-900">Archive</button>
-              <button onClick={() => runWorkflow('unpublish')} disabled={loading || !form.slug} className="rounded-md border border-slate-700 px-3 py-2 text-xs hover:bg-slate-900">Unpublish</button>
-              <input value={scheduleDate} onChange={(e) => setScheduleDate(e.target.value)} placeholder="YYYY-MM-DD" className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-xs" />
-              <button onClick={() => runWorkflow('schedule')} disabled={loading || !form.slug || !scheduleDate} className="rounded-md border border-slate-700 px-3 py-2 text-xs hover:bg-slate-900">Schedule</button>
-              <button onClick={deletePost} disabled={loading || !form.slug} className="rounded-md border border-red-900 px-3 py-2 text-xs text-red-300 hover:bg-red-950">Delete</button>
+            <details className="rounded-lg border border-slate-800 p-3">
+              <summary className="cursor-pointer text-sm font-semibold">Editorial comments</summary>
+              <div className="mt-3 space-y-2">
+                <div className="max-h-24 space-y-1 overflow-auto">
+                  {form.editorialComments.map((comment, idx) => (
+                    <div key={`${comment}-${idx}`} className="flex items-start justify-between gap-2 rounded-lg border border-slate-800 p-2">
+                      <p className="whitespace-pre-wrap text-xs text-slate-300">{comment}</p>
+                      <button onClick={() => setForm({ ...form, editorialComments: form.editorialComments.filter((_, i) => i !== idx) })} className="rounded border border-slate-700 px-1.5 py-0.5 text-[11px] hover:bg-slate-900">Remove</button>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <input value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="add comment" className="flex-1 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs" />
+                  <button onClick={() => { const next = newComment.trim(); if (!next) return; setForm({ ...form, editorialComments: [...form.editorialComments, next] }); setNewComment(''); }} className="rounded-lg border border-slate-700 px-3 py-2 text-xs hover:bg-slate-900">Add</button>
+                </div>
+              </div>
+            </details>
+
+            <div className="flex flex-wrap gap-2">
+              <button onClick={() => savePost()} disabled={loading || !workflowToken || !form.slug} className="rounded-lg border border-cyan-700 px-4 py-2 text-xs hover:bg-cyan-950">Save</button>
+              <button onClick={() => runWorkflow('publish')} disabled={loading || !form.slug} className="rounded-lg border border-slate-700 px-4 py-2 text-xs hover:bg-slate-900">Publish</button>
+              <button onClick={() => runWorkflow('archive')} disabled={loading || !form.slug} className="rounded-lg border border-slate-700 px-4 py-2 text-xs hover:bg-slate-900">Archive</button>
+              <button onClick={() => runWorkflow('unpublish')} disabled={loading || !form.slug} className="rounded-lg border border-slate-700 px-4 py-2 text-xs hover:bg-slate-900">Unpublish</button>
+              <input value={scheduleDate} onChange={(e) => setScheduleDate(e.target.value)} placeholder="YYYY-MM-DD" className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs" />
+              <button onClick={() => runWorkflow('schedule')} disabled={loading || !form.slug || !scheduleDate} className="rounded-lg border border-slate-700 px-4 py-2 text-xs hover:bg-slate-900">Schedule</button>
+              <button onClick={deletePost} disabled={loading || !form.slug} className="rounded-lg border border-red-900 px-4 py-2 text-xs text-red-300 hover:bg-red-950">Delete</button>
             </div>
           </section>
 
-          <aside className="space-y-4">
-            <section className="rounded-xl border border-slate-800 bg-slate-950/90 p-4">
-              <div className="mb-2 flex items-center justify-between">
-                <h3 className="text-sm font-semibold">Media Library</h3>
-                <button onClick={loadMedia} className="rounded border border-slate-700 px-2 py-1 text-[11px] hover:bg-slate-900">Refresh</button>
-              </div>
-              <input value={mediaSearch} onChange={(e) => setMediaSearch(e.target.value)} placeholder="search media..." className="mb-2 w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-xs" />
-              <label className="mb-2 block cursor-pointer rounded-md border border-dashed border-slate-700 p-3 text-xs text-slate-400 hover:border-slate-500">
-                {uploadingMedia ? 'Uploading...' : 'Drop/click to upload images'}
-                <input type="file" className="hidden" multiple accept="image/*" onChange={(e) => { if (!e.target.files) return; void uploadMedia(e.target.files); e.currentTarget.value = ''; }} />
-              </label>
-              <div onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); void uploadMedia(e.dataTransfer.files, true); }} className="mb-2 text-[11px] text-slate-500">Drop images here to upload + insert in editor.</div>
-              <div className="max-h-[30vh] space-y-2 overflow-auto">
-                {mediaLoading && <p className="text-xs text-slate-500">Loading media...</p>}
-                {filteredMediaFiles.map((file) => (
-                  <div key={file.key} className="rounded-md border border-slate-800 p-2 text-xs">
-                    <div className="truncate font-mono">{file.key}</div>
-                    <div className="mb-2 text-[11px] text-slate-500">{formatBytes(file.size)}</div>
-                    <div className="flex flex-wrap gap-1">
-                      <button onClick={() => insertAtCursor(`![${file.key}](${file.url})`)} className="rounded border border-slate-700 px-1.5 py-0.5 text-[11px] hover:bg-slate-900">Insert</button>
-                      <button onClick={() => navigator.clipboard.writeText(file.url)} className="rounded border border-slate-700 px-1.5 py-0.5 text-[11px] hover:bg-slate-900">Copy URL</button>
-                      <button onClick={() => void deleteMedia(file.key)} className="rounded border border-red-900 px-1.5 py-0.5 text-[11px] text-red-300 hover:bg-red-950">Delete</button>
-                    </div>
-                  </div>
+          <aside className="space-y-4 xl:sticky xl:top-4 xl:self-start">
+            <section className="rounded-xl border border-slate-800 bg-slate-950 p-4">
+              <div className="mb-3 flex gap-1 rounded-lg border border-slate-800 bg-slate-900 p-1 text-[11px]">
+                {(['media', 'outline', 'schedule', 'history'] as const).map((tab) => (
+                  <button key={tab} onClick={() => setRightTab(tab)} className={`flex-1 rounded-md px-2 py-1 capitalize ${rightTab === tab ? 'bg-cyan-900/40 text-cyan-100' : 'text-slate-400 hover:bg-slate-800'}`}>{tab}</button>
                 ))}
               </div>
-            </section>
 
-            <section className="rounded-xl border border-slate-800 bg-slate-950/90 p-4">
-              <h3 className="mb-2 text-sm font-semibold">Document Outline</h3>
-              <div className="max-h-40 space-y-1 overflow-auto">
-                {headingOutline.map((h, idx) => (
-                  <button key={`${h.text}-${idx}`} onClick={() => jumpToLine(h.line)} className="block w-full truncate rounded border border-slate-800 px-2 py-1 text-left text-xs hover:border-slate-700" style={{ paddingLeft: `${0.5 + (h.level - 1) * 0.5}rem` }}>
-                    {h.text}
-                  </button>
-                ))}
-                {headingOutline.length === 0 && <p className="text-xs text-slate-500">No headings yet.</p>}
-              </div>
-            </section>
-
-            <section className="rounded-xl border border-slate-800 bg-slate-950/90 p-4">
-              <h3 className="mb-2 text-sm font-semibold">Scheduled Queue</h3>
-              <div className="max-h-40 space-y-2 overflow-auto">
-                {scheduledPosts.map((post) => (
-                  <div key={post.slug} className="rounded-md border border-slate-800 p-2 text-xs">
-                    <div className="truncate font-mono">{post.slug}</div>
-                    <div className="text-[11px] text-slate-500">{post.scheduled_date}</div>
-                    <button onClick={() => runWorkflow('publish', post.slug)} className="mt-1 rounded border border-slate-700 px-2 py-1 text-[11px] hover:bg-slate-900">Publish now</button>
+              {rightTab === 'media' && (
+                <div>
+                  <div className="mb-2 flex items-center justify-between">
+                    <h3 className="text-sm font-semibold">Media Library</h3>
+                    <button onClick={loadMedia} className="rounded border border-slate-700 px-2 py-1 text-[11px] hover:bg-slate-900">Refresh</button>
                   </div>
-                ))}
-                {scheduledPosts.length === 0 && <p className="text-xs text-slate-500">No scheduled posts.</p>}
-              </div>
-            </section>
-
-            <section className="rounded-xl border border-slate-800 bg-slate-950/90 p-4">
-              <h3 className="mb-2 text-sm font-semibold">Revision History</h3>
-              <div className="max-h-[30vh] space-y-2 overflow-auto">
-                {history.map((item) => (
-                  <div key={item.id} className="rounded-md border border-slate-800 p-2">
-                    <div className="text-xs font-mono text-slate-300">#{item.id} {item.revision_type}</div>
-                    <div className="text-[11px] text-slate-500">{item.actor} · {new Date(item.created_at).toLocaleString()}</div>
-                    <button onClick={() => void restoreRevision(item.id)} className="mt-2 rounded border border-cyan-800 px-2 py-1 text-[11px] hover:bg-cyan-950">Restore</button>
+                  <input value={mediaSearch} onChange={(e) => setMediaSearch(e.target.value)} placeholder="search media..." className="mb-2 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs" />
+                  <label className="mb-2 block cursor-pointer rounded-lg border border-dashed border-slate-700 p-3 text-xs text-slate-400 hover:border-slate-500">
+                    {uploadingMedia ? 'Uploading...' : 'Drop/click to upload images'}
+                    <input type="file" className="hidden" multiple accept="image/*" onChange={(e) => { if (!e.target.files) return; void uploadMedia(e.target.files); e.currentTarget.value = ''; }} />
+                  </label>
+                  <div onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); void uploadMedia(e.dataTransfer.files, true); }} className="mb-2 text-[11px] text-slate-500">Drop images to upload and insert.</div>
+                  <div className="max-h-[54vh] space-y-2 overflow-auto">
+                    {mediaLoading && <p className="text-xs text-slate-500">Loading media...</p>}
+                    {filteredMediaFiles.map((file) => (
+                      <div key={file.key} className="rounded-lg border border-slate-800 p-2 text-xs">
+                        <div className="truncate font-mono">{file.key}</div>
+                        <div className="mb-2 text-[11px] text-slate-500">{formatBytes(file.size)}</div>
+                        <div className="flex flex-wrap gap-1">
+                          <button onClick={() => insertAtCursor(`![${file.key}](${file.url})`)} className="rounded border border-slate-700 px-1.5 py-0.5 text-[11px] hover:bg-slate-900">Insert</button>
+                          <button onClick={() => navigator.clipboard.writeText(file.url)} className="rounded border border-slate-700 px-1.5 py-0.5 text-[11px] hover:bg-slate-900">Copy URL</button>
+                          <button onClick={() => void deleteMedia(file.key)} className="rounded border border-red-900 px-1.5 py-0.5 text-[11px] text-red-300 hover:bg-red-950">Delete</button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-                {history.length === 0 && <p className="text-xs text-slate-500">No revisions loaded.</p>}
-              </div>
+                </div>
+              )}
+
+              {rightTab === 'outline' && (
+                <div>
+                  <h3 className="mb-2 text-sm font-semibold">Document Outline</h3>
+                  <div className="max-h-[60vh] space-y-1 overflow-auto">
+                    {headingOutline.map((h, idx) => (
+                      <button key={`${h.text}-${idx}`} onClick={() => jumpToLine(h.line)} className="block w-full truncate rounded border border-slate-800 px-2 py-1 text-left text-xs hover:border-slate-600" style={{ paddingLeft: `${0.6 + (h.level - 1) * 0.5}rem` }}>{h.text}</button>
+                    ))}
+                    {headingOutline.length === 0 && <p className="text-xs text-slate-500">No headings yet.</p>}
+                  </div>
+                </div>
+              )}
+
+              {rightTab === 'schedule' && (
+                <div>
+                  <h3 className="mb-2 text-sm font-semibold">Scheduled Queue</h3>
+                  <div className="max-h-[60vh] space-y-2 overflow-auto">
+                    {scheduledPosts.map((post) => (
+                      <div key={post.slug} className="rounded-lg border border-slate-800 p-2 text-xs">
+                        <div className="truncate font-mono">{post.slug}</div>
+                        <div className="text-[11px] text-slate-500">{post.scheduled_date}</div>
+                        <button onClick={() => runWorkflow('publish', post.slug)} className="mt-1 rounded border border-slate-700 px-2 py-1 text-[11px] hover:bg-slate-900">Publish now</button>
+                      </div>
+                    ))}
+                    {scheduledPosts.length === 0 && <p className="text-xs text-slate-500">No scheduled posts.</p>}
+                  </div>
+                </div>
+              )}
+
+              {rightTab === 'history' && (
+                <div>
+                  <h3 className="mb-2 text-sm font-semibold">Revision History</h3>
+                  <div className="max-h-[60vh] space-y-2 overflow-auto">
+                    {history.map((item) => (
+                      <div key={item.id} className="rounded-lg border border-slate-800 p-2">
+                        <div className="text-xs font-mono text-slate-300">#{item.id} {item.revision_type}</div>
+                        <div className="text-[11px] text-slate-500">{item.actor} · {new Date(item.created_at).toLocaleString()}</div>
+                        <button onClick={() => void restoreRevision(item.id)} className="mt-2 rounded border border-cyan-800 px-2 py-1 text-[11px] hover:bg-cyan-950">Restore</button>
+                      </div>
+                    ))}
+                    {history.length === 0 && <p className="text-xs text-slate-500">No revisions loaded.</p>}
+                  </div>
+                </div>
+              )}
             </section>
           </aside>
         </div>
