@@ -134,7 +134,7 @@ export default function AdminPage() {
   const [cursorInfo, setCursorInfo] = useState({ line: 1, column: 1 });
   const [rightTab, setRightTab] = useState<'meta' | 'media' | 'outline' | 'schedule' | 'history'>('meta');
   const [showExplorer, setShowExplorer] = useState(true);
-  const [showInspector, setShowInspector] = useState(true);
+  const [showInspector, setShowInspector] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -688,7 +688,7 @@ export default function AdminPage() {
             <button onClick={() => setShowInspector((v) => !v)} className={`h-9 rounded ${showInspector ? 'bg-[#2a2d2e]' : 'hover:bg-[#24262b]'}`} title="Inspector">I</button>
           </aside>
 
-          <div className={`grid gap-2 ${showExplorer && showInspector ? 'xl:grid-cols-[260px_1fr_320px]' : showExplorer ? 'xl:grid-cols-[260px_1fr]' : showInspector ? 'xl:grid-cols-[1fr_320px]' : 'xl:grid-cols-[1fr]'}`}>
+          <div className={`grid gap-2 ${showExplorer && showInspector ? 'xl:grid-cols-[220px_1fr_300px]' : showExplorer ? 'xl:grid-cols-[220px_1fr]' : showInspector ? 'xl:grid-cols-[1fr_300px]' : 'xl:grid-cols-[1fr]'}`}>
             {showExplorer && (
               <section className="rounded-md border border-[#2a2d2e] bg-[#181a1f] p-3 space-y-2">
                 <div className="space-y-2">
@@ -737,7 +737,7 @@ export default function AdminPage() {
                 ))}
               </div>
 
-              <div className="grid gap-0" style={{ gridTemplateColumns: previewMode === 'split' ? '1fr 1fr' : '1fr' }}>
+              <div className="grid gap-0" style={{ gridTemplateColumns: previewMode === 'split' ? '1.25fr 1fr' : '1fr' }}>
                 {previewMode !== 'preview' && (
                   <textarea ref={textareaRef} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} onKeyDown={onEditorKeyDown} onKeyUp={updateCursorInfo} onClick={updateCursorInfo} onSelect={updateCursorInfo} onPaste={(e) => void handleEditorPaste(e)} placeholder="Write markdown here..." className="h-[78vh] min-h-[620px] w-full resize-none border-r border-[#2a2d2e] bg-[#1e1e1e] px-4 py-3 font-mono text-sm leading-relaxed outline-none" />
                 )}
