@@ -7,6 +7,8 @@ import MarkdocRenderer, {
   transformContent,
 } from '@/components/blog/MarkdocRenderer';
 
+export const dynamicParams = false;
+
 function calculateReadingTime(content: any): number {
   if (!content) return 0;
   const wordsPerMinute = 200;
