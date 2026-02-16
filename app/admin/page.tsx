@@ -137,6 +137,8 @@ export default function AdminPage() {
   const [showInspector, setShowInspector] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const previewScrollRef = useRef<HTMLDivElement | null>(null);
+  const syncScrollSource = useRef<'editor' | 'preview' | null>(null);
 
   useEffect(() => {
     const storedWorker = localStorage.getItem('blog_worker_base');
@@ -665,6 +667,35 @@ export default function AdminPage() {
     updateCursorInfo();
   }
 
+  function syncScroll(from: 'editor' | 'preview') {
+    const editor = textareaRef.current;
+    const preview = previewScrollRef.current;
+    if (!editor || !preview) return;
+
+    const editorScrollable = editor.scrollHeight - editor.clientHeight;
+    const previewScrollable = preview.scrollHeight - preview.clientHeight;
+    if (editorScrollable <= 0 || previewScrollable <= 0) return;
+
+    if (from === 'editor') {
+      if (syncScrollSource.current === 'preview') return;
+      syncScrollSource.current = 'editor';
+      const ratio = editor.scrollTop / editorScrollable;
+      preview.scrollTop = ratio * previewScrollable;
+      requestAnimationFrame(() => {
+        if (syncScrollSource.current === 'editor') syncScrollSource.current = null;
+      });
+      return;
+    }
+
+    if (syncScrollSource.current === 'editor') return;
+    syncScrollSource.current = 'preview';
+    const ratio = preview.scrollTop / previewScrollable;
+    editor.scrollTop = ratio * editorScrollable;
+    requestAnimationFrame(() => {
+      if (syncScrollSource.current === 'preview') syncScrollSource.current = null;
+    });
+  }
+
   return (
     <main className="min-h-screen bg-[#0f111a] text-[#d4d4d4] p-3">
       <div className="mx-auto max-w-[1950px]">
@@ -744,10 +775,10 @@ export default function AdminPage() {
 
               <div className="grid gap-0" style={{ gridTemplateColumns: previewMode === 'split' ? '1fr 1fr' : '1fr' }}>
                 {previewMode !== 'preview' && (
-                  <textarea ref={textareaRef} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} onKeyDown={onEditorKeyDown} onKeyUp={updateCursorInfo} onClick={updateCursorInfo} onSelect={updateCursorInfo} onPaste={(e) => void handleEditorPaste(e)} placeholder="Write markdown here..." className="h-[78vh] min-h-[620px] w-full resize-none border-r border-[#2a2d2e] bg-[#1e1e1e] px-4 py-3 font-mono text-sm leading-relaxed outline-none" />
+                  <textarea ref={textareaRef} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} onKeyDown={onEditorKeyDown} onKeyUp={updateCursorInfo} onClick={updateCursorInfo} onSelect={updateCursorInfo} onPaste={(e) => void handleEditorPaste(e)} onScroll={() => syncScroll('editor')} placeholder="Write markdown here..." className="h-[78vh] min-h-[620px] w-full resize-none border-r border-[#2a2d2e] bg-[#1e1e1e] px-4 py-3 font-mono text-sm leading-relaxed outline-none" />
                 )}
                 {previewMode !== 'edit' && (
-                  <div className="h-[78vh] min-h-[620px] overflow-auto bg-[#1b1f27] px-5 py-4">
+                  <div ref={previewScrollRef} onScroll={() => syncScroll('preview')} className="h-[78vh] min-h-[620px] overflow-auto bg-[#1b1f27] px-5 py-4">
                     {previewContent ? <article className="prose-custom max-w-none"><MarkdocRenderer content={previewContent} /></article> : <p className="text-xs text-[#808080]">Preview unavailable for current content.</p>}
                   </div>
                 )}
