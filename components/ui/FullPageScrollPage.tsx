@@ -9,6 +9,7 @@ import React, {
   useContext,
 } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDown } from 'lucide-react';
 import Hero from '@/components/ui/Hero';
 import Skills from '@/components/ui/Skills';
 import Socials from '@/components/ui/Socials';
@@ -45,6 +46,7 @@ const sections = [
 
 const experienceSlideCount = 3;
 const experienceSectionIndex = 1;
+const sectionAccentColors = ['#ff3366', '#ffcc00', '#00f0ff', '#9d00ff'];
 
 export default function FullPageScrollPage() {
   const [currentSection, setCurrentSection] = useState(0);
@@ -54,7 +56,7 @@ export default function FullPageScrollPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const lastScrollTime = useRef(0);
   const touchStartY = useRef(0);
-  const { setActiveSection } = useSection();
+  const { setActiveSection, setActiveSkillCategory } = useSection();
 
   const totalSections = sections.length;
   const scrollCooldown = 700;
@@ -83,8 +85,12 @@ export default function FullPageScrollPage() {
   const isInExperience = currentSection === experienceSectionIndex;
 
   useEffect(() => {
-    setActiveSection(sections[currentSection].id);
-  }, [currentSection, setActiveSection]);
+    const nextSection = sections[currentSection].id;
+    setActiveSection(nextSection);
+    if (nextSection !== 'skills') {
+      setActiveSkillCategory(null);
+    }
+  }, [currentSection, setActiveSection, setActiveSkillCategory]);
 
   const goToSection = useCallback(
     (index: number) => {
@@ -235,13 +241,15 @@ export default function FullPageScrollPage() {
   const experienceColors = ['#ff3366', '#ffcc00', '#ff5500'];
   const currentColor = isInExperience
     ? experienceColors[currentExperienceSlide] || '#ff3366'
-    : '#ff3366';
+    : sectionAccentColors[currentSection] || '#ff3366';
 
   return (
     <ScrollContext.Provider value={contextValue}>
       <main
         ref={containerRef}
-        className="fixed inset-0 overflow-hidden bg-background"
+        className={`fixed inset-0 overflow-hidden bg-background ${
+          isAnimating ? 'scrolling-section' : ''
+        }`}
         style={{ height: 'calc(var(--vh, 1vh) * 100)' }}
       >
         {/* Three.js Globe Background */}
@@ -267,7 +275,7 @@ export default function FullPageScrollPage() {
             className="w-full flex items-center justify-center p-2 sm:p-4 md:p-8"
             style={{ height: 'calc(var(--vh, 1vh) * 100)' }}
           >
-            <div className="w-full max-w-4xl mx-auto pointer-events-auto">
+            <div className="w-full max-w-7xl mx-auto pointer-events-auto">
               <Hero />
             </div>
           </section>
@@ -320,6 +328,22 @@ export default function FullPageScrollPage() {
           />
         </div>
 
+        {/* Bottom scroll hint - desktop only, first section */}
+        <div className="hidden md:block">
+          <BottomScrollHint
+            isVisible={currentSection === 0}
+            onScroll={() => goToSection(1)}
+          />
+        </div>
+
+        {/* Section progress bar */}
+        <motion.div
+          className="fixed bottom-0 left-0 z-40 h-px origin-left hidden md:block"
+          style={{ background: currentColor, width: '100%' }}
+          animate={{ scaleX: (currentSection + 1) / sections.length }}
+          transition={{ type: 'spring', stiffness: 180, damping: 26 }}
+        />
+
         {/* Mobile Navigation - Bottom */}
         <div className="md:hidden">
           <ScrollNavMobile
@@ -362,193 +386,278 @@ function ScrollNavDesktop({
     { company: 'Castler', color: '#ff5500' },
   ];
 
+  const NODE_GAP = 78;
+  const TRACK_PAD = 14;
+  const trackHeight = (sections.length - 1) * NODE_GAP;
+
+  // Progress fill height in px — advances smoothly through experience sub-slides
+  const progressFillHeight = isInExperience
+    ? NODE_GAP +
+      (currentExperienceSlide / (experienceItems.length - 1)) * NODE_GAP * 0.82
+    : currentSection * NODE_GAP;
+
+  const isLastSection = currentSection === sections.length - 1;
+
   return (
     <motion.nav
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.5, duration: 0.5 }}
-      className="fixed right-6 top-1/2 -translate-y-1/2 z-50"
+      className="fixed right-5 top-1/2 z-50 -translate-y-1/2 hidden md:flex flex-col items-center"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <motion.div
-        className="absolute inset-y-0 -inset-x-3 bg-neutral-950 border border-neutral-800 -z-10"
-        animate={{
-          borderColor: isInExperience
-            ? currentColor
-            : '#262626',
-        }}
-        transition={{ duration: 0.3 }}
-      />
+      {/* Track + nodes */}
+      <div
+        className="relative"
+        style={{ width: 28, height: trackHeight + TRACK_PAD * 2 }}
+      >
+        {/* Background track */}
+        <div
+          className="absolute left-1/2 -translate-x-1/2 w-px bg-neutral-800"
+          style={{ top: TRACK_PAD, height: trackHeight }}
+        />
 
-      <div className="flex flex-col items-center gap-4 py-4 px-2">
-        <div className="absolute left-1/2 -translate-x-1/2 top-4 bottom-4 w-px bg-neutral-800">
-          <motion.div
-            className="absolute top-0 left-0 w-full"
-            style={{ backgroundColor: currentColor }}
-            animate={{
-              height: isInExperience
-                ? `${
-                    ((1 + currentExperienceSlide / 3) / sections.length) * 100
-                  }%`
-                : `${((currentSection + 1) / sections.length) * 100}%`,
-            }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-          />
-        </div>
+        {/* Animated progress fill */}
+        <motion.div
+          className="absolute left-1/2 -translate-x-1/2 origin-top"
+          style={{
+            width: 1.5,
+            top: TRACK_PAD,
+            background: `linear-gradient(to bottom, ${sectionAccentColors[0]}, ${currentColor})`,
+          }}
+          animate={{ height: progressFillHeight }}
+          transition={{ type: 'spring', stiffness: 180, damping: 26 }}
+        />
 
-        {sections.map((section, index) => {
-          const isActive = currentSection === index;
-          const isPast = index < currentSection;
-          const isExperienceSection = section.id === 'experience';
+        {/* Experience sub-dots — inline between Work and Skills nodes */}
+        <AnimatePresence>
+          {isInExperience && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center"
+              style={{ top: TRACK_PAD + NODE_GAP + 15, gap: 15 }}
+            >
+              {experienceItems.map((exp, ei) => (
+                <div
+                  key={exp.company}
+                  className="relative flex items-center justify-center"
+                >
+                  <AnimatePresence>
+                    {(isHovered || ei === currentExperienceSlide) && (
+                      <motion.span
+                        initial={{ opacity: 0, x: 6 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 6 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute right-5 whitespace-nowrap font-mono text-[8px] uppercase tracking-wider"
+                        style={{
+                          color:
+                            ei === currentExperienceSlide
+                              ? exp.color
+                              : '#475569',
+                        }}
+                      >
+                        {exp.company}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                  <button
+                    onClick={() => goToExperienceSlide(ei)}
+                    className="flex h-5 w-5 items-center justify-center"
+                    aria-label={`Show ${exp.company}`}
+                  >
+                    <motion.div
+                      className="rounded-full transition-colors duration-300"
+                      style={{
+                        backgroundColor:
+                          ei <= currentExperienceSlide ? exp.color : '#334155',
+                        boxShadow:
+                          ei === currentExperienceSlide
+                            ? `0 0 8px ${exp.color}`
+                            : 'none',
+                      }}
+                      animate={{
+                        width: ei === currentExperienceSlide ? 7 : 5,
+                        height: ei === currentExperienceSlide ? 7 : 5,
+                      }}
+                      transition={{ duration: 0.2 }}
+                    />
+                  </button>
+                </div>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Section nodes */}
+        {sections.map((section, i) => {
+          const isActive = currentSection === i;
+          const isPast = i < currentSection;
+          const color = sectionAccentColors[i] || currentColor;
 
           return (
-            <div key={section.id} className="relative">
-              <button
-                onClick={() => goToSection(index)}
-                className="group relative flex items-center justify-end gap-3 z-10"
-              >
-                <AnimatePresence>
-                  {(isHovered || isActive) && (
-                    <motion.span
-                      initial={{ opacity: 0, x: 10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 10 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute right-8 whitespace-nowrap text-[10px] font-mono uppercase tracking-widest transition-colors duration-300"
-                      style={{
-                        color: isActive
-                          ? isExperienceSection && isInExperience
-                            ? currentColor
-                            : '#ff3366'
-                          : isPast
-                          ? '#ffcc00'
-                          : '#64748b',
-                      }}
+            <div
+              key={section.id}
+              className="absolute"
+              style={{ top: TRACK_PAD + i * NODE_GAP, left: 0, right: 0 }}
+            >
+              {/* Label — appears on hover or when active */}
+              <AnimatePresence>
+                {(isHovered || isActive) && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 8 }}
+                    transition={{ duration: 0.18 }}
+                    className="absolute right-full top-1/2 mr-3 flex -translate-y-1/2 items-center gap-2 whitespace-nowrap"
+                  >
+                    <span
+                      className="font-mono text-[10px] uppercase tracking-[0.22em]"
+                      style={{ color: isActive ? color : '#475569' }}
                     >
                       {section.label}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-
-                <div className="relative">
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeRing"
-                      className="absolute -inset-1.5 rounded-full border"
-                      style={{ borderColor: currentColor }}
-                      initial={false}
-                      transition={{
-                        type: 'spring',
-                        stiffness: 300,
-                        damping: 30,
-                      }}
-                    />
-                  )}
-
-                  {isActive && (
-                    <motion.div
-                      className="absolute -inset-2 rounded-full blur-md"
-                      style={{ backgroundColor: currentColor }}
-                      animate={{ opacity: [0.5, 1, 0.5] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                  )}
-
-                  <motion.div
-                    className="relative w-2.5 h-2.5 rounded-full transition-all duration-300"
-                    style={{
-                      backgroundColor: isActive
-                        ? currentColor
-                        : isPast
-                        ? '#06b6d4'
-                        : '#475569',
-                      boxShadow: isActive ? `0 0 12px ${currentColor}` : 'none',
-                    }}
-                    whileHover={{ scale: 1.3 }}
-                    whileTap={{ scale: 0.9 }}
-                  />
-                </div>
-              </button>
-
-              <AnimatePresence>
-                {isExperienceSection && isInExperience && isActive && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="flex flex-col items-center gap-2 mt-3 pt-3 border-t border-neutral-800">
-                      {experienceItems.map((exp, i) => (
-                        <motion.button
-                          key={exp.company}
-                          initial={{ opacity: 0, x: 10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: i * 0.1 }}
-                          className="flex items-center gap-2"
-                          onClick={() => goToExperienceSlide(i)}
-                        >
-                          <AnimatePresence>
-                            {(isHovered || i === currentExperienceSlide) && (
-                              <motion.span
-                                initial={{ opacity: 0, x: 5 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: 5 }}
-                                className="text-[8px] font-mono uppercase tracking-wider whitespace-nowrap"
-                                style={{
-                                  color:
-                                    i === currentExperienceSlide
-                                      ? exp.color
-                                      : '#64748b',
-                                }}
-                              >
-                                {exp.company}
-                              </motion.span>
-                            )}
-                          </AnimatePresence>
-                          <div
-                            className="w-1.5 h-1.5 rounded-full transition-all duration-300"
-                            style={{
-                              backgroundColor:
-                                i <= currentExperienceSlide
-                                  ? exp.color
-                                  : '#475569',
-                              transform:
-                                i === currentExperienceSlide
-                                  ? 'scale(1.3)'
-                                  : 'scale(1)',
-                              boxShadow:
-                                i === currentExperienceSlide
-                                  ? `0 0 8px ${exp.color}`
-                                  : 'none',
-                            }}
-                          />
-                        </motion.button>
-                      ))}
-                    </div>
+                    </span>
+                    <span className="font-mono text-[8px] text-slate-700">
+                      {section.icon}
+                    </span>
                   </motion.div>
                 )}
               </AnimatePresence>
+
+              {/* Node */}
+              <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
+                <button
+                  onClick={() => goToSection(i)}
+                  aria-label={`Go to ${section.label}`}
+                  className="relative flex h-8 w-8 items-center justify-center"
+                >
+                  {isActive && (
+                    <motion.div
+                      className="absolute rounded-full border"
+                      style={{ width: 22, height: 22, borderColor: color }}
+                      animate={{ scale: [1, 1.9], opacity: [0.55, 0] }}
+                      transition={{ duration: 2.2, repeat: Infinity }}
+                    />
+                  )}
+                  <motion.div
+                    className="rounded-full border-2"
+                    style={{
+                      width: 10,
+                      height: 10,
+                      borderColor: isActive || isPast ? color : '#334155',
+                      backgroundColor: isActive
+                        ? color
+                        : isPast
+                        ? `${color}28`
+                        : 'transparent',
+                      boxShadow: isActive ? `0 0 12px ${color}` : 'none',
+                    }}
+                    whileHover={{ scale: 1.5 }}
+                    whileTap={{ scale: 0.85 }}
+                    transition={{ type: 'spring', stiffness: 400 }}
+                  />
+                </button>
+              </div>
             </div>
           );
         })}
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isHovered ? 1 : 0.5 }}
-          className="mt-2 text-[9px] font-mono flex items-center gap-1"
-          style={{ color: currentColor }}
-        >
-          <span>{String(currentSection + 1).padStart(2, '0')}</span>
-          <span className="text-slate-600">/</span>
-          <span className="text-slate-500">
-            {String(sections.length).padStart(2, '0')}
-          </span>
-        </motion.div>
       </div>
+
+      {/* Scroll hint — click to advance, disappears on last section */}
+      <AnimatePresence>
+        {!isLastSection && (
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => {
+              if (
+                isInExperience &&
+                currentExperienceSlide < experienceItems.length - 1
+              ) {
+                goToExperienceSlide(currentExperienceSlide + 1);
+              } else {
+                goToSection(currentSection + 1);
+              }
+            }}
+            className="group mt-3 flex flex-col items-center gap-1.5"
+          >
+            <span className="font-mono text-[8px] uppercase tracking-[0.28em] text-slate-600 transition-colors group-hover:text-slate-400">
+              scroll
+            </span>
+            <motion.div
+              animate={{ y: [0, 5, 0] }}
+              transition={{ duration: 1.9, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <ChevronDown
+                size={12}
+                className="text-slate-600 transition-colors group-hover:text-slate-400"
+              />
+            </motion.div>
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* Step counter */}
+      <motion.div
+        className="mt-3 flex items-center gap-1 font-mono text-[9px]"
+        style={{ color: currentColor }}
+      >
+        <span>{String(currentSection + 1).padStart(2, '0')}</span>
+        <span className="text-slate-700">/</span>
+        <span className="text-slate-500">
+          {String(sections.length).padStart(2, '0')}
+        </span>
+      </motion.div>
     </motion.nav>
+  );
+}
+
+// Bottom scroll hint — mouse-icon prompt, desktop only, section 0 only
+function BottomScrollHint({
+  isVisible,
+  onScroll,
+}: {
+  isVisible: boolean;
+  onScroll: () => void;
+}) {
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.button
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 14 }}
+          transition={{ delay: 1.4, duration: 0.5 }}
+          onClick={onScroll}
+          className="group fixed bottom-7 left-1/2 z-50 -translate-x-1/2 flex flex-col items-center gap-2"
+        >
+          {/* Mouse outline */}
+          <div
+            className="relative border border-slate-600 transition-colors group-hover:border-slate-400"
+            style={{ width: 18, height: 30, borderRadius: 9 }}
+          >
+            <motion.div
+              className="absolute left-1/2 -translate-x-1/2 rounded-full bg-slate-500 group-hover:bg-slate-400 transition-colors"
+              style={{ width: 2, height: 6 }}
+              animate={{ top: ['18%', '46%', '18%'], opacity: [1, 0.2, 1] }}
+              transition={{ duration: 1.9, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          </div>
+          <motion.span
+            className="font-mono text-[8px] uppercase tracking-[0.32em] text-slate-600 transition-colors group-hover:text-slate-400"
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2.6, repeat: Infinity }}
+          >
+            scroll
+          </motion.span>
+        </motion.button>
+      )}
+    </AnimatePresence>
   );
 }
 

@@ -13,15 +13,19 @@ export default function CustomCursor() {
     const checkTouchDevice = () => {
       setIsTouchDevice(
         'ontouchstart' in window ||
-        navigator.maxTouchPoints > 0 ||
-        window.matchMedia('(pointer: coarse)').matches
+          navigator.maxTouchPoints > 0 ||
+          window.matchMedia('(pointer: coarse)').matches ||
+          window.innerWidth < 768
       );
     };
 
     checkTouchDevice();
+    window.addEventListener('resize', checkTouchDevice);
 
     // Don't add mouse listeners on touch devices
-    if (isTouchDevice) return;
+    if (isTouchDevice) {
+      return () => window.removeEventListener('resize', checkTouchDevice);
+    }
 
     const onMouseMove = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
@@ -43,6 +47,7 @@ export default function CustomCursor() {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mousedown', onMouseDown);
       window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener('resize', checkTouchDevice);
       document.documentElement.removeEventListener('mouseleave', onMouseLeave);
       document.documentElement.removeEventListener('mouseenter', onMouseEnter);
     };
@@ -63,9 +68,7 @@ export default function CustomCursor() {
       {/* Outer Ring */}
       <div
         className={`fixed top-0 left-0 w-8 h-8 border border-rose-800 rounded-full pointer-events-none z-[100009] transition-all duration-150 ease-out ${
-          isMouseDown
-            ? 'scale-75 border-yellow-700 bg-yellow-950'
-            : 'scale-100'
+          isMouseDown ? 'scale-75 border-yellow-700 bg-yellow-950' : 'scale-100'
         }`}
         style={{
           transform: `translate(${position.x - 16}px, ${position.y - 16}px)`,

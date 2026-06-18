@@ -15,41 +15,35 @@ const ParticleShader = {
     varying vec3 vColor;
 
     void main() {
-      // Animate radius: spiral inwards
-      // r = initialRadius - (time * speed) % range
-      // Cycle creates continuous flow
-      
-      float life = mod(uTime * aSpeed + aOffset, 1.0); // 0 to 1
-      
-      // Radius shrinks as life goes 0 -> 1
-      // Start at 16.0, end at 2.6 (Horizon)
-      float currentRadius = mix(16.0, 2.8, life); // Stop just before horizon
-      
-      // Angle spins faster as radius gets smaller (Conservation of angular momentum)
-      // angle = constant + time * baseSpeed / radius
-      float angle = aOffset * 6.28 + uTime * (2.0 / currentRadius);
+      float life = mod(uTime * aSpeed + aOffset, 1.0);
+      float fall = pow(life, 1.28);
+      float currentRadius = mix(aRadius, 2.82, fall);
+      float angularVelocity = 2.8 / max(currentRadius, 0.2);
+      float angle = aOffset * 6.28318 + uTime * angularVelocity + fall * 5.6;
+      float innerGlow = smoothstep(0.52, 1.0, life);
       
       vec3 pos = vec3(
         cos(angle) * currentRadius,
         sin(angle) * currentRadius,
-        (sin(angle * 3.0 + uTime) * 0.1) // Slight vertical wobble
+        sin(angle * 3.0 + aOffset * 19.0 + uTime * 0.7) * 0.12 * (1.0 - life * 0.55)
       );
 
       vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
       
-      // Size depends on radius (bigger when closer?) or just perspective
-      gl_PointSize = (40.0 / -mvPosition.z) * (0.5 + 0.5 * life); // Grow slightly as they fall in
+      gl_PointSize = (46.0 / -mvPosition.z) * (0.35 + 0.85 * innerGlow);
       gl_Position = projectionMatrix * mvPosition;
       
-      // Fade in at start, fade out at end
       float fadeIn = smoothstep(0.0, 0.1, life);
-      float fadeOut = 1.0 - smoothstep(0.9, 1.0, life);
-      vAlpha = fadeIn * fadeOut;
+      float fadeOut = 1.0 - smoothstep(0.88, 1.0, life);
+      vAlpha = fadeIn * fadeOut * (0.36 + innerGlow * 0.82);
       
-      // Color shifts from Blue (outer) to Hot White/Orange (inner)
-      vec3 colorOuter = vec3(0.2, 0.6, 1.0); // Cyan/Blue
-      vec3 colorInner = vec3(1.0, 0.8, 0.5); // Hot Orange/White
-      vColor = mix(colorOuter, colorInner, life * life); // Exponential heat up
+      vec3 colorOuter = vec3(0.12, 0.48, 1.0);
+      vec3 colorMid = vec3(0.95, 0.18, 0.54);
+      vec3 colorInner = vec3(1.0, 0.82, 0.42);
+      vec3 colorWhiteHot = vec3(1.0, 0.95, 0.78);
+      vColor = mix(colorOuter, colorMid, smoothstep(0.12, 0.62, life));
+      vColor = mix(vColor, colorInner, smoothstep(0.5, 0.88, life));
+      vColor = mix(vColor, colorWhiteHot, smoothstep(0.84, 1.0, life));
     }
   `,
   fragmentShader: `
@@ -72,7 +66,7 @@ const ParticleShader = {
 export default function AccretionParticles() {
   const meshRef = useRef<THREE.Points>(null);
 
-  const count = 4000; // Number of particles
+  const count = 5600;
 
   const { speeds, offsets, radii } = useMemo(() => {
     const speeds = new Float32Array(count);
@@ -80,9 +74,9 @@ export default function AccretionParticles() {
     const radii = new Float32Array(count);
 
     for (let i = 0; i < count; i++) {
-      speeds[i] = 0.1 + Math.random() * 0.2; // Random fall-in speed
-      offsets[i] = Math.random(); // Random start position in cycle
-      radii[i] = 10.0 + Math.random() * 6.0; // Base radius var
+      speeds[i] = 0.08 + Math.random() * 0.24;
+      offsets[i] = Math.random();
+      radii[i] = 8.0 + Math.random() * 8.5;
     }
     return { speeds, offsets, radii };
   }, []);
@@ -122,6 +116,12 @@ export default function AccretionParticles() {
             attach="attributes-aOffset"
             count={count}
             array={offsets}
+            itemSize={1}
+          />
+          <bufferAttribute
+            attach="attributes-aRadius"
+            count={count}
+            array={radii}
             itemSize={1}
           />
         </bufferGeometry>

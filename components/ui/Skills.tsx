@@ -2,38 +2,76 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Code2, Layout, Server, Database } from 'lucide-react';
+import { ChevronDown, Code2, Cpu, Server, Database } from 'lucide-react';
+import { useSection } from '@/contexts/SectionContext';
 
 const skillCategories = [
   {
     name: 'Languages',
     icon: Code2,
     color: '#00f0ff',
-    skills: ['Python', 'TypeScript', 'GoLang', 'Rust', 'Java'],
+    skills: ['Python', 'TypeScript', 'Go', 'SQL'],
   },
   {
-    name: 'Frontend',
-    icon: Layout,
-    color: '#ffffff',
-    skills: ['React', 'Next.js', 'Vue', 'Tailwind'],
-  },
-  {
-    name: 'Backend',
+    name: 'Backend & APIs',
     icon: Server,
-    color: '#ff3300',
-    skills: ['Node.js', 'Docker', 'Kubernetes', 'Kafka'],
+    color: '#f8fafc',
+    skills: [
+      'Node.js',
+      'NestJS',
+      'REST APIs',
+      'GraphQL',
+      'WebSockets',
+      'OAuth 2.0',
+      'Rate Limiting',
+      'Microservices',
+      'Event-Driven Architecture',
+      'Distributed Systems',
+    ],
   },
   {
-    name: 'Data/ML',
+    name: 'Data & Infrastructure',
     icon: Database,
+    color: '#ff3300',
+    skills: [
+      'PostgreSQL',
+      'MySQL',
+      'MongoDB',
+      'Redis',
+      'Kafka',
+      'Redshift',
+      'Airbyte',
+      'AWS',
+      'Docker',
+      'Kubernetes',
+      'CI/CD',
+    ],
+  },
+  {
+    name: 'AI/ML',
+    icon: Cpu,
     color: '#9d00ff',
-    skills: ['PostgreSQL', 'MongoDB', 'PyTorch', 'Redis'],
+    skills: [
+      'LLM APIs',
+      'Gemini',
+      'Agentic Workflows',
+      'Function Calling',
+      'Tool Execution',
+      'RAG',
+      'Vector Databases',
+      'Qwen3-ASR/TTS',
+      'LiveKit',
+      'CUDA/GPU Inference',
+      'Prompt Engineering',
+      'AI Evaluation',
+    ],
   },
 ];
 
 export default function Skills() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [isDesktop, setIsDesktop] = useState(false);
+  const { activeSkillCategory, setActiveSkillCategory } = useSection();
 
   useEffect(() => {
     const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
@@ -44,13 +82,15 @@ export default function Skills() {
 
   const toggleExpand = (index: number) => {
     if (!isDesktop) {
-      setExpandedIndex(expandedIndex === index ? null : index);
+      const nextIndex = expandedIndex === index ? null : index;
+      setExpandedIndex(nextIndex);
+      setActiveSkillCategory(nextIndex);
     }
   };
 
   return (
     <div className="h-full flex flex-col justify-center md:justify-end pb-20 sm:pb-24 md:pb-12 pointer-events-none px-3 sm:px-4 md:px-8">
-      <div className="pointer-events-auto w-full max-w-[320px] sm:max-w-md md:max-w-2xl mx-auto md:mx-0 md:ml-auto">
+      <div className="pointer-events-auto w-full max-w-[320px] sm:max-w-md md:max-w-xl mx-auto md:mx-0 md:ml-auto">
         {/* Section header with responsive title and contextual subtitle */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -61,9 +101,9 @@ export default function Skills() {
             Tech Stack
           </h2>
           <p className="text-[10px] sm:text-xs md:text-sm text-slate-400">
-            <span className="md:hidden">Tap categories to explore</span>
+            <span className="md:hidden">Tap categories to isolate orbits</span>
             <span className="hidden md:inline">
-              Skills visualized in 3D orbit
+              Hover a category, then click a planet in orbit
             </span>
           </p>
         </motion.div>
@@ -186,7 +226,20 @@ export default function Skills() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1 }}
-                className="bg-neutral-950 border border-neutral-800 p-4 hover:border-neutral-700 transition-all duration-300"
+                className="cyber-bracket bg-neutral-950/85 border p-3 transition-all duration-300"
+                onMouseEnter={() => setActiveSkillCategory(idx)}
+                onMouseLeave={() => setActiveSkillCategory(null)}
+                onFocus={() => setActiveSkillCategory(idx)}
+                onBlur={() => setActiveSkillCategory(null)}
+                style={{
+                  borderColor:
+                    activeSkillCategory === idx ? category.color : '#262626',
+                  boxShadow:
+                    activeSkillCategory === idx
+                      ? `0 0 28px -12px ${category.color}`
+                      : 'none',
+                  ['--corner-color' as string]: category.color + '60',
+                }}
               >
                 {/* Icon badge with category name and skill count */}
                 <div className="flex items-center gap-3 mb-3">
@@ -204,7 +257,7 @@ export default function Skills() {
                       {category.name}
                     </span>
                     <span className="text-xs text-slate-500">
-                      {category.skills.length} skills
+                      {category.skills.length} orbital bodies
                     </span>
                   </div>
                 </div>

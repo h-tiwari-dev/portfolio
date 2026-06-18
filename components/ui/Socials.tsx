@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Github,
   Linkedin,
@@ -9,30 +9,35 @@ import {
   FileDown,
   Clock,
   MapPin,
+  Phone,
   Zap,
   ExternalLink,
   ArrowRight,
 } from 'lucide-react';
-import ContactModal from '@/components/common/ContactModal';
 import { motion } from 'framer-motion';
 
 export default function Socials() {
-  const [isContactOpen, setIsContactOpen] = useState(false);
-
   const links = [
     {
       icon: Github,
       label: 'GitHub',
-      description: 'Check out my projects',
+      description: 'github.com/h-tiwari-dev',
       url: 'https://github.com/h-tiwari-dev',
       color: '#ffffff',
     },
     {
       icon: Linkedin,
       label: 'LinkedIn',
-      description: "Let's connect professionally",
-      url: 'https://www.linkedin.com/in/tiwari-ai-harsh/',
+      description: 'linkedin.com/in/tiwari-ai-harsh',
+      url: 'https://www.linkedin.com/in/tiwari-ai-harsh',
       color: '#0a66c2',
+    },
+    {
+      icon: ExternalLink,
+      label: 'Portfolio',
+      description: 'tiwariaiharsh.com',
+      url: 'https://tiwariaiharsh.com',
+      color: '#00f0ff',
     },
     {
       icon: BookOpen,
@@ -44,9 +49,16 @@ export default function Socials() {
     {
       icon: Mail,
       label: 'Email',
-      description: 'Send me a message',
-      onClick: () => setIsContactOpen(true),
+      description: 'h.tiwari.dev@gmail.com',
+      url: 'mailto:h.tiwari.dev@gmail.com',
       color: '#f43f5e',
+    },
+    {
+      icon: Phone,
+      label: 'Mobile',
+      description: '+91-7355517759',
+      url: 'tel:+917355517759',
+      color: '#22c55e',
     },
   ];
 
@@ -60,7 +72,7 @@ export default function Socials() {
             Get In Touch
           </h2>
           <p className="text-xs sm:text-sm md:text-base text-slate-400">
-            Open for freelance & full-time opportunities
+            Senior Software Engineer — Bengaluru, India
           </p>
         </div>
 
@@ -76,9 +88,16 @@ export default function Socials() {
                 transition={{ delay: 0.1 }}
                 className="bg-neutral-900 border border-neutral-800 p-2.5 sm:p-3 md:p-4 text-center"
               >
-                <MapPin size={14} className="text-cyan-400 mx-auto mb-1 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-                <span className="text-[10px] sm:text-xs text-slate-400 block">Location</span>
-                <span className="text-xs sm:text-sm md:text-base text-white font-medium">India</span>
+                <MapPin
+                  size={14}
+                  className="text-cyan-400 mx-auto mb-1 sm:w-4 sm:h-4 md:w-5 md:h-5"
+                />
+                <span className="text-[10px] sm:text-xs text-slate-400 block">
+                  Location
+                </span>
+                <span className="text-xs sm:text-sm md:text-base text-white font-medium">
+                  Bengaluru
+                </span>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -86,9 +105,16 @@ export default function Socials() {
                 transition={{ delay: 0.2 }}
                 className="bg-neutral-900 border border-neutral-800 p-2.5 sm:p-3 md:p-4 text-center"
               >
-                <Clock size={14} className="text-yellow-400 mx-auto mb-1 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-                <span className="text-[10px] sm:text-xs text-slate-400 block">Timezone</span>
-                <span className="text-xs sm:text-sm md:text-base text-white font-medium">IST +5:30</span>
+                <Clock
+                  size={14}
+                  className="text-yellow-400 mx-auto mb-1 sm:w-4 sm:h-4 md:w-5 md:h-5"
+                />
+                <span className="text-[10px] sm:text-xs text-slate-400 block">
+                  Timezone
+                </span>
+                <span className="text-xs sm:text-sm md:text-base text-white font-medium">
+                  IST +5:30
+                </span>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -96,37 +122,51 @@ export default function Socials() {
                 transition={{ delay: 0.3 }}
                 className="bg-neutral-900 border border-neutral-800 p-2.5 sm:p-3 md:p-4 text-center"
               >
-                <Zap size={14} className="text-green-400 mx-auto mb-1 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-                <span className="text-[10px] sm:text-xs text-slate-400 block">Response</span>
-                <span className="text-xs sm:text-sm md:text-base text-white font-medium">&lt; 24h</span>
+                <Zap
+                  size={14}
+                  className="text-green-400 mx-auto mb-1 sm:w-4 sm:h-4 md:w-5 md:h-5"
+                />
+                <span className="text-[10px] sm:text-xs text-slate-400 block">
+                  Response
+                </span>
+                <span className="text-xs sm:text-sm md:text-base text-white font-medium">
+                  &lt; 24h
+                </span>
               </motion.div>
             </div>
 
             {/* Resume Download */}
-            <motion.button
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              onClick={() => window.open('/harsh_resume_new.pdf', '_blank')}
-              className="group w-full mb-4 sm:mb-5 md:mb-0 p-3 sm:p-4 md:p-5 bg-rose-950 border border-rose-900 hover:border-rose-700 transition-all duration-300 cursor-pointer"
+              className="mb-4 sm:mb-5 md:mb-0"
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3 md:gap-4">
-                  <div className="w-10 h-10 md:w-12 md:h-12 bg-rose-500 flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <FileDown size={18} className="text-white md:w-6 md:h-6" />
-                  </div>
-                  <div className="text-left">
-                    <span className="text-sm sm:text-base md:text-lg font-semibold text-white block">
-                      Download Resume
+              <button
+                onClick={() => window.open('/harsh_resume_new.pdf', '_blank')}
+                className="button-3d button-3d--rose button-3d--wide group w-full p-3 text-left sm:p-4 md:p-5"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3 md:gap-4">
+                    <span className="button-3d__icon h-10 w-10 md:h-12 md:w-12">
+                      <FileDown size={18} className="md:h-6 md:w-6" />
                     </span>
-                    <span className="text-[10px] sm:text-xs md:text-sm text-slate-400">
-                      PDF • Updated Jan 2025
-                    </span>
+                    <div className="text-left">
+                      <span className="button-3d__label block text-sm font-semibold sm:text-base md:text-lg">
+                        Download Resume
+                      </span>
+                      <span className="text-[10px] text-slate-400 sm:text-xs md:text-sm">
+                        PDF • Current profile
+                      </span>
+                    </div>
                   </div>
+                  <ArrowRight
+                    size={18}
+                    className="button-3d__trailing md:h-5 md:w-5"
+                  />
                 </div>
-                <ArrowRight size={18} className="text-rose-700 group-hover:text-rose-400 group-hover:translate-x-1 transition-all md:w-5 md:h-5" />
-              </div>
-            </motion.button>
+              </button>
+            </motion.div>
           </div>
 
           {/* Right Column - Social Links */}
@@ -136,7 +176,7 @@ export default function Socials() {
               {links.map((item, i) => (
                 <button
                   key={i}
-                  onClick={item.onClick || (() => window.open(item.url, '_blank'))}
+                  onClick={() => window.open(item.url, '_blank')}
                   className="group relative w-12 h-12 sm:w-14 sm:h-14 bg-neutral-900 border border-neutral-800 hover:border-neutral-600 transition-all duration-300 flex items-center justify-center"
                 >
                   <item.icon
@@ -162,7 +202,7 @@ export default function Socials() {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 + i * 0.1 }}
-                  onClick={item.onClick || (() => window.open(item.url, '_blank'))}
+                  onClick={() => window.open(item.url, '_blank')}
                   className="group flex items-center gap-3 p-4 bg-neutral-900 border border-neutral-800 hover:border-neutral-700 transition-all duration-300 text-left"
                   style={{
                     ['--hover-color' as string]: item.color,
@@ -175,10 +215,7 @@ export default function Socials() {
                       border: `1px solid ${item.color}60`,
                     }}
                   >
-                    <item.icon
-                      size={18}
-                      style={{ color: item.color }}
-                    />
+                    <item.icon size={18} style={{ color: item.color }} />
                   </div>
                   <div className="flex-1">
                     <span className="text-sm font-medium text-white block">
@@ -188,7 +225,10 @@ export default function Socials() {
                       {item.description}
                     </span>
                   </div>
-                  <ExternalLink size={14} className="text-slate-600 group-hover:text-slate-400 transition-colors" />
+                  <ExternalLink
+                    size={14}
+                    className="text-slate-600 group-hover:text-slate-400 transition-colors"
+                  />
                 </motion.button>
               ))}
             </div>
@@ -211,15 +251,10 @@ export default function Socials() {
         >
           <div className="flex items-center gap-1.5 text-[10px] sm:text-xs md:text-sm text-slate-500">
             <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-green-500 animate-pulse" />
-            <span>Available for new projects • Preferred: Email or LinkedIn</span>
+            <span>h.tiwari.dev@gmail.com • +91-7355517759</span>
           </div>
         </motion.div>
       </div>
-
-      <ContactModal
-        isOpen={isContactOpen}
-        onClose={() => setIsContactOpen(false)}
-      />
     </div>
   );
 }

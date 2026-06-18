@@ -7,7 +7,7 @@ import { useSection } from '@/contexts/SectionContext';
 
 export default function ThreeBackground() {
   const [isMobile, setIsMobile] = useState(false);
-  const { activeSection } = useSection();
+  const { activeSection, activeSkillCategory } = useSection();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -39,7 +39,11 @@ export default function ThreeBackground() {
       >
         <Suspense fallback={null}>
           <ambientLight intensity={0.1} />
-          <GlobeScene isMobile={isMobile} activeSection={activeSection} />
+          <GlobeScene
+            isMobile={isMobile}
+            activeSection={activeSection}
+            activeSkillCategory={activeSkillCategory}
+          />
         </Suspense>
         <fogExp2 attach="fog" args={['#020104', 0.025]} />
       </Canvas>

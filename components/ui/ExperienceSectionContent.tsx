@@ -2,88 +2,132 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Activity, Building2, Calendar, ChevronRight } from 'lucide-react';
+import {
+  Activity,
+  ArrowUpRight,
+  Building2,
+  Calendar,
+  ChevronRight,
+  Cpu,
+  Database,
+  MapPin,
+  RadioTower,
+} from 'lucide-react';
 
 const experiences = [
   {
     pid: 'PID_1024',
     company: 'WellnessLiving',
-    role: 'Sr. Software Engineer',
-    period: '2025 - PRESENT',
-    status: 'STABLE_EXEC',
+    role: 'Senior Software Engineer',
+    location: 'Bengaluru, India',
+    period: 'APR 2025 - PRESENT',
+    status: 'VOICE_AI_PROD',
     isActive: true,
-    color: 'amber',
-    highlights: [
-      'Real-time warehouse (Debezium → Kafka → ClickHouse) with semantic layer',
-      'Cut time-to-insight 80% and ad-hoc SQL 60%',
-      'pgvector LLM conversation intelligence on transcripts',
-      'Stateless WebSocket platform via Kafka backplane',
-      '35% fewer disconnects, 18% fewer support tickets',
+    color: 'rose',
+    summary:
+      'Production Voice AI, LLM microservices, real-time media systems, and tenant-specific agent workflows for live customer conversations.',
+    impact: [
+      { value: '<1s', label: 'response-path target' },
+      { value: '5', label: 'latency stages traced' },
+      { value: 'RAG', label: 'tool-backed agents' },
     ],
-    tech: ['KAFKA', 'CLICKHOUSE', 'PGVECTOR', 'K8S', 'DEBEZIUM'],
+    highlights: [
+      'Engineered a multi-tenant Voice AI backend with RAG, structured function calling, tool schemas, and provider integrations',
+      'Built a Chinese voice-to-voice agent using LiveKit, self-deployed Qwen3-ASR/Qwen3-TTS, CUDA inference, and Gemini orchestration',
+      'Re-architected Cerebrum, the LLM microservice behind telephony agents, for sub-second streaming responses',
+      'Added service guardrails for tool execution, structured tracing, regression checks, retry-safe workflows, and read-only SQL agents',
+      'Scaled stateless WebSocket services with OAuth 2.0 authentication and rate limiting for real-time chat and agent workflows',
+      'Instrumented STT, request assembly, LLM inference, tool execution, and TTS telemetry through Kafka into Redshift',
+    ],
+    tech: ['LIVEKIT', 'QWEN3', 'GEMINI', 'RAG', 'KAFKA', 'REDSHIFT'],
   },
   {
     pid: 'PID_0892',
     company: 'Kusho',
     role: 'Full Stack Developer',
-    period: '2023 - 2025',
-    status: 'TERMINATED_EXIT_0',
+    location: 'Bengaluru, India',
+    period: 'AUG 2023 - APR 2025',
+    status: 'DEVTOOLS_SCALE',
     isActive: false,
-    color: 'cyan',
-    highlights: [
-      'React Flow builder with 50+ nodes, sub-200ms UI',
-      '40% faster test runs with visual test builder',
-      'Playwright CDP automation with AST parsing',
-      '3x coverage, 70% less manual effort',
-      'Redis RQ + Pinecone: 45% higher throughput',
+    color: 'amber',
+    summary:
+      'LLM task pipelines, API workflow execution, browser automation, and distributed test infrastructure for developer tooling.',
+    impact: [
+      { value: '50+', label: 'builder nodes' },
+      { value: '95%', label: 'extension stability' },
+      { value: '1000+', label: 'business workflows' },
     ],
-    tech: ['REACT_FLOW', 'PLAYWRIGHT', 'REDIS', 'PINECONE', 'GRAFANA'],
+    highlights: [
+      'Built Redis and RQ worker pipelines for scalable LLM task execution, prompt processing, and async job orchestration',
+      'Designed a unified service-definition DSL for Postman, OpenAPI/Swagger, GraphQL, and Protocol Buffers',
+      'Built an API testing platform with 50+ workflow node types for end-to-end orchestration and faster large-flow execution',
+      'Developed a Chrome extension that records interactions and generates Playwright scripts with resilient selector fallbacks',
+      'Modeled large API collections as dependency-aware workflow graphs with parallel fan-out and isolated execution pipelines',
+      'Built a compiler that normalizes API specs into a shared executable graph IR for generation, validation, and execution',
+    ],
+    tech: [
+      'REDIS_RQ',
+      'PLAYWRIGHT',
+      'OPENAPI',
+      'GRAPHQL',
+      'PROTOBUF',
+      'LLM_APIS',
+    ],
   },
   {
     pid: 'PID_0441',
     company: 'Castler',
     role: 'Full Stack Developer',
-    period: '2021 - 2023',
-    status: 'TERMINATED_EXIT_0',
+    location: 'Delhi, India',
+    period: 'MAY 2021 - AUG 2023',
+    status: 'PAYMENTS_SCALE',
     isActive: false,
-    color: 'purple',
-    highlights: [
-      'Event-driven payments: INR 50Cr+/mo, 2M+ txns',
-      'Sub-200ms latency, 35% lower cost',
-      'Banking Security: cut critical vulns 40%',
-      'Migrated 200GB MongoDB → MySQL via Airflow',
-      'React 18 + XState: 60% faster workflow creation',
+    color: 'orange',
+    summary:
+      'Payment infrastructure, validation pipelines, financial data migrations, security hardening, and state reconciliation at scale.',
+    impact: [
+      { value: 'INR 50Cr+', label: 'monthly volume' },
+      { value: '2M+', label: 'transactions' },
+      { value: '<200ms', label: 'payment latency' },
     ],
-    tech: ['KAFKA', 'REDIS', 'MONGODB', 'XSTATE', 'AIRFLOW'],
+    highlights: [
+      'Built an event-driven UPI/IMPS payment platform with queues, idempotency controls, and circuit breakers',
+      'Architected a payee validation pipeline for 1000+ RPM peak demand against a heavily rate-limited bank API',
+      'Led a zero-downtime 200GB MongoDB to MySQL migration with blue-green deployment and dual-write architecture',
+      'Built Airflow reconciliation pipelines that improved consistency, delivered 40% faster queries, and reduced infrastructure cost by 25%',
+      'Strengthened OAuth 2.0/PKCE auth and automated security scanning with SonarQube, Snyk, and OWASP ZAP',
+      'Built recovery workflows across gateway responses, bank callbacks, and internal ledger state to preserve financial correctness',
+    ],
+    tech: ['KAFKA', 'REDIS', 'MYSQL', 'MONGODB', 'AIRFLOW', 'OAUTH2'],
   },
 ];
 
 const colorConfig = {
-  amber: {
-    bg: 'from-rose-500/20 via-rose-500/5 to-transparent',
-    border: 'border-rose-900',
-    text: 'text-rose-400',
-    glow: '',
+  rose: {
+    border: 'border-rose-800',
+    text: 'text-rose-300',
+    dim: 'text-rose-500',
     dot: 'bg-rose-500',
-    tag: 'bg-rose-950 border-rose-900 text-rose-300',
+    tag: 'bg-rose-950/80 border-rose-900 text-rose-200',
+    glow: 'shadow-[0_0_50px_-24px_rgba(255,51,102,0.9)]',
     accent: '#ff3366',
   },
-  cyan: {
-    bg: 'from-yellow-400/20 via-yellow-400/5 to-transparent',
-    border: 'border-yellow-900',
-    text: 'text-yellow-400',
-    glow: '',
+  amber: {
+    border: 'border-yellow-800',
+    text: 'text-yellow-300',
+    dim: 'text-yellow-500',
     dot: 'bg-yellow-400',
-    tag: 'bg-yellow-950 border-yellow-900 text-yellow-300',
+    tag: 'bg-yellow-950/80 border-yellow-900 text-yellow-200',
+    glow: 'shadow-[0_0_50px_-24px_rgba(255,204,0,0.9)]',
     accent: '#ffcc00',
   },
-  purple: {
-    bg: 'from-orange-500/20 via-orange-500/5 to-transparent',
-    border: 'border-orange-900',
-    text: 'text-orange-400',
-    glow: '',
+  orange: {
+    border: 'border-orange-800',
+    text: 'text-orange-300',
+    dim: 'text-orange-500',
     dot: 'bg-orange-500',
-    tag: 'bg-orange-950 border-orange-900 text-orange-300',
+    tag: 'bg-orange-950/80 border-orange-900 text-orange-200',
+    glow: 'shadow-[0_0_50px_-24px_rgba(255,85,0,0.9)]',
     accent: '#ff5500',
   },
 };
@@ -97,314 +141,263 @@ export default function ExperienceSectionContent({
   activeIndex,
   onSlideChange,
 }: ExperienceSectionContentProps) {
-  const totalSlides = experiences.length;
+  const activeExperience = experiences[activeIndex];
   const currentColors =
-    colorConfig[experiences[activeIndex].color as keyof typeof colorConfig];
-  const progress = activeIndex / (totalSlides - 1);
+    colorConfig[activeExperience.color as keyof typeof colorConfig];
 
   return (
     <div className="relative h-full w-full overflow-hidden">
-
-      {/* Gradient overlay */}
       <div
-        className={`absolute inset-0 bg-gradient-to-r ${currentColors.bg} z-[1] transition-all duration-500 pointer-events-none`}
+        className="absolute inset-0 z-[1] transition-colors duration-500 pointer-events-none"
+        style={{
+          background: `radial-gradient(circle at 18% 45%, ${currentColors.accent}20, transparent 32%), linear-gradient(90deg, ${currentColors.accent}16, transparent 42%)`,
+        }}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-background/80 z-[1] pointer-events-none" />
+      <div className="absolute inset-0 z-[1] bg-gradient-to-t from-background via-background/30 to-background/80 pointer-events-none" />
 
-      {/* Header */}
-      <div className="absolute top-4 left-3 sm:top-6 sm:left-6 md:top-8 md:left-8 z-20">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-2 sm:gap-3"
-        >
-          <div
-            className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-neutral-950 flex items-center justify-center border ${currentColors.border} transition-colors duration-500`}
-          >
-            <Activity
-              size={16}
-              className={`${currentColors.text} transition-colors duration-500 sm:w-5 sm:h-5`}
-            />
-          </div>
-          <div>
-            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white">
-              Experience
-            </h2>
-            <p className="text-[8px] sm:text-[9px] md:text-[10px] font-mono text-slate-500 uppercase tracking-wider">
-              Swipe to explore
-            </p>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Progress counter */}
-      <div className="absolute top-4 right-3 sm:top-6 sm:right-6 md:top-8 md:right-20 z-20">
-        <div className="text-right">
-          <span
-            className={`text-2xl sm:text-3xl md:text-4xl font-bold ${currentColors.text} transition-colors duration-500`}
-          >
-            {String(activeIndex + 1).padStart(2, '0')}
-          </span>
-          <span className="text-base sm:text-lg md:text-xl text-slate-600 mx-0.5 sm:mx-1">/</span>
-          <span className="text-base sm:text-lg md:text-xl text-slate-500">
-            {String(totalSlides).padStart(2, '0')}
-          </span>
-        </div>
-      </div>
-
-      {/* Progress bar - left side */}
-      <div className="absolute top-1/2 -translate-y-1/2 left-6 md:left-8 z-20 hidden md:block">
-        <div className="flex flex-col gap-3">
-          {experiences.map((exp, i) => (
-            <button
-              key={exp.pid}
-              onClick={() => onSlideChange(i)}
-              className="group flex items-center gap-3"
-            >
-              <div
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  i === activeIndex
-                    ? `scale-150 ${
-                        colorConfig[exp.color as keyof typeof colorConfig].dot
-                      }`
-                    : i < activeIndex
-                    ? colorConfig[exp.color as keyof typeof colorConfig].dot +
-                      ' opacity-50'
-                    : 'bg-slate-600'
-                }`}
-                style={{
-                  boxShadow:
-                    i === activeIndex
-                      ? `0 0 15px ${
-                          colorConfig[exp.color as keyof typeof colorConfig]
-                            .accent
-                        }`
-                      : 'none',
-                }}
-              />
-              <span
-                className={`text-[10px] font-mono uppercase tracking-wider transition-all ${
-                  i === activeIndex
-                    ? colorConfig[exp.color as keyof typeof colorConfig].text
-                    : 'text-slate-600 group-hover:text-slate-400'
-                }`}
-              >
-                {exp.company}
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Horizontal slides container */}
-      <div className="absolute inset-0 z-10">
-        <motion.div
-          className="h-full flex"
-          animate={{ x: `-${activeIndex * 100}%` }}
-          transition={{
-            type: 'spring',
-            stiffness: 300,
-            damping: 30,
-            mass: 0.8,
-          }}
-        >
-          {experiences.map((exp, index) => {
-            const colors = colorConfig[exp.color as keyof typeof colorConfig];
-            const isActive = index === activeIndex;
-
-            return (
-              <div
-                key={exp.pid}
-                className="min-w-full h-full flex items-center justify-center px-3 sm:px-4 md:px-16 lg:px-24 pb-24 sm:pb-16 md:pb-0"
-              >
-                <div className="w-full max-w-3xl">
-                  {/* Content Card */}
-                  <motion.div
-                    initial={false}
-                    animate={{
-                      opacity: isActive ? 1 : 0.3,
-                      scale: isActive ? 1 : 0.95,
-                      y: isActive ? 0 : 20,
-                    }}
-                    transition={{ duration: 0.4 }}
-                    className={`relative p-4 sm:p-6 md:p-8 border ${
-                      colors.border
-                    } bg-neutral-950 ${
-                      isActive ? colors.glow : ''
-                    }`}
-                  >
-                    {/* Status badge - Simplified on mobile */}
-                    <div className="flex items-center gap-2 mb-3 sm:mb-4 md:mb-6">
-                      {exp.isActive && (
-                        <div className="flex items-center gap-1.5 px-2 py-0.5 bg-green-950 border border-green-900">
-                          <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                          <span className="text-[9px] sm:text-[10px] font-mono text-green-400">
-                            Current
-                          </span>
-                        </div>
-                      )}
-                      <span className="text-[8px] sm:text-[9px] font-mono text-slate-500 hidden sm:inline">
-                        {exp.pid}
-                      </span>
-                    </div>
-
-                    {/* Role & Company */}
-                    <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-1.5 sm:mb-2 md:mb-3 leading-tight">
-                      {exp.role}
-                    </h3>
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4 md:mb-6">
-                      <span
-                        className={`text-base sm:text-lg md:text-xl font-mono font-bold ${colors.text} flex items-center gap-1.5 sm:gap-2`}
-                      >
-                        <Building2 size={14} className="opacity-60 sm:w-4 sm:h-4" />
-                        {exp.company}
-                      </span>
-                      <span className="flex items-center gap-1 sm:gap-1.5 text-slate-400 text-[11px] sm:text-xs md:text-sm font-mono">
-                        <Calendar size={11} className="sm:w-3 sm:h-3" />
-                        {exp.period}
-                      </span>
-                    </div>
-
-                    {/* Highlights - Show fewer on mobile */}
-                    <div className="space-y-1.5 sm:space-y-2 md:space-y-3 mb-4 sm:mb-6 md:mb-8">
-                      {exp.highlights.slice(0, 3).map((point, i) => (
-                        <motion.div
-                          key={i}
-                          initial={false}
-                          animate={{
-                            opacity: isActive ? 1 : 0.5,
-                            x: isActive ? 0 : -10,
-                          }}
-                          transition={{
-                            delay: isActive ? i * 0.05 : 0,
-                            duration: 0.3,
-                          }}
-                          className="flex items-start gap-1.5 sm:gap-2 md:gap-3"
-                        >
-                          <ChevronRight
-                            size={12}
-                            className={`${colors.text} mt-0.5 shrink-0 sm:w-3.5 sm:h-3.5`}
-                          />
-                          <span className="text-[11px] sm:text-xs md:text-sm text-slate-300 leading-relaxed">
-                            {point}
-                          </span>
-                        </motion.div>
-                      ))}
-                      {/* Show remaining highlights only on larger screens */}
-                      <div className="hidden sm:block">
-                        {exp.highlights.slice(3).map((point, i) => (
-                          <motion.div
-                            key={i + 3}
-                            initial={false}
-                            animate={{
-                              opacity: isActive ? 1 : 0.5,
-                              x: isActive ? 0 : -10,
-                            }}
-                            transition={{
-                              delay: isActive ? (i + 3) * 0.05 : 0,
-                              duration: 0.3,
-                            }}
-                            className="flex items-start gap-2 md:gap-3 mt-2 md:mt-3"
-                          >
-                            <ChevronRight
-                              size={14}
-                              className={`${colors.text} mt-0.5 shrink-0`}
-                            />
-                            <span className="text-xs md:text-sm text-slate-300 leading-relaxed">
-                              {point}
-                            </span>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Tech Stack */}
-                    <div className="flex flex-wrap gap-1 sm:gap-1.5 md:gap-2">
-                      {exp.tech.slice(0, 4).map((t) => (
-                        <span
-                          key={t}
-                          className={`text-[8px] sm:text-[9px] md:text-[10px] font-mono px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 md:py-1.5 border ${colors.tag}`}
-                        >
-                          {t}
-                        </span>
-                      ))}
-                      {/* Show remaining tech only on larger screens */}
-                      {exp.tech.slice(4).map((t) => (
-                        <span
-                          key={t}
-                          className={`hidden sm:inline text-[9px] md:text-[10px] font-mono px-2 md:px-3 py-1 md:py-1.5 border ${colors.tag}`}
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </motion.div>
-
-                </div>
-              </div>
-            );
-          })}
-        </motion.div>
-      </div>
-
-      {/* Bottom scroll indicator - Hidden on mobile where we have bottom nav */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-20 hidden sm:block"
-      >
-        <div className="flex flex-col items-center gap-2">
-          <span className="text-[9px] md:text-[10px] font-mono text-slate-500 uppercase tracking-widest">
-            {activeIndex < totalSlides - 1
-              ? 'Scroll to continue'
-              : 'Scroll down to continue'}
-          </span>
+      <div className="relative z-20 flex h-full flex-col px-4 pb-24 pt-5 sm:px-6 sm:pb-20 md:px-10 md:py-9">
+        <div className="mb-5 flex items-start justify-between gap-4 md:mb-8">
           <motion.div
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className={`w-5 h-8 md:w-6 md:h-10 border-2 ${currentColors.border} flex items-start justify-center p-1.5 md:p-2 transition-colors duration-500`}
-          >
-            <motion.div
-              className={`w-1 h-1 md:w-1.5 md:h-1.5 ${currentColors.dot} transition-colors duration-500`}
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            />
-          </motion.div>
-        </div>
-      </motion.div>
-
-      {/* Mobile progress dots - Larger touch targets */}
-      <div className="absolute bottom-24 sm:bottom-20 left-1/2 -translate-x-1/2 z-20 flex gap-4 md:hidden">
-        {experiences.map((exp, i) => (
-          <button
-            key={exp.pid}
-            onClick={() => onSlideChange(i)}
-            className="p-2 touch-manipulation"
+            initial={{ opacity: 0, y: -14 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-3"
           >
             <div
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                i === activeIndex
-                  ? `${
-                      colorConfig[exp.color as keyof typeof colorConfig].dot
-                    } scale-125`
-                  : i < activeIndex
-                  ? `${
-                      colorConfig[exp.color as keyof typeof colorConfig].dot
-                    } opacity-50`
-                  : 'bg-slate-600'
-              }`}
-              style={{
-                boxShadow:
-                  i === activeIndex
-                    ? `0 0 12px ${
-                        colorConfig[exp.color as keyof typeof colorConfig].accent
-                      }`
-                    : 'none',
-              }}
-            />
-          </button>
-        ))}
+              className={`flex h-11 w-11 items-center justify-center border bg-neutral-950/85 ${currentColors.border}`}
+            >
+              <Activity size={19} className={currentColors.text} />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-white md:text-3xl">
+                Experience
+              </h2>
+              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-slate-500">
+                Work trajectory
+              </p>
+            </div>
+          </motion.div>
+
+          <div className="text-right">
+            <span
+              className={`text-3xl font-black md:text-5xl ${currentColors.text}`}
+            >
+              {String(activeIndex + 1).padStart(2, '0')}
+            </span>
+            <span className="mx-1 text-xl text-slate-600 md:text-2xl">/</span>
+            <span className="text-xl text-slate-500 md:text-2xl">
+              {String(experiences.length).padStart(2, '0')}
+            </span>
+          </div>
+        </div>
+
+        <div className="grid min-h-0 flex-1 gap-4 md:grid-cols-[220px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)_280px]">
+          <nav className="hidden md:block">
+            <div className="relative h-full border-l border-neutral-800 pl-5">
+              <div
+                className="absolute left-[-1px] top-0 w-px transition-all duration-500"
+                style={{
+                  height: `${((activeIndex + 1) / experiences.length) * 100}%`,
+                  backgroundColor: currentColors.accent,
+                }}
+              />
+              <div className="space-y-4">
+                {experiences.map((exp, index) => {
+                  const colors =
+                    colorConfig[exp.color as keyof typeof colorConfig];
+                  const isActive = activeIndex === index;
+
+                  return (
+                    <button
+                      key={exp.pid}
+                      onClick={() => onSlideChange(index)}
+                      className="group block w-full text-left"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span
+                          className={`h-2.5 w-2.5 rounded-full transition-transform ${
+                            isActive ? colors.dot : 'bg-slate-700'
+                          }`}
+                          style={{
+                            boxShadow: isActive
+                              ? `0 0 16px ${colors.accent}`
+                              : 'none',
+                          }}
+                        />
+                        <span
+                          className={`font-mono text-[10px] uppercase tracking-[0.2em] ${
+                            isActive
+                              ? colors.text
+                              : 'text-slate-600 group-hover:text-slate-400'
+                          }`}
+                        >
+                          {exp.company}
+                        </span>
+                      </div>
+                      <div className="mt-2 pl-5 text-xs leading-relaxed text-slate-500">
+                        {exp.period}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </nav>
+
+          <motion.section
+            key={activeExperience.pid}
+            initial={{ opacity: 0, y: 18, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.35 }}
+            className={`min-h-0 border bg-neutral-950/82 p-4 backdrop-blur-sm sm:p-5 md:p-7 ${currentColors.border} ${currentColors.glow}`}
+          >
+            <div className="mb-5 flex flex-wrap items-center gap-2">
+              {activeExperience.isActive && (
+                <span className="inline-flex items-center gap-2 border border-green-900 bg-green-950/80 px-2.5 py-1 font-mono text-[10px] text-green-300">
+                  <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
+                  Current
+                </span>
+              )}
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-500">
+                {activeExperience.pid}
+              </span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-600">
+                {activeExperience.status}
+              </span>
+            </div>
+
+            <h3 className="max-w-3xl text-2xl font-black leading-tight text-white sm:text-3xl md:text-5xl">
+              {activeExperience.role}
+            </h3>
+
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <span
+                className={`inline-flex items-center gap-2 font-mono text-base font-bold sm:text-lg ${currentColors.text}`}
+              >
+                <Building2 size={17} />
+                {activeExperience.company}
+              </span>
+              <span className="inline-flex items-center gap-2 font-mono text-xs text-slate-400">
+                <MapPin size={14} />
+                {activeExperience.location}
+              </span>
+              <span className="inline-flex items-center gap-2 font-mono text-xs text-slate-400">
+                <Calendar size={14} />
+                {activeExperience.period}
+              </span>
+            </div>
+
+            <p className="mt-5 max-w-3xl text-sm leading-relaxed text-slate-300 sm:text-base">
+              {activeExperience.summary}
+            </p>
+
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              {activeExperience.impact.map((item) => (
+                <div
+                  key={item.value}
+                  className="border border-neutral-800 bg-black/30 p-3"
+                >
+                  <div className={`text-2xl font-black ${currentColors.text}`}>
+                    {item.value}
+                  </div>
+                  <div className="mt-1 text-[11px] leading-snug text-slate-500">
+                    {item.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 grid gap-3 md:grid-cols-2">
+              {activeExperience.highlights.map((point, index) => (
+                <motion.div
+                  key={point}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.04, duration: 0.25 }}
+                  className={`items-start gap-2 text-sm leading-relaxed text-slate-300 ${
+                    index > 3 ? 'hidden md:flex' : 'flex'
+                  }`}
+                >
+                  <ChevronRight
+                    size={15}
+                    className={`mt-0.5 shrink-0 ${currentColors.text}`}
+                  />
+                  <span>{point}</span>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="mt-6 flex flex-wrap gap-2">
+              {activeExperience.tech.map((tech) => (
+                <span
+                  key={tech}
+                  className={`border px-2.5 py-1.5 font-mono text-[10px] ${currentColors.tag}`}
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </motion.section>
+
+          <aside className="hidden lg:flex lg:flex-col lg:gap-3">
+            <div className="border border-neutral-800 bg-neutral-950/70 p-4">
+              <div className="mb-4 flex items-center justify-between">
+                <RadioTower size={18} className={currentColors.text} />
+                <ArrowUpRight size={16} className="text-slate-600" />
+              </div>
+              <div className="text-sm font-semibold text-white">
+                Platform Focus
+              </div>
+              <div className="mt-2 text-xs leading-relaxed text-slate-500">
+                Distributed systems, developer velocity, and production
+                reliability.
+              </div>
+            </div>
+            <div className="border border-neutral-800 bg-neutral-950/70 p-4">
+              <Cpu size={18} className={currentColors.text} />
+              <div className="mt-4 text-sm font-semibold text-white">
+                System Shape
+              </div>
+              <div className="mt-2 text-xs leading-relaxed text-slate-500">
+                Event streams, state machines, automation, and observability.
+              </div>
+            </div>
+            <div className="border border-neutral-800 bg-neutral-950/70 p-4">
+              <Database size={18} className={currentColors.text} />
+              <div className="mt-4 text-sm font-semibold text-white">
+                Data Layer
+              </div>
+              <div className="mt-2 text-xs leading-relaxed text-slate-500">
+                Warehouses, vectors, queues, migrations, and semantic models.
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <div className="absolute bottom-24 left-1/2 z-20 flex -translate-x-1/2 gap-4 md:hidden">
+          {experiences.map((exp, index) => {
+            const colors = colorConfig[exp.color as keyof typeof colorConfig];
+            return (
+              <button
+                key={exp.pid}
+                onClick={() => onSlideChange(index)}
+                className="p-2"
+                aria-label={`Show ${exp.company}`}
+              >
+                <span
+                  className={`block h-3 w-3 rounded-full ${
+                    index === activeIndex ? colors.dot : 'bg-slate-700'
+                  }`}
+                  style={{
+                    boxShadow:
+                      index === activeIndex
+                        ? `0 0 14px ${colors.accent}`
+                        : 'none',
+                  }}
+                />
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
