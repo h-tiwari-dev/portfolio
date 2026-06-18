@@ -557,45 +557,6 @@
   animation: hero-glitch 0.35s steps(1) forwards;
 }
 
-/* ── Hero stage scan line ─────────────────────────────────── */
-@keyframes stage-scan {
-  0% {
-    top: -2px;
-    opacity: 0;
-  }
-  5% {
-    opacity: 1;
-  }
-  95% {
-    opacity: 0.6;
-  }
-  100% {
-    top: 100%;
-    opacity: 0;
-  }
-}
-
-.hero-role-stage {
-  position: relative;
-}
-
-.hero-role-stage::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(225, 29, 72, 0.5),
-    rgba(251, 191, 36, 0.3),
-    transparent
-  );
-  pointer-events: none;
-  animation: stage-scan 6s ease-in-out infinite;
-  animation-delay: 1.2s;
-}
 
 /* ── Cyber corner brackets ────────────────────────────────── */
 .cyber-bracket {
