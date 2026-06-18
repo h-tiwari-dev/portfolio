@@ -114,7 +114,7 @@ export default function TerminalWidget({ sessions: propSessions, minHeight = 192
       }, delay);
     }
     return clear;
-  }, [phase, sessIdx, lineIdx, typingText]);
+  }, [activeSessions, phase, sessIdx, lineIdx, typingText]);
 
   useEffect(() => {
     if (phase !== 'holding') return;
@@ -130,7 +130,7 @@ export default function TerminalWidget({ sessions: propSessions, minHeight = 192
       FADE_DURATION,
     );
     return clear;
-  }, [phase]);
+  }, [activeSessions.length, phase]);
 
   const session = activeSessions[sessIdx];
   const isTypingCmd =
@@ -175,7 +175,7 @@ export default function TerminalWidget({ sessions: propSessions, minHeight = 192
           harsh@prod ~ {session.title}
         </span>
         <span className="ml-auto font-mono text-[9px] text-slate-700">
-          {sessIdx + 1}/{SESSIONS.length}
+          {sessIdx + 1}/{activeSessions.length}
         </span>
       </div>
 

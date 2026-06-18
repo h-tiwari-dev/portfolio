@@ -142,7 +142,7 @@ export default function Socials() {
           {/* Headline */}
           <motion.div variants={item}>
             <h2 className="text-4xl font-black leading-[0.9] tracking-tight text-white sm:text-5xl md:text-[2.6rem] lg:text-5xl">
-              Let's Build
+              Let&apos;s Build
               <br />
               <span className="text-rose-400">Something.</span>
             </h2>
@@ -249,13 +249,13 @@ export default function Socials() {
                     '--hover-color': s.color,
                   } as React.CSSProperties
                 }
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderLeftColor = `${s.color}80`;
-                  (e.currentTarget as HTMLElement).style.boxShadow = `0 0 24px -8px ${s.color}40`;
+                onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  e.currentTarget.style.borderLeftColor = `${s.color}80`;
+                  e.currentTarget.style.boxShadow = `0 0 24px -8px ${s.color}40`;
                 }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderLeftColor = `${s.color}40`;
-                  (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+                onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  e.currentTarget.style.borderLeftColor = `${s.color}40`;
+                  e.currentTarget.style.boxShadow = 'none';
                 }}
               >
                 {/* Icon */}
