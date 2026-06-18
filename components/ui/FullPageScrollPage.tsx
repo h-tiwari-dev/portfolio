@@ -309,7 +309,7 @@ export default function FullPageScrollPage() {
             className="w-full flex items-center justify-center p-2 sm:p-4 md:p-8"
             style={{ height: 'calc(var(--vh, 1vh) * 100)' }}
           >
-            <div className="w-full max-w-4xl mx-auto bg-neutral-950 border border-neutral-800 p-3 sm:p-4 md:p-6 pointer-events-auto">
+            <div className="w-full max-w-5xl mx-auto pointer-events-auto">
               <Socials />
             </div>
           </section>
