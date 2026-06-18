@@ -16,6 +16,7 @@ import {
   ArrowUpRight,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import TerminalWidget from '@/components/ui/TerminalWidget';
 
 const socials = [
   {
@@ -68,6 +69,43 @@ const stats = [
   { icon: Zap,     label: 'Response',  value: '< 24h',     color: '#34d399' },
 ];
 
+const STATUS_SESSIONS = [
+  {
+    title: 'whoami',
+    lines: [
+      { type: 'cmd'   as const, text: 'whoami' },
+      { type: 'val'   as const, text: 'name        Harsh Tiwari' },
+      { type: 'val'   as const, text: 'role        Senior Software Engineer' },
+      { type: 'val'   as const, text: 'exp         4+ years production' },
+      { type: 'blank' as const, text: '' },
+      { type: 'ok'    as const, text: 'status      open to work         ✓' },
+    ],
+  },
+  {
+    title: 'looking-for',
+    lines: [
+      { type: 'cmd'   as const, text: 'cat looking_for.txt' },
+      { type: 'out'   as const, text: 'reading preferences...' },
+      { type: 'val'   as const, text: 'Voice AI / LLM systems' },
+      { type: 'val'   as const, text: 'distributed backend roles' },
+      { type: 'val'   as const, text: 'product cos, early-stage ok' },
+      { type: 'blank' as const, text: '' },
+      { type: 'ok'    as const, text: 'remote / relocate            ✓' },
+    ],
+  },
+  {
+    title: 'ping',
+    lines: [
+      { type: 'cmd'   as const, text: 'ping h.tiwari.dev@gmail.com' },
+      { type: 'out'   as const, text: 'connecting...' },
+      { type: 'ok'    as const, text: 'PONG  820ms   reachable     ✓' },
+      { type: 'blank' as const, text: '' },
+      { type: 'val'   as const, text: 'preferred   Email or LinkedIn' },
+      { type: 'val'   as const, text: 'response    < 24h guaranteed' },
+    ],
+  },
+];
+
 const container = {
   hidden: {},
   show: { transition: { staggerChildren: 0.07 } },
@@ -81,14 +119,14 @@ const item = {
 export default function Socials() {
   return (
     <div className="relative h-full w-full px-4 py-6 sm:px-6 md:px-8 md:py-8 flex flex-col justify-center">
-      <div className="grid gap-8 md:grid-cols-[1fr_1.1fr] md:gap-12 md:items-center">
+      <div className="grid gap-6 md:grid-cols-[1fr_1.15fr] md:gap-10 md:items-start">
 
-        {/* ── Left column ── */}
+        {/* ── Left column: headline + terminal + stat pills ── */}
         <motion.div
           variants={container}
           initial="hidden"
           animate="show"
-          className="flex flex-col gap-5"
+          className="flex flex-col gap-4"
         >
           {/* Status badge */}
           <motion.div variants={item} className="flex items-center gap-2">
@@ -103,16 +141,50 @@ export default function Socials() {
 
           {/* Headline */}
           <motion.div variants={item}>
-            <h2 className="text-4xl font-black leading-[0.9] tracking-tight text-white sm:text-5xl md:text-5xl lg:text-6xl">
+            <h2 className="text-4xl font-black leading-[0.9] tracking-tight text-white sm:text-5xl md:text-[2.6rem] lg:text-5xl">
               Let's Build
               <br />
               <span className="text-rose-400">Something.</span>
             </h2>
-            <p className="mt-3 text-sm text-slate-400 md:text-base">
+            <p className="mt-2.5 text-sm text-slate-400">
               Senior Software Engineer · Bengaluru, India
             </p>
           </motion.div>
 
+          {/* Status terminal */}
+          <motion.div variants={item}>
+            <TerminalWidget sessions={STATUS_SESSIONS} minHeight={156} />
+          </motion.div>
+
+          {/* Stat pills */}
+          <motion.div variants={item} className="grid grid-cols-3 gap-2">
+            {stats.map((s) => {
+              const Icon = s.icon;
+              return (
+                <div
+                  key={s.label}
+                  className="border border-neutral-800/60 bg-neutral-950/50 px-2.5 py-2 text-center"
+                >
+                  <Icon size={12} className="mx-auto mb-1" style={{ color: s.color }} />
+                  <div className="font-mono text-[8px] uppercase tracking-[0.2em] text-slate-600">
+                    {s.label}
+                  </div>
+                  <div className="mt-0.5 text-[11px] font-semibold text-slate-300">
+                    {s.value}
+                  </div>
+                </div>
+              );
+            })}
+          </motion.div>
+        </motion.div>
+
+        {/* ── Right column: email CTA + resume + social grid ── */}
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="flex flex-col gap-3"
+        >
           {/* Primary email CTA */}
           <motion.a
             variants={item}
@@ -124,47 +196,26 @@ export default function Socials() {
               <div className="mb-0.5 font-mono text-[9px] uppercase tracking-[0.28em] text-slate-600">
                 Primary contact
               </div>
-              <div className="text-sm font-medium text-slate-200 transition-colors group-hover:text-rose-300 sm:text-base">
+              <div className="text-sm font-medium text-slate-200 transition-colors group-hover:text-rose-300">
                 h.tiwari.dev@gmail.com
               </div>
             </div>
             <ArrowUpRight
-              size={18}
+              size={16}
               className="shrink-0 text-slate-600 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-rose-400"
             />
           </motion.a>
-
-          {/* Stat pills */}
-          <motion.div variants={item} className="grid grid-cols-3 gap-2">
-            {stats.map((s) => {
-              const Icon = s.icon;
-              return (
-                <div
-                  key={s.label}
-                  className="border border-neutral-800/60 bg-neutral-950/50 px-3 py-2.5 text-center"
-                >
-                  <Icon size={13} className="mx-auto mb-1.5" style={{ color: s.color }} />
-                  <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-slate-600">
-                    {s.label}
-                  </div>
-                  <div className="mt-0.5 text-xs font-semibold text-slate-300">
-                    {s.value}
-                  </div>
-                </div>
-              );
-            })}
-          </motion.div>
 
           {/* Resume download */}
           <motion.div variants={item}>
             <button
               onClick={() => window.open('/harsh_resume_new.pdf', '_blank')}
-              className="button-3d button-3d--rose button-3d--wide group w-full p-3.5 text-left"
+              className="button-3d button-3d--rose button-3d--wide group w-full p-3 text-left"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className="button-3d__icon">
-                    <FileDown size={18} />
+                    <FileDown size={16} />
                   </span>
                   <div>
                     <span className="button-3d__label block text-sm font-semibold">
@@ -173,19 +224,16 @@ export default function Socials() {
                     <span className="text-[10px] text-slate-500">PDF · Updated Jun 2025</span>
                   </div>
                 </div>
-                <ArrowRight size={16} className="button-3d__trailing" />
+                <ArrowRight size={14} className="button-3d__trailing" />
               </div>
             </button>
           </motion.div>
-        </motion.div>
 
-        {/* ── Right column — social grid ── */}
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="grid grid-cols-2 gap-2.5 sm:gap-3"
-        >
+          {/* Social grid */}
+          <motion.div
+            variants={container}
+            className="grid grid-cols-2 gap-2 sm:gap-2.5"
+          >
           {socials.map((s) => {
             const Icon = s.icon;
             return (
@@ -241,6 +289,7 @@ export default function Socials() {
             );
           })}
         </motion.div>
+        </motion.div> {/* end right column */}
       </div>
 
       {/* Footer */}

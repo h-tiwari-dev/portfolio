@@ -56,7 +56,13 @@ const OUTPUT_DELAY = 210;
 const HOLD_DURATION = 3400;
 const FADE_DURATION = 500;
 
-export default function TerminalWidget() {
+interface TerminalWidgetProps {
+  sessions?: { title: string; lines: Line[] }[];
+  minHeight?: number;
+}
+
+export default function TerminalWidget({ sessions: propSessions, minHeight = 192 }: TerminalWidgetProps = {}) {
+  const activeSessions = propSessions ?? SESSIONS;
   const [sessIdx, setSessIdx] = useState(0);
   const [doneLines, setDoneLines] = useState<Line[]>([]);
   const [typingText, setTypingText] = useState('');
@@ -80,7 +86,7 @@ export default function TerminalWidget() {
 
   useEffect(() => {
     if (phase !== 'typing') return;
-    const session = SESSIONS[sessIdx];
+    const session = activeSessions[sessIdx];
     const line = session.lines[lineIdx];
     if (!line) {
       setPhase('holding');
@@ -120,13 +126,13 @@ export default function TerminalWidget() {
     if (phase !== 'fading') return;
     setFading(true);
     to.current = setTimeout(
-      () => setSessIdx(i => (i + 1) % SESSIONS.length),
+      () => setSessIdx(i => (i + 1) % activeSessions.length),
       FADE_DURATION,
     );
     return clear;
   }, [phase]);
 
-  const session = SESSIONS[sessIdx];
+  const session = activeSessions[sessIdx];
   const isTypingCmd =
     phase === 'typing' && session.lines[lineIdx]?.type === 'cmd';
 
@@ -174,7 +180,7 @@ export default function TerminalWidget() {
       </div>
 
       {/* Body */}
-      <div className="min-h-[192px] space-y-0.5 px-3 py-3 font-mono text-xs">
+      <div className="space-y-0.5 px-3 py-3 font-mono text-xs" style={{ minHeight: minHeight }}>
         {doneLines.map((line, i) => (
           <div key={i} className={lineClass(line.type)}>
             {linePrefix(line.type)}
@@ -200,7 +206,7 @@ export default function TerminalWidget() {
 
       {/* Session dots */}
       <div className="flex items-center gap-1.5 border-t border-neutral-800/40 px-3 py-1.5">
-        {SESSIONS.map((_, i) => (
+        {activeSessions.map((_, i) => (
           <span
             key={i}
             className="h-1 w-1 rounded-full transition-colors duration-300"
