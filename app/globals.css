@@ -475,6 +475,13 @@
   --button-icon: #fbbf24;
 }
 
+.button-3d--cyan {
+  --button-accent: #0f766e;
+  --button-glow: rgba(45, 212, 191, 0.24);
+  --button-border: rgba(45, 212, 191, 0.22);
+  --button-icon: #5eead4;
+}
+
 .button-3d--wide {
   --button-accent: #e11d48;
   --button-glow: rgba(225, 29, 72, 0.2);

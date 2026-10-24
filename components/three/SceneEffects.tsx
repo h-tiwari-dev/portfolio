@@ -7,6 +7,8 @@ import { EffectComposer } from 'three-stdlib';
 import { RenderPass } from 'three-stdlib';
 import { UnrealBloomPass } from 'three-stdlib';
 import { ShaderPass } from 'three-stdlib';
+import { useReducedMotion } from 'framer-motion';
+import { butlerSignal } from '@/lib/butler/signal';
 
 extend({ EffectComposer, RenderPass, UnrealBloomPass, ShaderPass });
 
@@ -20,6 +22,8 @@ export default function SceneEffects() {
 
   const bloomPassRef = useRef<UnrealBloomPass | null>(null);
   const lensingPassRef = useRef<ShaderPass | null>(null);
+  const voiceRef = useRef(0);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     // Bloom Pass - reduced strength and higher threshold to prevent white buildup
@@ -107,7 +111,14 @@ export default function SceneEffects() {
 
   const blackHolePos = new THREE.Vector3(0, 0, 0);
 
-  useFrame(() => {
+  useFrame((_, delta) => {
+    if (bloomPassRef.current) {
+      const target = reduceMotion ? 0 : butlerSignal.speak;
+      const rate = target > voiceRef.current ? 0.5 : 0.12;
+      voiceRef.current += (target - voiceRef.current) * Math.min(1, rate * Math.min(delta, 0.05) * 60);
+      bloomPassRef.current.strength = 0.5 + voiceRef.current * 0.75;
+    }
+
     // Update Lensing Uniforms
     if (lensingPassRef.current) {
       const screenPos = blackHolePos.clone().project(camera);

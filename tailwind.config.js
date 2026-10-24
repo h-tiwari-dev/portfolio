@@ -53,6 +53,7 @@ module.exports = {
       fontFamily: {
         sans: ["var(--font-space-grotesk)"],
         mono: ["var(--font-jetbrains-mono)"],
+        butler: ["var(--font-butler)", "Georgia", "serif"],
       },
     },
   },

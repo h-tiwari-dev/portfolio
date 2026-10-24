@@ -9,6 +9,7 @@ import BlackHoleCore, { SkillPosition } from './BlackHoleCore';
 import StarField from './StarField';
 import SceneEffects from './SceneEffects';
 import AccretionParticles from './AccretionParticles';
+import { butler } from '@/lib/butler/engine';
 
 interface GlobeSceneProps {
   isMobile?: boolean;
@@ -44,6 +45,19 @@ const sectionViews = {
     position: new THREE.Vector3(0.45, -0.15, -0.2),
     rotation: new THREE.Euler(-0.03, -0.22, 0.02),
   },
+};
+
+const butlerView = {
+  camera: new THREE.Vector3(-11.4, 7.2, 11.4),
+  target: new THREE.Vector3(0, -3.1, 0),
+  position: new THREE.Vector3(0, 0, 0),
+  rotation: new THREE.Euler(0, 0, 0),
+};
+
+const butlerViewMobile = {
+  ...butlerView,
+  camera: new THREE.Vector3(-25, 15.5, 25),
+  target: new THREE.Vector3(0, -5.5, 0),
 };
 
 const tetherPoints = [
@@ -178,6 +192,7 @@ function SceneTether({
 
   useFrame((state) => {
     if (groupRef.current) {
+      groupRef.current.visible = !isMobile && !butler.getSnapshot().open;
       groupRef.current.rotation.y =
         Math.sin(state.clock.elapsedTime * 0.08) * 0.12;
       groupRef.current.rotation.x =
@@ -232,9 +247,17 @@ export default function GlobeScene({
   const showSkills = activeSection === 'skills';
 
   useFrame((state) => {
-    const view =
-      sectionViews[activeSection as keyof typeof sectionViews] ??
-      sectionViews.hero;
+    const focused = butler.getSnapshot().open;
+    const view = focused
+      ? isMobile
+        ? butlerViewMobile
+        : butlerView
+      : sectionViews[activeSection as keyof typeof sectionViews] ??
+        sectionViews.hero;
+    if (controlsRef.current) {
+      controlsRef.current.autoRotate = activeSection === 'hero' && !focused;
+      controlsRef.current.maxDistance = focused && isMobile ? 45 : 20;
+    }
 
     if (sceneRef.current) {
       sceneRef.current.position.lerp(view.position, 0.04);
@@ -273,7 +296,6 @@ export default function GlobeScene({
         enableDamping
         dampingFactor={0.035}
         rotateSpeed={0.4}
-        autoRotate={activeSection === 'hero'}
         autoRotateSpeed={0.5}
         enableZoom={false} // Disable zoom to avoid conflict with page scroll
         minDistance={3}

@@ -1,4 +1,4 @@
-import { Space_Grotesk, JetBrains_Mono } from 'next/font/google';
+import { Space_Grotesk, JetBrains_Mono, Cormorant_Garamond } from 'next/font/google';
 import Link from 'next/link';
 import { navItems } from '@/constants/navItems';
 import { SectionProvider } from '@/contexts/SectionContext';
@@ -15,6 +15,13 @@ const spaceGrotesk = Space_Grotesk({
   variable: '--font-space-grotesk',
 });
 
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  style: ['normal', 'italic'],
+  variable: '--font-butler',
+});
+
 import CustomCursor from '@/components/common/CustomCursor';
 
 export default function RootLayout({
@@ -26,7 +33,7 @@ export default function RootLayout({
     <html lang="en">
       <head />
       <body
-        className={`min-h-screen bg-background overflow-x-hidden font-sans antialiased text-white ${jetbrainsMono.variable} ${spaceGrotesk.variable}`}
+        className={`min-h-screen bg-background overflow-x-hidden font-sans antialiased text-white ${jetbrainsMono.variable} ${spaceGrotesk.variable} ${cormorant.variable}`}
       >
         {Number.parseInt(process.env.LOOKING_FOR_WORK ?? '0') === 1 ? (
           <div className="fixed top-0 left-0 right-0 bg-red-800 text-white font-bold text-center z-50">

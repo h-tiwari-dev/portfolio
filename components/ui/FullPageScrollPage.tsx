@@ -5,6 +5,8 @@ import React, {
   useEffect,
   useCallback,
   useRef,
+  useLayoutEffect,
+  useSyncExternalStore,
   createContext,
   useContext,
 } from 'react';
@@ -15,6 +17,8 @@ import Skills from '@/components/ui/Skills';
 import Socials from '@/components/ui/Socials';
 import ExperienceSectionContent from '@/components/ui/ExperienceSectionContent';
 import ThreeBackground from '@/components/three/ThreeBackground';
+import ButlerDock from '@/components/butler/ButlerDock';
+import { butler } from '@/lib/butler/engine';
 import { useSection } from '@/contexts/SectionContext';
 
 // Context for sharing scroll state
@@ -27,6 +31,9 @@ interface ScrollContextType {
   goToExperienceSlide: (index: number) => void;
   isAnimating: boolean;
 }
+
+const useIsomorphicLayoutEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
 const ScrollContext = createContext<ScrollContextType | null>(null);
 
@@ -57,6 +64,17 @@ export default function FullPageScrollPage() {
   const lastScrollTime = useRef(0);
   const touchStartY = useRef(0);
   const { setActiveSection, setActiveSkillCategory } = useSection();
+  const butlerOpen = useSyncExternalStore(
+    butler.subscribe,
+    () => butler.getSnapshot().open,
+    () => false
+  );
+  const pageRef = useRef<HTMLDivElement>(null);
+
+  // Layout effect so the page is focusable again before the dock hands focus back on close.
+  useIsomorphicLayoutEffect(() => {
+    pageRef.current?.toggleAttribute('inert', butlerOpen);
+  }, [butlerOpen]);
 
   const totalSections = sections.length;
   const scrollCooldown = 700;
@@ -122,6 +140,7 @@ export default function FullPageScrollPage() {
 
   const handleScroll = useCallback(
     (direction: 'up' | 'down') => {
+      if (butler.getSnapshot().open) return;
       const now = Date.now();
       if (now - lastScrollTime.current < scrollCooldown || isAnimating) return;
       lastScrollTime.current = now;
@@ -215,6 +234,7 @@ export default function FullPageScrollPage() {
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (butler.getSnapshot().open) return;
       if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
         e.preventDefault();
         handleScroll('down');
@@ -227,6 +247,10 @@ export default function FullPageScrollPage() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleScroll]);
+
+  const showBlackHole = useCallback(() => {
+    if (currentSection !== 0) goToSection(0);
+  }, [currentSection, goToSection]);
 
   const contextValue: ScrollContextType = {
     currentSection,
@@ -255,6 +279,14 @@ export default function FullPageScrollPage() {
         {/* Three.js Globe Background */}
         <ThreeBackground />
 
+        <motion.div
+          ref={pageRef}
+          className={`absolute inset-0 z-10 ${butlerOpen ? 'pointer-events-none' : ''}`}
+          initial={false}
+          animate={{ opacity: butlerOpen ? 0 : 1, scale: butlerOpen ? 0.985 : 1 }}
+          transition={{ duration: butlerOpen ? 0.5 : 0.7, ease: 'easeOut' }}
+          aria-hidden={butlerOpen || undefined}
+        >
         {/* Background Decorative Elements */}
         <div className="fixed inset-0 bg-grid opacity-10 pointer-events-none z-[1]"></div>
 
@@ -353,6 +385,9 @@ export default function FullPageScrollPage() {
             goToSection={goToSection}
           />
         </div>
+        </motion.div>
+
+        <ButlerDock onOpen={showBlackHole} />
       </main>
     </ScrollContext.Provider>
   );

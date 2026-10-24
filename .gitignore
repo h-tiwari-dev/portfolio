@@ -1,4 +1,6 @@
 node_modules/
+public/models/butler-resume/onnx/
+out/models/butler-resume/onnx/
 .env
 .next
 

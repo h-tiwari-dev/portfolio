@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { butler } from '@/lib/butler/engine';
 import { motion } from 'framer-motion';
 import {
   Activity,
@@ -11,6 +12,7 @@ import {
   Cpu,
   Database,
   MapPin,
+  Mic,
   RadioTower,
 } from 'lucide-react';
 
@@ -171,9 +173,17 @@ export default function ExperienceSectionContent({
               <h2 className="text-xl font-bold text-white md:text-3xl">
                 Experience
               </h2>
-              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-slate-500">
-                Work trajectory
-              </p>
+              <div className="flex flex-wrap items-center gap-3">
+                <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-slate-500">Work trajectory</p>
+                <button
+                  type="button"
+                  onClick={() => butler.open()}
+                  className="inline-flex items-center gap-1.5 border border-rose-900/70 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-rose-300 transition-colors hover:border-rose-700 hover:text-rose-200"
+                >
+                  <Mic size={11} aria-hidden="true" />
+                  Ask the butler
+                </button>
+              </div>
             </div>
           </motion.div>
 

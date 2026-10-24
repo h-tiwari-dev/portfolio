@@ -4,6 +4,9 @@ import { useMemo, useRef, MutableRefObject } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Billboard } from '@react-three/drei';
 import * as THREE from 'three';
+import { useReducedMotion } from 'framer-motion';
+import { butlerSignal } from '@/lib/butler/signal';
+import { butler } from '@/lib/butler/engine';
 
 const BLACK_HOLE_RADIUS = 2.6; // Doubled from 1.3
 const DISK_INNER_RADIUS = 3.0; // Doubled from 1.5
@@ -115,6 +118,9 @@ const PhotonRingShader = {
     uniform float uTime;
     uniform vec3 uCameraPosition;
     uniform float uOpacity;
+    uniform float uVoice;
+    uniform float uListen;
+    uniform float uFocus;
     varying vec2 vUv;
     varying vec3 vNormal;
     varying vec3 vWorldPosition;
@@ -123,18 +129,23 @@ const PhotonRingShader = {
       vec3 viewDirection = normalize(uCameraPosition - vWorldPosition);
       float fresnel = pow(1.0 - abs(dot(normalize(vNormal), viewDirection)), 1.6);
       float thread = sin((vUv.x + uTime * 0.055) * 6.28318 * 12.0) * 0.5 + 0.5;
-      float hotSpot = pow(thread, 5.0);
-      float tube = 1.0 - smoothstep(0.18, 0.5, abs(vUv.y - 0.5));
+      float hotSpot = pow(thread, 5.0 - uVoice * 3.0);
+      float tube = 1.0 - smoothstep(0.18 + uVoice * 0.2, 0.5, abs(vUv.y - 0.5));
       float pulse = sin(uTime * 2.8 + vUv.x * 6.28318 * 2.0) * 0.08 + 0.92;
 
       vec3 hot = vec3(1.0, 0.68, 0.28);
       vec3 rose = vec3(1.0, 0.22, 0.48);
       vec3 violet = vec3(0.48, 0.3, 1.0);
+      vec3 cyan = vec3(0.2, 0.9, 1.0);
       vec3 color = mix(rose, hot, hotSpot);
       color = mix(color, violet, smoothstep(0.62, 1.0, vUv.y) * 0.35);
+      color = mix(color, vec3(1.0, 0.93, 0.78), uVoice * 0.45);
+      color = mix(color, cyan, uListen * 0.85);
 
       float alpha = tube * (0.26 + hotSpot * 0.56 + fresnel * 0.28) * pulse * uOpacity;
-      gl_FragColor = vec4(color * (1.35 + hotSpot * 1.6), alpha);
+      alpha *= (1.0 - uFocus * 0.45) + uVoice * (1.4 + uFocus * 0.8) + uListen * 0.5;
+      float gain = (1.0 - uFocus * 0.5) + uVoice * (1.8 + uFocus * 1.6) + uListen * 0.5;
+      gl_FragColor = vec4(color * (1.35 + hotSpot * 1.6) * gain, clamp(alpha, 0.0, 1.0));
     }
   `,
 };
@@ -176,6 +187,10 @@ const DiskShader = {
     uniform float uNoiseScale;
     uniform float uFlowSpeed;
     uniform float uDensity;
+    uniform float uVoice;
+    uniform float uListen;
+    uniform float uThink;
+    uniform float uFocus;
 
     // Skill disturbance uniforms
     uniform vec2 uSkillPositions[${MAX_SKILL_DISTURBANCES}];
@@ -314,12 +329,22 @@ const DiskShader = {
         float pulse = sin(uTime * 1.7 + normalizedRadius * 14.0 + vAngle * 2.4) * 0.08 + 0.92;
         brightness *= pulse;
 
+        float voiceBand = 1.0 - smoothstep(0.0, 0.55, normalizedRadius);
+        float thinkWave = (sin(normalizedRadius * 22.0 - uTime * 3.2) * 0.5 + 0.5) * uThink * voiceBand;
+        brightness *= 1.0 - uFocus * (0.5 - voiceBand * 0.15);
+        brightness *= 1.0 + uVoice * (0.5 + voiceBand * (2.4 + uFocus * 1.4)) + thinkWave * (0.35 + uFocus * 0.5);
+        brightness += uVoice * innerPhotonHeat * (2.2 + uFocus * 1.5);
+
         float alpha = uDensity * (0.16 + noiseVal * 0.74 + filament * 0.34);
+        alpha *= 1.0 + uVoice * voiceBand * 1.6;
         alpha *= smoothstep(0.0, 0.11, normalizedRadius);
         alpha *= (1.0 - smoothstep(0.86, 1.0, normalizedRadius));
         alpha *= darkLane;
-        alpha += innerPhotonHeat * 0.18 + backLensedArc * 0.08;
-        alpha = clamp(alpha, 0.0, 0.92);
+        alpha += innerPhotonHeat * (0.18 + uVoice * 0.4) + backLensedArc * 0.08;
+        alpha = clamp(alpha, 0.0, 0.92 + uVoice * 0.08);
+
+        color = mix(color, vec3(0.2, 0.85, 1.0), uListen * voiceBand * 0.75);
+        brightness *= 1.0 + uListen * voiceBand * 0.8;
 
         gl_FragColor = vec4(color * brightness, alpha);
     }
@@ -334,6 +359,8 @@ export default function BlackHoleCore({
   const auraRef = useRef<THREE.Mesh>(null);
   const photonRingRef = useRef<THREE.Mesh>(null);
   const secondaryPhotonRingRef = useRef<THREE.Mesh>(null);
+  const levelsRef = useRef({ voice: 0, listen: 0, think: 0, focus: 0 });
+  const reduceMotion = useReducedMotion();
   const { camera } = useThree();
 
   // Initialize skill position arrays for uniforms
@@ -354,6 +381,10 @@ export default function BlackHoleCore({
       uNoiseScale: { value: 2.85 },
       uFlowSpeed: { value: 0.26 },
       uDensity: { value: 1.08 },
+      uVoice: { value: 0 },
+      uListen: { value: 0 },
+      uThink: { value: 0 },
+      uFocus: { value: 0 },
       // Skill disturbance uniforms - affects flow turbulence only
       uSkillPositions: { value: initialSkillPositions },
       uActiveSkills: { value: 0 },
@@ -383,6 +414,9 @@ export default function BlackHoleCore({
       uTime: { value: 0 },
       uCameraPosition: { value: new THREE.Vector3() },
       uOpacity: { value: 1.0 },
+      uVoice: { value: 0 },
+      uListen: { value: 0 },
+      uFocus: { value: 0 },
     }),
     []
   );
@@ -392,16 +426,37 @@ export default function BlackHoleCore({
       uTime: { value: 0 },
       uCameraPosition: { value: new THREE.Vector3() },
       uOpacity: { value: 0.42 },
+      uVoice: { value: 0 },
+      uListen: { value: 0 },
+      uFocus: { value: 0 },
     }),
     []
   );
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     const time = state.clock.elapsedTime;
+    const levels = levelsRef.current;
+    const step = Math.min(delta, 0.05) * 60;
+    const follow = (current: number, target: number, attack: number, release: number) =>
+      current + (target - current) * Math.min(1, (target > current ? attack : release) * step);
+    if (reduceMotion) {
+      levels.voice = follow(levels.voice, butlerSignal.speak > 0.02 ? 0.35 : 0, 0.03, 0.03);
+      levels.listen = follow(levels.listen, butlerSignal.listen > 0 ? 0.35 : 0, 0.03, 0.03);
+    } else {
+      levels.voice = follow(levels.voice, butlerSignal.speak, 0.55, 0.14);
+      levels.listen = follow(levels.listen, butlerSignal.listen, 0.4, 0.1);
+    }
+    levels.think = follow(levels.think, reduceMotion ? 0 : butlerSignal.think, 0.08, 0.05);
+    levels.focus = follow(levels.focus, butler.getSnapshot().open ? 1 : 0, 0.03, 0.03);
+
     if (diskRef.current) {
       diskRef.current.rotation.z = time * 0.05; // Rotate disk
       const material = diskRef.current.material as THREE.ShaderMaterial;
       material.uniforms.uTime.value = time;
+      material.uniforms.uVoice.value = levels.voice;
+      material.uniforms.uListen.value = levels.listen;
+      material.uniforms.uThink.value = levels.think;
+      material.uniforms.uFocus.value = levels.focus;
 
       // Update skill positions from ref for flow disturbance
       if (skillPositionsRef?.current) {
@@ -439,12 +494,20 @@ export default function BlackHoleCore({
       const material = photonRingRef.current.material as THREE.ShaderMaterial;
       material.uniforms.uTime.value = time;
       material.uniforms.uCameraPosition.value.copy(camera.position);
+      material.uniforms.uVoice.value = levels.voice;
+      material.uniforms.uListen.value = levels.listen;
+      material.uniforms.uFocus.value = levels.focus;
+      const swell = 1 + levels.voice * (0.05 + levels.focus * 0.04);
+      photonRingRef.current.scale.set(swell, swell, 1);
     }
     if (secondaryPhotonRingRef.current) {
       const material = secondaryPhotonRingRef.current
         .material as THREE.ShaderMaterial;
       material.uniforms.uTime.value = time * 0.82;
       material.uniforms.uCameraPosition.value.copy(camera.position);
+      material.uniforms.uVoice.value = levels.voice * 0.7;
+      material.uniforms.uListen.value = levels.listen;
+      material.uniforms.uFocus.value = levels.focus;
     }
   });
 

@@ -9,13 +9,15 @@ import {
   ExternalLink,
   FileDown,
   MapPin,
+  Mic,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import TerminalWidget from '@/components/ui/TerminalWidget';
+import { butler } from '@/lib/butler/engine';
 
 const metrics = [
   { value: '<1s', label: 'voice-agent response target' },
-  { value: '2M+', label: 'monthly transactions' },
+  { value: '2M+', label: 'transactions' },
   { value: '50+', label: 'workflow node types' },
 ];
 
@@ -118,6 +120,17 @@ export default function Hero() {
               <span className="button-3d__label">Blog</span>
               <ArrowRight size={14} className="button-3d__trailing" />
             </Link>
+
+            <button
+              type="button"
+              onClick={() => butler.open()}
+              className="button-3d button-3d--cyan flex w-full items-center justify-center gap-3 px-5 py-3 text-sm font-medium sm:w-auto"
+            >
+              <span className="button-3d__icon">
+                <Mic size={17} />
+              </span>
+              <span className="button-3d__label">Butler</span>
+            </button>
           </motion.div>
         </div>
 
