@@ -115,23 +115,45 @@ async function hasWebGpu() {
   }
 }
 
+const WEIGHTS_FALLBACK = 'https://www.tiwariaiharsh.com';
+
 async function hasLocalMind() {
   try {
-    const [config, weights] = await Promise.all([
-      fetch('/models/butler-resume/config.json', { method: 'HEAD' }),
-      fetch('/models/butler-resume/onnx/model_q4f16.onnx', { method: 'HEAD' }),
-    ]);
-    return config.ok && weights.ok;
+    const config = await fetch('/models/butler-resume/config.json', { method: 'HEAD' });
+    if (!config.ok) return false;
+    const sameOrigin = await fetch('/models/butler-resume/onnx/model_q4f16.onnx', { method: 'HEAD' });
+    if (sameOrigin.ok) return true;
+    if (self.location.hostname === 'www.tiwariaiharsh.com') return false;
+    const fallback = await fetch(`${WEIGHTS_FALLBACK}/models/butler-resume/onnx/model_q4f16.onnx`, { method: 'HEAD' });
+    return fallback.ok;
   } catch {
     return false;
   }
+}
+
+function proxyMissingWeights() {
+  const original = globalThis.fetch.bind(globalThis);
+  globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+    const raw = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
+    const parsed = new URL(raw, self.location.origin);
+    const sameHost = parsed.origin === self.location.origin;
+    if (sameHost && parsed.pathname.startsWith('/models/butler-resume/onnx/')) {
+      const local = await original(input, init);
+      if (local.ok || local.status === 206) return local;
+      return original(`${WEIGHTS_FALLBACK}${parsed.pathname}${parsed.search}`, init);
+    }
+    return original(input, init);
+  }) as typeof fetch;
 }
 
 async function load(useMind: boolean, mindModel?: string, mindDtype = 'q4f16', earsModel: string = MODELS.ears) {
   const gpu = await hasWebGpu();
   const localMind = !mindModel && (await hasLocalMind());
   const mindToLoad = mindModel ?? (localMind ? 'butler-resume' : MODELS.mind);
-  if (localMind) env.allowLocalModels = true;
+  if (localMind) {
+    env.allowLocalModels = true;
+    proxyMissingWeights();
+  }
   const loadEars = (async () => {
     if (ears) return;
     ears = (await loadPipeline('automatic-speech-recognition', earsModel, {

@@ -3,6 +3,7 @@
 import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { diskPlane } from './BlackHoleCore';
 
 const ParticleShader = {
   vertexShader: `
@@ -65,6 +66,7 @@ const ParticleShader = {
 
 export default function AccretionParticles() {
   const meshRef = useRef<THREE.Points>(null);
+  const groupRef = useRef<THREE.Group>(null);
 
   const count = 5600;
 
@@ -89,6 +91,7 @@ export default function AccretionParticles() {
   );
 
   useFrame((state) => {
+    if (groupRef.current) groupRef.current.quaternion.copy(diskPlane);
     if (meshRef.current) {
       (meshRef.current.material as THREE.ShaderMaterial).uniforms.uTime.value =
         state.clock.elapsedTime;
@@ -96,8 +99,7 @@ export default function AccretionParticles() {
   });
 
   return (
-    // Rotate to match disk tilt
-    <group rotation={[Math.PI / 3.0, 0, 0]}>
+    <group ref={groupRef}>
       <points ref={meshRef}>
         <bufferGeometry>
           <bufferAttribute

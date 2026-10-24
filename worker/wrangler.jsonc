@@ -1,7 +1,12 @@
 {
 	"name": "portfolio-worker",
 	"main": "index.ts",
+	"workers_dev": true,
 	"compatibility_date": "2026-02-08",
+	"routes": [
+		{ "pattern": "tiwariaiharsh.com/models/butler-resume/onnx/*", "zone_name": "tiwariaiharsh.com" },
+		{ "pattern": "www.tiwariaiharsh.com/models/butler-resume/onnx/*", "zone_name": "tiwariaiharsh.com" }
+	],
 	"compatibility_flags": [
 		"nodejs_compat"
 	],

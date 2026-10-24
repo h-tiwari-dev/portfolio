@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "npx wrangler pages dev out",
-    "deploy": "npm run build && npx wrangler pages deploy out --project-name=portfolio",
+    "deploy": "npm run build && rm -rf out/models/butler-resume/onnx && npx wrangler pages deploy out --project-name=portfolio",
     "deploy:worker": "cd worker && npx wrangler deploy",
     "lint": "next lint",
     "migrate:posts:d1": "tsx scripts/migrate-posts-to-worker-db.ts",

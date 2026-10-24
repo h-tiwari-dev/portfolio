@@ -774,10 +774,78 @@ async function handleMediaRequest(request: Request, env: Env) {
   }
 }
 
+const MODEL_PREFIX = '/models/butler-resume/onnx/';
+const MODEL_OBJECT_PREFIX = 'models/butler-resume/onnx/';
+
+function modelObjectKey(pathname: string): string | null {
+  if (!pathname.startsWith(MODEL_PREFIX)) return null;
+  const name = pathname.slice(MODEL_PREFIX.length);
+  if (!/^[A-Za-z0-9._-]+$/.test(name)) return null;
+  return `${MODEL_OBJECT_PREFIX}${name}`;
+}
+
+function modelHeaders(object: R2Object, ranged: boolean): Headers {
+  const headers = new Headers();
+  object.writeHttpMetadata(headers);
+  headers.set('etag', object.httpEtag);
+  headers.set('accept-ranges', 'bytes');
+  headers.set('cache-control', 'public, max-age=31536000, immutable');
+  headers.set('access-control-allow-origin', '*');
+  headers.set('access-control-expose-headers', 'content-length, content-range, accept-ranges, etag');
+  if (!headers.has('content-type')) headers.set('content-type', 'application/octet-stream');
+  const range = object.range;
+  if (ranged && range && range.offset !== undefined && range.length !== undefined) {
+    const end = range.offset + range.length - 1;
+    headers.set('content-range', `bytes ${range.offset}-${end}/${object.size}`);
+    headers.set('content-length', String(range.length));
+  } else {
+    headers.set('content-length', String(object.size));
+  }
+  return headers;
+}
+
+async function handleModelRequest(request: Request, env: Env): Promise<Response | null> {
+  const key = modelObjectKey(new URL(request.url).pathname);
+  if (!key) return null;
+  if (!env.BLOG_MEDIA) {
+    return new Response('Model storage is not configured.', { status: 500 });
+  }
+  if (request.method === 'OPTIONS') {
+    return new Response(null, {
+      headers: {
+        'access-control-allow-origin': '*',
+        'access-control-allow-methods': 'GET, HEAD, OPTIONS',
+        'access-control-allow-headers': 'range, if-range, if-none-match',
+        'access-control-max-age': '86400',
+      },
+    });
+  }
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    return new Response('Method not allowed', { status: 405 });
+  }
+
+  if (request.method === 'HEAD') {
+    const object = await env.BLOG_MEDIA.head(key);
+    if (!object) return new Response('Not found', { status: 404 });
+    return new Response(null, { headers: modelHeaders(object, false) });
+  }
+
+  const ranged = request.headers.has('range');
+  const object = await env.BLOG_MEDIA.get(key, ranged ? { range: request.headers } : undefined);
+  if (!object) return new Response(ranged ? 'Range not satisfiable' : 'Not found', { status: ranged ? 416 : 404 });
+  return new Response(object.body, {
+    status: ranged && object.range ? 206 : 200,
+    headers: modelHeaders(object, ranged),
+  });
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     const pathname = url.pathname;
+
+    const modelResponse = await handleModelRequest(request, env);
+    if (modelResponse) return modelResponse;
 
     if (request.method === 'OPTIONS') {
       return new Response(null, { headers: getCorsHeaders() });

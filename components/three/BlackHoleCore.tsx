@@ -11,7 +11,32 @@ import { butler } from '@/lib/butler/engine';
 const BLACK_HOLE_RADIUS = 2.6; // Doubled from 1.3
 const DISK_INNER_RADIUS = 3.0; // Doubled from 1.5
 const DISK_OUTER_RADIUS = 14.0; // Increased from 8.0
-const DISK_TILT_ANGLE = Math.PI / 3.0;
+const DISK_TILT_ANGLE_DEFAULT = Math.PI / 3.0;
+// How far the disk leans away from facing the camera once open. 0 would be a
+// razor-thin edge-on line (barely visible); this keeps a wide, readable ellipse.
+const DISK_FOCUS_FACING = 0.45;
+const DISK_FOCUS_PHI = Math.acos(DISK_FOCUS_FACING);
+
+export const diskPlane = new THREE.Quaternion().setFromEuler(
+  new THREE.Euler(DISK_TILT_ANGLE_DEFAULT, 0, 0)
+);
+
+const rig = {
+  euler: new THREE.Euler(DISK_TILT_ANGLE_DEFAULT, 0, 0),
+  qParent: new THREE.Quaternion(),
+  qRest: new THREE.Quaternion(),
+  qWorld: new THREE.Quaternion(),
+  qFocus: new THREE.Quaternion(),
+  qPlane: new THREE.Quaternion(),
+  view: new THREE.Vector3(),
+  right: new THREE.Vector3(),
+  up: new THREE.Vector3(),
+  line: new THREE.Vector3(),
+  cross: new THREE.Vector3(),
+  normal: new THREE.Vector3(),
+  yAxis: new THREE.Vector3(),
+  basis: new THREE.Matrix4(),
+};
 const MAX_SKILL_DISTURBANCES = 28; // Maximum skills to track for disturbance
 const PHOTON_RING_RADIUS = BLACK_HOLE_RADIUS * 1.28;
 const AURA_RADIUS = BLACK_HOLE_RADIUS * 2.55;
@@ -450,7 +475,36 @@ export default function BlackHoleCore({
     levels.focus = follow(levels.focus, butler.getSnapshot().open ? 1 : 0, 0.03, 0.03);
 
     if (diskRef.current) {
-      diskRef.current.rotation.z = time * 0.05; // Rotate disk
+      const parent = diskRef.current.parent;
+      if (parent) {
+        parent.getWorldQuaternion(rig.qParent);
+        rig.qRest.setFromEuler(rig.euler);
+        camera.getWorldDirection(rig.view);
+        rig.right.set(1, 0, 0).applyQuaternion(camera.quaternion);
+        rig.up.set(0, 1, 0).applyQuaternion(camera.quaternion);
+        // Down-right on screen, so the disk's long axis reads as \.
+        rig.line.copy(rig.right).addScaledVector(rig.up, -1).normalize();
+        rig.cross.crossVectors(rig.line, rig.view).normalize();
+        // Lean the normal partway toward the view direction (not fully
+        // perpendicular to it) so the disk stays an open, visible ellipse
+        // instead of collapsing edge-on into a thin line.
+        rig.normal
+          .copy(rig.view)
+          .multiplyScalar(Math.cos(DISK_FOCUS_PHI))
+          .addScaledVector(rig.cross, Math.sin(DISK_FOCUS_PHI))
+          .normalize();
+        rig.yAxis.crossVectors(rig.normal, rig.line).normalize();
+        rig.basis.makeBasis(rig.line, rig.yAxis, rig.normal);
+        rig.qWorld.setFromRotationMatrix(rig.basis);
+        rig.qFocus.copy(rig.qParent).invert().multiply(rig.qWorld);
+        if (rig.qRest.dot(rig.qFocus) < 0) {
+          rig.qFocus.set(-rig.qFocus.x, -rig.qFocus.y, -rig.qFocus.z, -rig.qFocus.w);
+        }
+        rig.qPlane.copy(rig.qRest).slerp(rig.qFocus, levels.focus);
+        diskPlane.copy(rig.qPlane);
+        diskRef.current.quaternion.copy(rig.qPlane);
+        diskRef.current.rotateZ(time * 0.05);
+      }
       const material = diskRef.current.material as THREE.ShaderMaterial;
       material.uniforms.uTime.value = time;
       material.uniforms.uVoice.value = levels.voice;
@@ -581,7 +635,7 @@ export default function BlackHoleCore({
       </Billboard>
 
       {/* Accretion Disk */}
-      <mesh ref={diskRef} rotation={[DISK_TILT_ANGLE, 0, 0]} renderOrder={1}>
+      <mesh ref={diskRef} renderOrder={1}>
         <ringGeometry args={[DISK_INNER_RADIUS, DISK_OUTER_RADIUS, 256, 128]} />
         <shaderMaterial
           vertexShader={DiskShader.vertexShader}
