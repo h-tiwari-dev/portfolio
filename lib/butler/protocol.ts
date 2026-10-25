@@ -21,8 +21,8 @@ export type BrainResponse =
   | { type: 'thought'; id: number; text: string; ms: number }
   | { type: 'error'; id?: number; message: string };
 
-export const BUTLER_VOICE = 'bm_george';
-export const BUTLER_SPEED = 0.94;
+export const BUTLER_VOICE = 'hugh';
+export const BUTLER_SPEED = 1;
 
 export type VoiceRequest =
   | { type: 'load' }
@@ -38,8 +38,8 @@ export type VoiceResponse =
 export const MODELS = {
   ears: 'onnx-community/whisper-large-v3-turbo',
   mind: 'onnx-community/Qwen3-0.6B-ONNX',
-  voice: 'onnx-community/Kokoro-82M-v1.0-ONNX',
+  voice: 'onnx-community/phonon-31m-en-ONNX',
 } as const;
 
-export const APPROX_MB = { ears: 759, mind: 652, voice: 326 };
-export const APPROX_MB_WASM = { ears: 1085, mind: 0, voice: 92 };
+export const APPROX_MB = { ears: 759, mind: 652, voice: 161 };
+export const APPROX_MB_WASM = { ears: 1085, mind: 0, voice: 161 };
