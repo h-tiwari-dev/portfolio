@@ -148,39 +148,43 @@ async function loadVoice(device: 'webgpu' | 'wasm', dtype: 'q4f16' | 'q4' | 'fp3
 
 async function synthesize(text: string, id: number) {
   if (!flow || !mimi || !tokenizer || !cfg || !voiceState) throw new Error('The voice is not loaded.');
+  const phonon = cfg;
+  const speak = flow;
+  const decode = mimi;
+  const prompt = voiceState;
   let sentence = text.trim().replace(/\s+/g, ' ');
   if (!sentence) return new Float32Array();
   sentence = sentence[0].toUpperCase() + sentence.slice(1);
   if (/[\p{L}\p{N}]$/u.test(sentence)) sentence += '.';
   const ids = tokenizer.encode(sentence, { add_special_tokens: false });
   let state = nextState(
-    await flow({
+    await speak({
       text_ids: i64(ids, [1, ids.length]),
-      voice_latents: f32([1, cfg.voice_dim, 0]),
-      latent: f32([1, 0, cfg.latent_dim]),
-      noise: f32([1, cfg.latent_dim]),
+      voice_latents: f32([1, phonon.voice_dim, 0]),
+      latent: f32([1, 0, phonon.latent_dim]),
+      noise: f32([1, phonon.latent_dim]),
       num_speakers: i64([1], [1]),
       duration_delta: f32([1]),
-      ...voiceState,
+      ...prompt,
     })
   );
-  const codec: State = { past_offset: i64([0], [1]), ...emptyCache(cfg.mimi_decoder) };
-  for (const [name, dims] of Object.entries(cfg.mimi_decoder.conv_states)) codec[name] = f32(dims);
-  let latent = f32([1, 1, cfg.latent_dim], new Float32Array(cfg.latent_dim).fill(Number.NaN));
+  const codec: State = { past_offset: i64([0], [1]), ...emptyCache(phonon.mimi_decoder) };
+  for (const [name, dims] of Object.entries(phonon.mimi_decoder.conv_states)) codec[name] = f32(dims);
+  let latent = f32([1, 1, phonon.latent_dim], new Float32Array(phonon.latent_dim).fill(Number.NaN));
   const randn = () => Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(2 * Math.PI * Math.random());
   const chunks: Float32Array[] = [];
   let countdown: number | null = null;
-  const frames = Math.ceil((ids.length / 3 + 2) * cfg.frame_rate);
+  const frames = Math.ceil((ids.length / 3 + 2) * phonon.frame_rate);
   try {
     for (let frame = 0; frame < frames; frame += 1) {
       if (!wanted(id)) return null;
       const noise = f32(
-        [1, cfg.latent_dim],
-        Float32Array.from({ length: cfg.latent_dim }, () => randn() * Math.sqrt(cfg.temperature))
+        [1, phonon.latent_dim],
+        Float32Array.from({ length: phonon.latent_dim }, () => randn() * Math.sqrt(phonon.temperature))
       );
-      const step = await flow({
+      const step = await speak({
         text_ids: i64([], [1, 0]),
-        voice_latents: f32([1, cfg.voice_dim, 0]),
+        voice_latents: f32([1, phonon.voice_dim, 0]),
         latent,
         noise,
         num_speakers: i64([1], [1]),
@@ -190,13 +194,13 @@ async function synthesize(text: string, id: number) {
       release(state, { latent });
       state = nextState(step);
       latent = step.latent_out;
-      const decoded = await mimi({ latent, ...codec });
+      const decoded = await decode({ latent, ...codec });
       release(codec);
       const audio = decoded.audio.data as Float32Array;
       chunks.push(new Float32Array(audio));
       Object.assign(codec, nextState(decoded));
       const eos = (step.eos_logit.data as Float32Array)[0];
-      if (countdown === null && eos > cfg.eos_threshold) countdown = sentence.split(' ').length <= 4 ? 3 : 1;
+      if (countdown === null && eos > phonon.eos_threshold) countdown = sentence.split(' ').length <= 4 ? 3 : 1;
       if (countdown !== null) {
         countdown -= 1;
         if (countdown < 0) break;
