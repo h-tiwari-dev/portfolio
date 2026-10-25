@@ -41,7 +41,10 @@ export interface ButlerState {
 }
 
 const SAMPLE_RATE = 16000;
-const SILENCE_END_MS = 900;
+// Long enough to ride out the natural pause people leave before or inside an
+// unfamiliar compound name ("Wellness... Living"), so the mic doesn't cut off
+// before the whole word is said.
+const SILENCE_END_MS = 1300;
 const NO_SPEECH_MS = 7000;
 const MAX_UTTERANCE_MS = 12000;
 const LOAD_STALL_MS = 90000;

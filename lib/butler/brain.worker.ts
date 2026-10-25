@@ -20,6 +20,16 @@ type Ears = ((
   kwargs?: Record<string, unknown>
 ) => Promise<{ text: string } | { text: string }[]>) & {
   tokenizer: PreTrainedTokenizer;
+  model: {
+    generation_config: {
+      prev_sot_token_id?: number;
+      decoder_start_token_id?: number;
+      no_timestamps_token_id?: number;
+      is_multilingual?: boolean;
+      lang_to_id?: Record<string, number>;
+      task_to_id?: Record<string, number>;
+    };
+  };
 };
 type Mind = (
   messages: { role: string; content: string }[],
@@ -32,19 +42,23 @@ let mind: Mind | null = null;
 let mindId = '';
 const stopper = new InterruptableStoppingCriteria();
 
-// A handful of proper nouns Moonshine mishears often ("Both his work at wellness
-// level" for "WellnessLiving", "kaso" for "Kusho", "carcelor" for "Castler"). This
-// nudges decoding toward them, the same way Whisper's `initial_prompt` biases a
-// transcript, without forcing them into speech that never mentioned them.
+// Proper nouns the recognizer still smears ("kaso" for Kusho, "carcelor" for
+// Castler). This nudges decoding toward them once the start of the name is
+// already there, without forcing them into speech that never mentioned them.
 const BIAS_WORDS = ['Castler', 'Kusho', 'WellnessLiving', 'Wellness Living'];
 const BIAS_VALUE = 4;
+// Also nudge the very first token of each name, more gently, so the decoder
+// leans toward starting the name rather than only finishing it once started.
+const START_BIAS_VALUE = 1.5;
 
 class SequenceBiasLogitsProcessor extends LogitsProcessor {
   private sequences: number[][];
+  private startTokens: Set<number>;
 
   constructor(sequences: number[][]) {
     super();
     this.sequences = sequences;
+    this.startTokens = new Set(sequences.map((sequence) => sequence[0]));
   }
 
   _call(inputIds: bigint[][], logits: Tensor) {
@@ -55,6 +69,7 @@ class SequenceBiasLogitsProcessor extends LogitsProcessor {
     for (let i = 0; i < inputIds.length; i += 1) {
       const ids = inputIds[i];
       const data = rows[i].data as Float32Array;
+      for (const token of this.startTokens) data[token] += START_BIAS_VALUE;
       for (const sequence of this.sequences) {
         if (ids.length < sequence.length - 1) continue;
         let matches = true;
@@ -93,6 +108,42 @@ function buildBiasProcessor(tokenizer: PreTrainedTokenizer) {
 
 let biasProcessor: InstanceType<typeof LogitsProcessorList> | null = null;
 
+// Whisper has no accent switch. A short prefix is its previous-context prior, so
+// the decoder expects Indian English and the names on this page. The prefix is
+// stripped back out before the transcript is shown.
+const ACCENT_PROMPT = 'Indian English from Bengaluru. WellnessLiving.';
+let accentPrefix: number[] | null = null;
+let earsMultilingual = false;
+
+function buildAccentPrefix(model: Ears) {
+  const config = model.model.generation_config;
+  const prev = config.prev_sot_token_id;
+  const start = config.decoder_start_token_id;
+  if (prev == null || start == null) return null;
+  const words = model.tokenizer.encode(ACCENT_PROMPT, { add_special_tokens: false });
+  const ids = [prev, ...words, start];
+  if (config.is_multilingual) {
+    const lang = config.lang_to_id?.['<|en|>'];
+    const task = config.task_to_id?.transcribe;
+    if (lang == null || task == null) return null;
+    ids.push(lang, task);
+  }
+  if (config.no_timestamps_token_id != null) ids.push(config.no_timestamps_token_id);
+  return ids;
+}
+
+function stripAccentPrompt(text: string) {
+  const pattern = new RegExp(
+    `^\\s*${ACCENT_PROMPT.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/ /g, '\\s+')}[.\\s]*`,
+    'i'
+  );
+  return text
+    .replace(pattern, '')
+    .replace(/(?:\.{2,}\s*,\s*){2,}/g, '')
+    .replace(/,\s*(?:,\s*){2,}/g, '')
+    .trim();
+}
+
 function post(message: BrainResponse) {
   scope.postMessage(message);
 }
@@ -114,6 +165,10 @@ async function hasWebGpu() {
     return false;
   }
 }
+
+// 8-bit Whisper decodes to garbage on WebGPU, and this model's fp16 encoder is
+// 1.2 GB. 4-bit weights are what actually run next to the language model.
+const EARS_GPU_DTYPE: Record<string, string> = { encoder_model: 'q4', decoder_model_merged: 'q4' };
 
 const WEIGHTS_FALLBACK = 'https://www.tiwariaiharsh.com';
 
@@ -156,27 +211,24 @@ async function load(useMind: boolean, mindModel?: string, mindDtype = 'q4f16', e
   }
   const loadEars = (async () => {
     if (ears) return;
-    const loadEarsModel = (device: 'webgpu' | 'wasm', dtype: 'q8' | Record<string, string>) =>
+    const loadEarsModel = (device: 'webgpu' | 'wasm', dtype: string | Record<string, string>) =>
       loadPipeline('automatic-speech-recognition', earsModel, {
         dtype,
         device,
         progress_callback: progress('ears'),
         session_options: QUIET,
       }) as Promise<Ears>;
-    // The quantized encoder is what muddies short names. On a GPU, keep that
-    // encoder in fp16 and leave the decoder quantized. Fall back if fp16 is missing.
     try {
-      ears = await loadEarsModel(
-        gpu ? 'webgpu' : 'wasm',
-        gpu ? { encoder_model: 'fp16', decoder_model_merged: 'q8' } : 'q8'
-      );
+      ears = await loadEarsModel(gpu ? 'webgpu' : 'wasm', gpu ? EARS_GPU_DTYPE : 'q8');
     } catch (error) {
       if (!gpu) throw error;
-      console.warn('[butler] fp16 ears failed, using the quantized model', error);
+      console.warn('[butler] gpu ears failed, using wasm', error);
       ears = await loadEarsModel('wasm', 'q8');
     }
     biasProcessor = buildBiasProcessor(ears.tokenizer);
-    await ears(new Float32Array(16000));
+    earsMultilingual = Boolean(ears.model.generation_config.is_multilingual);
+    accentPrefix = buildAccentPrefix(ears);
+    await ears(new Float32Array(16000), accentPrefix ? { decoder_input_ids: accentPrefix } : {});
   })();
 
   const loadMind = (async () => {
@@ -216,14 +268,39 @@ scope.onmessage = (event: MessageEvent<BrainRequest>) => {
 };
 
 function prepareHearing(audio: Float32Array) {
+  const rate = 16000;
   let peak = 0;
   for (let i = 0; i < audio.length; i += 1) peak = Math.max(peak, Math.abs(audio[i]));
-  // Quiet laptop mics land well below the level Moonshine was trained on.
-  if (peak <= 0.012 || peak >= 0.55) return audio;
-  const gain = Math.min(3, 0.85 / peak);
-  const out = new Float32Array(audio.length);
-  for (let i = 0; i < audio.length; i += 1) out[i] = Math.max(-1, Math.min(1, audio[i] * gain));
-  return out;
+  const gain = peak > 0.012 && peak < 0.55 ? Math.min(3, 0.85 / peak) : 1;
+  const boosted = gain === 1 ? audio : new Float32Array(audio.length);
+  if (gain !== 1) {
+    for (let i = 0; i < audio.length; i += 1) boosted[i] = Math.max(-1, Math.min(1, audio[i] * gain));
+  }
+  // Drop the long silent tail. Whisper invents words when the clip ends in quiet.
+  const frame = 320;
+  const level = Math.max(0.008, peak * gain * 0.08);
+  const loud = (from: number) => {
+    const to = Math.min(boosted.length, from + frame);
+    let sum = 0;
+    for (let i = from; i < to; i += 1) sum += boosted[i] * boosted[i];
+    return Math.sqrt(sum / Math.max(1, to - from)) > level;
+  };
+  let start = 0;
+  let end = boosted.length;
+  for (let i = 0; i < boosted.length; i += frame) {
+    if (!loud(i)) continue;
+    start = Math.max(0, i - Math.floor(rate * 0.12));
+    break;
+  }
+  for (let i = Math.max(0, boosted.length - frame); i > start; i -= frame) {
+    if (!loud(i)) continue;
+    end = Math.min(boosted.length, i + frame + Math.floor(rate * 0.2));
+    break;
+  }
+  if (end - start < Math.floor(rate * 0.2)) return boosted;
+  const trimmed = new Float32Array(end - start);
+  trimmed.set(boosted.subarray(start, end));
+  return trimmed;
 }
 
 async function handle(message: Exclude<BrainRequest, { type: 'abort' }>) {
@@ -238,12 +315,18 @@ async function handle(message: Exclude<BrainRequest, { type: 'abort' }>) {
       const started = performance.now();
       const output = await ears(audio, {
         ...(biasProcessor ? { logits_processor: biasProcessor } : {}),
-        // The pipeline budgets 6 tokens per second, which clips a short question
-        // before the last name is written. Keep that rate, but never below 16.
-        max_new_tokens: Math.max(16, Math.ceil(audio.length / 16000) * 6),
+        ...(accentPrefix
+          ? { decoder_input_ids: accentPrefix }
+          : earsMultilingual
+            ? { language: 'english', task: 'transcribe' }
+            : {}),
+        // Without this a short clip plus the prompt below can make the decoder
+        // loop on the prompt's own words instead of moving on to the audio.
+        no_repeat_ngram_size: 3,
+        max_new_tokens: Math.min(64, Math.max(12, Math.ceil(audio.length / 16000) * 6)),
       });
-      const text = Array.isArray(output) ? output.map((item) => item.text).join(' ') : output.text;
-      post({ type: 'transcript', id: message.id, text: text.trim(), ms: performance.now() - started });
+      const raw = Array.isArray(output) ? output.map((item) => item.text).join(' ') : output.text;
+      post({ type: 'transcript', id: message.id, text: stripAccentPrompt(raw), ms: performance.now() - started });
       return;
     }
     if (message.type === 'think') {

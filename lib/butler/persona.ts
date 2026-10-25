@@ -441,12 +441,21 @@ export function acceptAnswer(raw: string, note: string, question = '') {
   return { text, grounded: true };
 }
 
+const WELLNESS_HEAD = String.raw`(?:(?:w|v)el+n[aeiou]?ss?|well\s+(?:ness|nest|is|this|as))`;
+const WELLNESS_TAIL = String.raw`(?:liv(?:ing|in|ving)?|leav(?:ing|in)|lin(?:ing|in)|lev(?:el|ing|in)|lov(?:ing|in)|leap(?:ing)?|lib(?:ing|bing))`;
+
 const HEARD_PHRASES: [RegExp, string][] = [
-  [/\b(wellness|welness|wellnes) ?(living|lining|leaving)\b/gi, 'WellnessLiving'],
+  // "WellnessLiving" survives an Indian accent as two beats: velness, wellness
+  // level, well nest living, wellness livin. This page only has the one company.
+  [new RegExp(String.raw`\b${WELLNESS_HEAD}[\s,.-]*${WELLNESS_TAIL}\b`, 'gi'), 'WellnessLiving'],
+  [new RegExp(String.raw`\b${WELLNESS_HEAD}\b[.!?]*\s*${WELLNESS_TAIL}\b[.!?]*`, 'gi'), 'WellnessLiving.'],
+  [/\b(?:velness|vellness|wellniss|welness|wellnes|wellness)\b/gi, 'WellnessLiving'],
   [/\b(carcelor|carceler|carsler|castle ?ler|cassler|caslo|casslo|caslar)\b/gi, 'Castler'],
   [/\b(about|at) casserole\b/gi, '$1 Castler'],
-  [/\b(kaso|kasho|kashu|kuso|kusu|kushu|cusho|kusso|koosho|ku sho|coo sho)\b/gi, 'Kusho'],
+  [/\b(kaso|kasho|kashu|kuso|kusu|kushu|cusho|kusso|koosho|koucho|ku sho|coo sho)\b/gi, 'Kusho'],
+  [/\b(at|about|from|with|for) (cash|kash|cush|coo) ?(show|shoe|sho)\b/gi, '$1 Kusho'],
   [/\bmongo ?db\b/gi, 'MongoDB'],
+  [/\bred ?shi(f|ff|fted|ft)\b/gi, 'Redshift'],
   [/\bmr\.? tiwar[iy]\b/gi, 'Mr Tiwari'],
 ];
 
@@ -509,12 +518,35 @@ export function fixNames(text: string) {
   return slotted.replace(/[A-Za-z]{5,}/g, (word) => soundAlike(word, false) ?? word);
 }
 
+function bareWords(sentence: string) {
+  return sentence.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
+}
+
+function dropRepeats(text: string) {
+  const sentences = splitSentences(text);
+  const kept = sentences.filter((sentence, index) => {
+    if (index === 0) return true;
+    const prior = bareWords(sentences[index - 1]);
+    const current = bareWords(sentence);
+    if (!current) return false;
+    // Whisper sometimes echoes the end of a sentence as its own short
+    // sentence right after ("...at Wellness Living. Living."). Drop a short
+    // trailing fragment that just repeats the tail of what came before.
+    if (current === prior) return false;
+    const words = current.split(/\s+/);
+    return !(words.length <= 3 && prior.endsWith(current));
+  });
+  return kept.join(' ');
+}
+
 export function cleanTranscript(text: string) {
   const cleaned = fixNames(
-    text
-      .replace(/\[[^\]]*\]|\([^)]*\)|\*[^*]*\*/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim()
+    dropRepeats(
+      text
+        .replace(/\[[^\]]*\]|\([^)]*\)|\*[^*]*\*/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+    )
   );
   const words = cleaned.replace(/[^a-z0-9\s]/gi, '').trim();
   if (words.length < 2) return '';

@@ -96,7 +96,7 @@ const CUES: Cue[] = [
   { id: 'volume', phrases: ['crore', 'two million', 'transactions', 'millisecond', 'how big', 'how much', 'volume', 'scale'], weight: 4, topic: 'castler', beat: 1 },
   { id: 'earliest', phrases: ['first job', 'first role', 'earliest', 'oldest role'], weight: 5, topic: 'castler', text: LINES.earliest },
   { id: 'latest', phrases: ['current role', 'current job', 'latest role', 'these days', 'right now'], weight: 4, topic: 'wellness', text: LINES.latest },
-  { id: 'wellness', phrases: ['wellnessliving', 'wellness living', 'wellness'], weight: 4, topic: 'wellness', beat: 0 },
+  { id: 'wellness', phrases: ['wellnessliving', 'wellness living', 'wellness', 'velness', 'wellniss', 'welness'], weight: 4, topic: 'wellness', beat: 0 },
   { id: 'kusho', phrases: ['kusho'], weight: 4, topic: 'kusho', beat: 0 },
   { id: 'castler', phrases: ['castler', 'payments', 'payment'], weight: 4, topic: 'castler', beat: 0 },
   { id: 'place', phrases: ['where do you live', 'where are you', 'based', 'location', 'bengaluru', 'bangalore', 'delhi'], weight: 4, topic: 'place' },
@@ -136,7 +136,7 @@ function hasAny(query: string, phrases: string[]) {
 function namedJobs(query: string): Job[] {
   const found: { job: Job; at: number }[] = [];
   const markers: [Job, string[]][] = [
-    ['wellness', ['wellnessliving', 'wellness living', 'wellness']],
+    ['wellness', ['wellnessliving', 'wellness living', 'wellness', 'velness', 'wellniss', 'welness']],
     ['kusho', ['kusho']],
     ['castler', ['castler']],
   ];

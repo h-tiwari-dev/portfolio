@@ -36,10 +36,10 @@ export type VoiceResponse =
   | { type: 'error'; id?: number; seq?: number; message: string };
 
 export const MODELS = {
-  ears: 'onnx-community/moonshine-base-ONNX',
+  ears: 'onnx-community/whisper-large-v3-turbo',
   mind: 'onnx-community/Qwen3-0.6B-ONNX',
   voice: 'onnx-community/Kokoro-82M-v1.0-ONNX',
 } as const;
 
-export const APPROX_MB = { ears: 82, mind: 652, voice: 326 };
-export const APPROX_MB_WASM = { ears: 63, mind: 0, voice: 92 };
+export const APPROX_MB = { ears: 759, mind: 652, voice: 326 };
+export const APPROX_MB_WASM = { ears: 1085, mind: 0, voice: 92 };
