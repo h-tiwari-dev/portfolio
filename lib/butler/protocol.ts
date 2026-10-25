@@ -41,5 +41,5 @@ export const MODELS = {
   voice: 'onnx-community/Kokoro-82M-v1.0-ONNX',
 } as const;
 
-export const APPROX_MB = { ears: 63, mind: 652, voice: 326 };
+export const APPROX_MB = { ears: 82, mind: 652, voice: 326 };
 export const APPROX_MB_WASM = { ears: 63, mind: 0, voice: 92 };

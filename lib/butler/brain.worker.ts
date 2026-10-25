@@ -156,12 +156,25 @@ async function load(useMind: boolean, mindModel?: string, mindDtype = 'q4f16', e
   }
   const loadEars = (async () => {
     if (ears) return;
-    ears = (await loadPipeline('automatic-speech-recognition', earsModel, {
-      dtype: 'q8',
-      device: 'wasm',
-      progress_callback: progress('ears'),
-      session_options: QUIET,
-    })) as Ears;
+    const loadEarsModel = (device: 'webgpu' | 'wasm', dtype: 'q8' | Record<string, string>) =>
+      loadPipeline('automatic-speech-recognition', earsModel, {
+        dtype,
+        device,
+        progress_callback: progress('ears'),
+        session_options: QUIET,
+      }) as Promise<Ears>;
+    // The quantized encoder is what muddies short names. On a GPU, keep that
+    // encoder in fp16 and leave the decoder quantized. Fall back if fp16 is missing.
+    try {
+      ears = await loadEarsModel(
+        gpu ? 'webgpu' : 'wasm',
+        gpu ? { encoder_model: 'fp16', decoder_model_merged: 'q8' } : 'q8'
+      );
+    } catch (error) {
+      if (!gpu) throw error;
+      console.warn('[butler] fp16 ears failed, using the quantized model', error);
+      ears = await loadEarsModel('wasm', 'q8');
+    }
     biasProcessor = buildBiasProcessor(ears.tokenizer);
     await ears(new Float32Array(16000));
   })();
@@ -202,6 +215,17 @@ scope.onmessage = (event: MessageEvent<BrainRequest>) => {
   chain = chain.then(() => handle(message));
 };
 
+function prepareHearing(audio: Float32Array) {
+  let peak = 0;
+  for (let i = 0; i < audio.length; i += 1) peak = Math.max(peak, Math.abs(audio[i]));
+  // Quiet laptop mics land well below the level Moonshine was trained on.
+  if (peak <= 0.012 || peak >= 0.55) return audio;
+  const gain = Math.min(3, 0.85 / peak);
+  const out = new Float32Array(audio.length);
+  for (let i = 0; i < audio.length; i += 1) out[i] = Math.max(-1, Math.min(1, audio[i] * gain));
+  return out;
+}
+
 async function handle(message: Exclude<BrainRequest, { type: 'abort' }>) {
   try {
     if (message.type === 'load') {
@@ -210,8 +234,14 @@ async function handle(message: Exclude<BrainRequest, { type: 'abort' }>) {
     }
     if (message.type === 'transcribe') {
       if (!ears) throw new Error('Speech recognition is not loaded.');
+      const audio = prepareHearing(message.audio);
       const started = performance.now();
-      const output = await ears(message.audio, biasProcessor ? { logits_processor: biasProcessor } : undefined);
+      const output = await ears(audio, {
+        ...(biasProcessor ? { logits_processor: biasProcessor } : {}),
+        // The pipeline budgets 6 tokens per second, which clips a short question
+        // before the last name is written. Keep that rate, but never below 16.
+        max_new_tokens: Math.max(16, Math.ceil(audio.length / 16000) * 6),
+      });
       const text = Array.isArray(output) ? output.map((item) => item.text).join(' ') : output.text;
       post({ type: 'transcript', id: message.id, text: text.trim(), ms: performance.now() - started });
       return;
