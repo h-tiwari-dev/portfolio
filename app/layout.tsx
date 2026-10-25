@@ -1,25 +1,33 @@
-import { Space_Grotesk, JetBrains_Mono, Cormorant_Garamond } from 'next/font/google';
+import localFont from 'next/font/local';
 import Link from 'next/link';
 import { navItems } from '@/constants/navItems';
 import { SectionProvider } from '@/contexts/SectionContext';
 
 import './globals.css';
 
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
+const jetbrainsMono = localFont({
+  src: './fonts/jetbrains-mono-normal-100-800.woff2',
+  weight: '100 800',
   variable: '--font-jetbrains-mono',
+  display: 'swap',
 });
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
+const spaceGrotesk = localFont({
+  src: './fonts/space-grotesk-normal-300-700.woff2',
+  weight: '300 700',
   variable: '--font-space-grotesk',
+  display: 'swap',
 });
 
-const cormorant = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  style: ['normal', 'italic'],
+const cormorant = localFont({
+  src: [
+    { path: './fonts/cormorant-normal-400.woff2', weight: '400', style: 'normal' },
+    { path: './fonts/cormorant-normal-400.woff2', weight: '500', style: 'normal' },
+    { path: './fonts/cormorant-italic-400.woff2', weight: '400', style: 'italic' },
+    { path: './fonts/cormorant-italic-400.woff2', weight: '500', style: 'italic' },
+  ],
   variable: '--font-butler',
+  display: 'swap',
 });
 
 import CustomCursor from '@/components/common/CustomCursor';
